@@ -1,5 +1,5 @@
-// Fecha y hora objetivo (viernes 26 de mayo de 2023 a las 22:00)
-var targetDate = new Date('May 26, 2023 22:00:00').getTime();
+// Crear la fecha y hora objetivo en UTC+2 (viernes 26 de mayo de 2023 a las 22:00 en España)
+var targetDate = new Date('May 26, 2023 22:30:00 GMT+0200').getTime();
 
 // Actualizar el contador cada segundo
 var countdown = setInterval(function() {
