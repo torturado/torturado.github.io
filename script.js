@@ -1,23 +1,28 @@
-// Crear la fecha y hora objetivo en UTC+2 (viernes 26 de mayo de 2023 a las 22:00 en España)
-var targetDate = new Date('May 26, 2023 23:30:00').getTime();
+// Set the date we're counting down to
+var countDownDate = new Date("May 26, 2023 22:30:00").getTime();
 
-// Actualizar el contador cada segundo
-var countdown = setInterval(function() {
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
   var now = new Date().getTime();
-  var distance = targetDate - now;
 
-  // Cálculos para días, horas, minutos y segundos restantes
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  // Mostrar el contador en el elemento con id "countdown"
-  document.getElementById('countdown').innerHTML = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+  // Display the result in the element with id="demo"
+  document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s ";
 
-  // Si la cuenta regresiva termina, mostrar un mensaje
+  // If the count down is finished, write some text
   if (distance < 0) {
-    clearInterval(countdown);
-    document.getElementById('countdown').innerHTML = '¡Tiempo terminado!';
+    clearInterval(x);
+    document.getElementById("countdown").innerHTML = "Sacabau";
   }
 }, 1000);
