@@ -1,13 +1,11 @@
 .container {
   text-align: center;
   margin-top: 100px;
-  font-family: Arial, sans-serif;
 }
 
 h1 {
   font-size: 36px;
   color: #333;
-  margin-bottom: 20px;
 }
 
 #countdown {
@@ -15,19 +13,4 @@ h1 {
   font-weight: bold;
   color: #333;
   margin-top: 20px;
-  background-color: #f7f7f7;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 24px;
-  }
-
-  #countdown {
-    font-size: 48px;
-    padding: 10px;
-  }
 }
