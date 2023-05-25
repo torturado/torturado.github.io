@@ -6,6 +6,7 @@
 h1 {
   font-size: 36px;
   color: #333;
+  font-family: Arial, sans-serif;
 }
 
 #countdown {
@@ -13,18 +14,17 @@ h1 {
   font-weight: bold;
   color: #333;
   margin-top: 20px;
-}
-
-body {
-  background-color: #f2f2f2;
-}
-
-.container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 40px;
-  border: 1px solid #ccc;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding: 20px 40px;
   border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+}
+
+@media (max-width: 480px) {
+  #countdown {
+    font-size: 48px;
+    padding: 10px 20px;
+  }
 }
