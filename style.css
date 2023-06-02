@@ -1,16 +1,16 @@
-.container {
-  text-align: center;
-  margin-top: 100px;
-}
-
-h1 {
-  font-size: 36px;
-  color: #333;
+body {
+  background-color: #000;
 }
 
 #countdown {
-  font-size: 72px;
+  font-size: 6rem;
   font-weight: bold;
-  color: #333;
-  margin-top: 20px;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
