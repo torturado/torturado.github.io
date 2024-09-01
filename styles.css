@@ -53,6 +53,7 @@ button:hover {
 
 #result p {
     margin: 10px 0;
+    padding-right: 30px; /* Make space for the icon */
 }
 
 .leaderboard-item {
@@ -69,4 +70,220 @@ button:hover {
     border-radius: 10px;
     width: 80%;
     max-width: 400px;
+}
+
+.input-group, .time-input, .future-amount-input, #result p {
+    position: relative;
+    margin: 10px 0;
+    padding-right: 30px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    font-family: "Arial", sans-serif;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: calc(100% + 10px);
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent #333 transparent transparent;
+}
+
+.tooltip .icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+}
+
+.tooltip {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Remove or comment out the old .info-icon and .info-popup styles */
+
+.time-input .info-icon {
+    right: 0px;
+}
+
+#result .info-icon {
+    right: 0;
+}
+
+.info-popup {
+    display: none;
+    position: fixed;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.result-item {
+    position: relative;
+    margin: 10px 0;
+    padding-right: 30px;
+    text-align: left;
+}
+
+.result-item .tooltip {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#result .tooltip .icon {
+    font-size: 14px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.info-button-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.info-button {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 700px;
+    color: #333;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    animation: modalopen 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    text-align: center; /* Centrar el texto */
+}
+
+h3, h4 {
+    color: #333;
+    border-bottom: 2px solid #4caf50;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: center; /* Centrar el texto en los encabezados */
+}
+
+h3 {
+    font-size: 24px;
+    margin-top: 0;
+}
+
+h4 {
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+p, ul, ol {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: left; /* Alinear el texto de párrafos y listas a la izquierda */
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto; /* Centrar el bloque de texto */
+}
+
+ul {
+    list-style-type: disc;
+    padding-left: 40px; /* Ajustar el padding para centrar mejor las listas */
+}
+
+ol {
+    list-style-type: decimal;
+    padding-left: 40px; /* Ajustar el padding para centrar mejor las listas */
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+}
+
+@keyframes modalopen {
+    from { opacity: 0; transform: translateY(-10%); }
+    to { opacity: 1; transform: translateY(0); }
 }
