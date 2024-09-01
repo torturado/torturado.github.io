@@ -1,59 +1,70 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>HotMouse</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXP Bank Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.1.2/bignumber.min.js'></script>
 </head>
-
 <body>
-  <header>
-    <div id="logo">HotMouse</div>
-    <!-- Navegación -->
-    <nav>
-        <a href="javascript:void(0);" id="menuBtn">☰ Menú</a>
-        <div id="dropdownMenu" class="dropdown">
-            <a href="#" class="menu-item">Servicios</a>
-            <a href="#" class="menu-item">Sobre nosotros</a>
-            <a href="#" class="menu-item">Contáctenos</a>
+    <div class="container">
+        <h1>EXP Bank Calculator</h1>
+        <div class="calculator">
+            <input type="number" id="currentGems" placeholder="Current Gems">
+            <input type="number" id="goalGems" placeholder="Goal Gems">
+            <div class="time-input">
+                <input type="number" id="years" placeholder="Y">
+                <input type="number" id="months" placeholder="M">
+                <input type="number" id="days" placeholder="D">
+                <input type="number" id="hours" placeholder="H">
+                <input type="number" id="minutes" placeholder="M">
+                <input type="number" id="seconds" placeholder="S">
+            </div>
+            <div class="future-amount-input">
+                <input type="date" id="targetDate">
+                <input type="time" id="targetTime">
+                <button id="clearBtn">Clear</button>
+            </div>
+            <p>Daily Interest: <span id="dailyInterest">0.40%</span></p>
+            <button id="calculateBtn">Calculate!</button>
+            <div id="result">
+                <p id="timeToReach">It will take ...</p>
+                <p id="gemsAfterTime">Gems after time: ...</p>
+                <p id="profit">Profit: ...</p>
+                <p id="profitPerSecond">Profit per second: ...</p>
+                <p id="profitPerMinute">Profit per minute: ...</p>
+                <p id="profitPerHour">Profit per hour: ...</p>
+                <p id="profitPerDay">Profit per day: ...</p>
+                <p id="profitPerWeek">Profit per week: ...</p>
+                <p id="profitPerMonth">Profit per month: ...</p>
+                <p id="profitGrowth">Profit Growth (%): ...</p>
+                <p id="futureAmount"></p>
+            </div>
         </div>
-    </nav>    
-    <div id="telefono">+34 941 89 18 89</div>
-  </header>
-
-  <!-- Modal -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 id="modal-title"></h2>
-        <p id="modal-text"></p>
+        <div class="leaderboard">
+            <h2>Leaderboard</h2>
+            <div class="leaderboard-item">
+                <p>1. Player1 (EXP)</p>
+                <p>210M Gems</p>
+            </div>
+            <div class="leaderboard-item">
+                <p>2. Player2 (EXP)</p>
+                <p>20M Gems</p>
+            </div>
+            <div class="leaderboard-item">
+                <p>3. Player3 (EXP)</p>
+                <p>10M Gems</p>
+            </div>
+        </div>
     </div>
-</div>
-
-
-  <!-- ... código anterior ... -->
-
-  <main>
-    <section id="promocion">
-      <h1>Convierte tu clic en un rugir con HotMouse</h1>
-      <p>por HotMouse, a ratones de ordenador</p>
-      <button>Reservar ahora</button>
-    </section>
-
-    <section id="producto">
-      <img src="https://d33ih9uc95ee0n.cloudfront.net/public/images/aigenerated/google_114894973553979557678/service/e49a39c9-8d7c-4546-a38b-792b64cfe75f.jpg?q=50&w=800&h=650&d=800x650" alt="Imagen del producto HotMouse">
-      <div>
-        <span>30,00 €</span>
-        <h2>HotMouse</h2>
-        <p>Soy experto en proporcionar soluciones óptimas con mi HotMouse, diseñado para mejorar su eficiencia en el trabajo.</p>
-        <button>Reservar ahora</button>
-      </div>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
 </body>
-
+<script src="script.js"></script>
+<script>
+    document.getElementById('clearBtn').addEventListener('click', function() {
+        document.getElementById('targetDate').value = '';
+        document.getElementById('targetTime').value = '';
+    });
+</script>
 </html>
