@@ -7,13 +7,29 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.1.2/bignumber.min.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <h1>EXP Bank Calculator</h1>
+        <div class="info-button-container">
+            <button id="technicalInfoBtn" class="info-button">i</button>
+        </div>
         <div class="calculator">
-            <input type="number" id="currentGems" placeholder="Current Gems">
-            <input type="number" id="goalGems" placeholder="Goal Gems">
+            <div class="input-group">
+                <input type="number" id="currentGems" placeholder="Current Gems">
+                <div class="tooltip">
+                    <div class="icon">i</div>
+                    <div class="tooltiptext">Enter your current number of gems</div>
+                </div>
+            </div>
+            <div class="input-group">
+                <input type="number" id="goalGems" placeholder="Goal Gems">
+                <div class="tooltip">
+                    <div class="icon">i</div>
+                    <div class="tooltiptext">Enter your target number of gems</div>
+                </div>
+            </div>
             <div class="time-input">
                 <input type="number" id="years" placeholder="Y">
                 <input type="number" id="months" placeholder="M">
@@ -21,26 +37,100 @@
                 <input type="number" id="hours" placeholder="H">
                 <input type="number" id="minutes" placeholder="M">
                 <input type="number" id="seconds" placeholder="S">
+                <div class="tooltip">
+                    <div class="icon">i</div>
+                    <div class="tooltiptext">Enter the time period for calculation (Years, Months, Days, Hours, Minutes, Seconds)</div>
+                </div>
             </div>
             <div class="future-amount-input">
                 <input type="date" id="targetDate">
                 <input type="time" id="targetTime">
                 <button id="clearBtn">Clear</button>
+                <div class="tooltip">
+                    <div class="icon">i</div>
+                    <div class="tooltiptext">Set a specific future date and time for calculation</div>
+                </div>
             </div>
             <p>Daily Interest: <span id="dailyInterest">0.40%</span></p>
             <button id="calculateBtn">Calculate!</button>
             <div id="result">
-                <p id="timeToReach">It will take ...</p>
-                <p id="gemsAfterTime">Gems after time: ...</p>
-                <p id="profit">Profit: ...</p>
-                <p id="profitPerSecond">Profit per second: ...</p>
-                <p id="profitPerMinute">Profit per minute: ...</p>
-                <p id="profitPerHour">Profit per hour: ...</p>
-                <p id="profitPerDay">Profit per day: ...</p>
-                <p id="profitPerWeek">Profit per week: ...</p>
-                <p id="profitPerMonth">Profit per month: ...</p>
-                <p id="profitGrowth">Profit Growth (%): ...</p>
-                <p id="futureAmount"></p>         
+                <div class="result-item">
+                    <span id="timeToReach">It will take ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Time required to reach your goal</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="gemsAfterTime">Gems after time: ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Total gems after the specified time</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="profit">Profit: ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Total profit earned</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="profitPerSecond">Profit per second: ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Profit earned every second</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="profitPerMinute">Profit per minute: ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Profit earned every minute</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="profitPerHour">Profit per hour: ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Profit earned every hour</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="profitPerDay">Profit per day: ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Profit earned every day</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="profitPerWeek">Profit per week: ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Profit earned every week</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="profitPerMonth">Profit per month: ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Profit earned every month</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="profitGrowth">Profit Growth (%): ...</span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Percentage of profit growth</div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <span id="futureAmount"></span>
+                    <div class="tooltip">
+                        <div class="icon">i</div>
+                        <div class="tooltiptext">Future amount of gems</div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="leaderboard">
@@ -57,6 +147,15 @@
                 <p>3. Player3 (EXP)</p>
                 <p>10M Gems</p>
             </div>
+        </div>
+    </div>
+    <div id="infoPopup" class="info-popup">
+        <span id="infoText"></span>
+    </div>
+    <div id="technicalInfoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="technicalInfoContent"></div>
         </div>
     </div>
 </body>
