@@ -5,6 +5,43 @@ const ONE = new BigNumber(1);
 let updateInterval;
 let growthInterval;
 
+const calculateFutureAmount = () => {
+    const targetDateInput = document.getElementById('targetDate');
+    const targetTimeInput = document.getElementById('targetTime');
+    const futureAmountElement = document.getElementById('futureAmount');
+    const futureAmountTooltip = futureAmountElement.nextElementSibling;
+
+    if (!targetDateInput.value) {
+        futureAmountElement.textContent = ''; 
+        futureAmountElement.parentElement.style.display = 'none';
+        futureAmountTooltip.style.display = 'none'; 
+        return;
+    }
+
+    const targetDate = new Date(`${targetDateInput.value}T${targetTimeInput.value || '00:00'}`);
+    
+    if (isNaN(targetDate.getTime())) {
+        alert("Please enter a valid target date.");
+        return;
+    }
+
+    const timeDifferenceInDays = new BigNumber(targetDate.getTime() - startTime).dividedBy(86400000);
+    const totalDays = initialTimeInDays.plus(timeDifferenceInDays);
+
+    const futureAmount = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
+
+    futureAmountElement.textContent = `On ${targetDate.toLocaleString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',  
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+    })}, you will have: ${formatNumber(futureAmount)} gems`;
+    futureAmountElement.parentElement.style.display = 'block';
+    futureAmountTooltip.style.display = 'inline-block'; 
+};
+
 const startCalculations = () => {
     clearInterval(updateInterval);
     clearInterval(growthInterval);
@@ -120,43 +157,6 @@ const startCalculations = () => {
         document.getElementById('profitPerMonth').textContent = `Profit per month: ${formatNumber(profitPerSecond.times(2592000))}`;
 
         document.getElementById('profitGrowth').textContent = `Profit Growth (%): ${profitGrowth.toFixed(6)}%`;
-    };
-
-    const calculateFutureAmount = () => {
-        const targetDateInput = document.getElementById('targetDate');
-        const targetTimeInput = document.getElementById('targetTime');
-        const futureAmountElement = document.getElementById('futureAmount');
-        const futureAmountTooltip = futureAmountElement.nextElementSibling;
-
-        if (!targetDateInput.value) {
-            futureAmountElement.textContent = ''; 
-            futureAmountElement.parentElement.style.display = 'none';
-            futureAmountTooltip.style.display = 'none'; 
-            return;
-        }
-
-        const targetDate = new Date(`${targetDateInput.value}T${targetTimeInput.value || '00:00'}`);
-        
-        if (isNaN(targetDate.getTime())) {
-            alert("Please enter a valid target date.");
-            return;
-        }
-    
-        const timeDifferenceInDays = new BigNumber(targetDate.getTime() - startTime).dividedBy(86400000);
-        const totalDays = initialTimeInDays.plus(timeDifferenceInDays);
-    
-        const futureAmount = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
-    
-        futureAmountElement.textContent = `On ${targetDate.toLocaleString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',  
-            hour: '2-digit', 
-            minute: '2-digit', 
-            hour12: true 
-        })}, you will have: ${formatNumber(futureAmount)} gems`;
-        futureAmountElement.parentElement.style.display = 'block';
-        futureAmountTooltip.style.display = 'inline-block'; 
     };
 
     updateResults();
