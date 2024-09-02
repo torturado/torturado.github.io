@@ -32,7 +32,6 @@ const startCalculations = () => {
 
     const startTime = Date.now();
 
-    
     const ln = (x) => {
         if (x.lte(0)) throw new Error('ln(x) is undefined for x <= 0');
         if (x.eq(ONE)) return new BigNumber(0);
@@ -54,12 +53,10 @@ const startCalculations = () => {
         return result.times(2);
     };
 
-    
     const logBase = (x, base) => {
         return ln(x).dividedBy(ln(base));
     };
 
-    
     const customExponentiation = (base, exponent) => {
         if (exponent.isInteger()) {
             return base.exponentiatedBy(exponent);
@@ -68,7 +65,6 @@ const startCalculations = () => {
         }
     };
 
-    
     const exp = (x) => {
         let sum = new BigNumber(1);
         let term = new BigNumber(1);
@@ -88,19 +84,20 @@ const startCalculations = () => {
         const elapsedTimeInSeconds = new BigNumber(Date.now() - startTime).dividedBy(1000);
         const elapsedTimeInDays = elapsedTimeInSeconds.dividedBy(86400);
         const totalDays = initialTimeInDays.plus(elapsedTimeInDays);
-
+    
         const futureGems = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
         const profit = futureGems.minus(currentGems);
         const profitGrowth = profit.dividedBy(currentGems).times(100);
-
+    
         document.getElementById('gemsAfterTime').textContent = `Gems after ${totalDays.integerValue(BigNumber.ROUND_FLOOR).toString()} day(s): ${formatNumber(futureGems)}`;
         document.getElementById('profit').textContent = `Profit: ${formatNumber(profit)}`;
-
-        if (goalGems) {
+    
+        const timeToReachElement = document.getElementById('timeToReach');
+        if (goalGems && !goalGems.isZero()) {
             const timeToReachGoal = logBase(goalGems.dividedBy(currentGems), ONE.plus(hourlyInterest)).dividedBy(24);
             const goalDate = new Date(startTime + timeToReachGoal.times(86400000).toNumber());
-
-            document.getElementById('timeToReach').textContent = `You will reach your goal on ${goalDate.toLocaleString('en-US', { 
+    
+            timeToReachElement.textContent = `You will reach your goal on ${goalDate.toLocaleString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric', 
@@ -108,8 +105,10 @@ const startCalculations = () => {
                 minute: '2-digit', 
                 hour12: true 
             })} (in ${timeToReachGoal.integerValue(BigNumber.ROUND_FLOOR).toString()} days).`;
+            timeToReachElement.parentElement.style.display = 'block';
         } else {
-            document.getElementById('timeToReach').textContent = '';
+            timeToReachElement.textContent = '';
+            timeToReachElement.parentElement.style.display = 'none';
         }
 
         const profitPerSecond = profit.dividedBy(totalDays.times(86400));
@@ -127,9 +126,12 @@ const startCalculations = () => {
         const targetDateInput = document.getElementById('targetDate');
         const targetTimeInput = document.getElementById('targetTime');
         const futureAmountElement = document.getElementById('futureAmount');
-        
+        const futureAmountTooltip = futureAmountElement.nextElementSibling;
+
         if (!targetDateInput.value) {
             futureAmountElement.textContent = ''; 
+            futureAmountElement.parentElement.style.display = 'none';
+            futureAmountTooltip.style.display = 'none'; 
             return;
         }
 
@@ -139,12 +141,12 @@ const startCalculations = () => {
             alert("Please enter a valid target date.");
             return;
         }
-
+    
         const timeDifferenceInDays = new BigNumber(targetDate.getTime() - startTime).dividedBy(86400000);
         const totalDays = initialTimeInDays.plus(timeDifferenceInDays);
-
+    
         const futureAmount = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
-
+    
         futureAmountElement.textContent = `On ${targetDate.toLocaleString('en-US', { 
             year: 'numeric', 
             month: 'long', 
@@ -153,18 +155,28 @@ const startCalculations = () => {
             minute: '2-digit', 
             hour12: true 
         })}, you will have: ${formatNumber(futureAmount)} gems`;
+        futureAmountElement.parentElement.style.display = 'block';
+        futureAmountTooltip.style.display = 'inline-block'; 
     };
 
     updateResults();
     calculateFutureAmount();
 
-    
     growthInterval = setInterval(updateResults, 100);  
     updateInterval = setInterval(calculateFutureAmount, 1000);  
 };
 
-document.getElementById('calculateBtn').addEventListener('click', startCalculations);
+document.getElementById('calculateBtn').addEventListener('click', () => {
+    startCalculations();
+    calculateFutureAmount();
+});
 
+document.getElementById('clearBtn').addEventListener('click', function() {
+    document.getElementById('targetDate').value = '';
+    document.getElementById('targetTime').value = '';
+    document.getElementById('futureAmount').textContent = '';
+    document.getElementById('futureAmount').parentElement.style.display = 'none';
+});
 
 ['currentGems', 'goalGems', 'years', 'months', 'days', 'hours', 'minutes', 'seconds', 'targetDate', 'targetTime'].forEach(id => {
     document.getElementById(id).addEventListener('input', function() {
@@ -173,10 +185,10 @@ document.getElementById('calculateBtn').addEventListener('click', startCalculati
     });
 });
 
-
 ['targetDate', 'targetTime'].forEach(id => {
     document.getElementById(id).addEventListener('input', function() {
         document.getElementById('futureAmount').textContent = '';
+        document.getElementById('futureAmount').parentElement.style.display = 'none';
     });
 });
 
@@ -238,3 +250,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.getElementById('goalGems').addEventListener('input', function() {
+    clearInterval(updateInterval);
+    clearInterval(growthInterval);
+    if (this.value === '') {
+        document.getElementById('timeToReach').textContent = '';
+        document.getElementById('timeToReach').parentElement.style.display = 'none';
+    }
+});
