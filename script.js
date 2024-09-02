@@ -10,18 +10,19 @@ const startCalculations = () => {
     clearInterval(growthInterval);
 
     const currentGems = new BigNumber(document.getElementById('currentGems').value);
-    const goalGems = new BigNumber(document.getElementById('goalGems').value);
+    const goalGems = document.getElementById('goalGems').value ? new BigNumber(document.getElementById('goalGems').value) : null;
     const days = parseInt(document.getElementById('days').value) || 0;
     const hours = parseInt(document.getElementById('hours').value) || 0;
     const minutes = parseInt(document.getElementById('minutes').value) || 0;
     const seconds = parseInt(document.getElementById('seconds').value) || 0;
 
-    if (isNaN(currentGems) || isNaN(goalGems) || currentGems.lte(0) || goalGems.lte(0)) {
-        alert("Please enter valid numbers for Current Gems and Goal Gems.");
+    if (isNaN(currentGems) || currentGems.lte(0)) {
+        alert("Please enter a valid number for Current Gems.");
         return;
     }
 
     const dailyInterest = new BigNumber('0.004');
+    const hourlyInterest = dailyInterest.dividedBy(24);
     const initialTimeInDays = new BigNumber(days)
         .plus(new BigNumber(hours).dividedBy(24))
         .plus(new BigNumber(minutes).dividedBy(1440))
@@ -31,7 +32,7 @@ const startCalculations = () => {
 
     const startTime = Date.now();
 
-    // Función personalizada para calcular el logaritmo natural
+    
     const ln = (x) => {
         if (x.lte(0)) throw new Error('ln(x) is undefined for x <= 0');
         if (x.eq(ONE)) return new BigNumber(0);
@@ -44,7 +45,7 @@ const startCalculations = () => {
         let term = ratio;
         let n = new BigNumber(3);
 
-        for (let i = 1; i <= 20; i++) {  // Ajusta el número de iteraciones para la precisión deseada
+        for (let i = 1; i <= 20; i++) {  
             term = term.times(ratioSquared);
             result = result.plus(term.dividedBy(n));
             n = n.plus(2);
@@ -53,12 +54,12 @@ const startCalculations = () => {
         return result.times(2);
     };
 
-    // Función personalizada para calcular logaritmo en base cualquiera
+    
     const logBase = (x, base) => {
         return ln(x).dividedBy(ln(base));
     };
 
-    // Función personalizada para la exponenciación con exponentes no enteros
+    
     const customExponentiation = (base, exponent) => {
         if (exponent.isInteger()) {
             return base.exponentiatedBy(exponent);
@@ -67,12 +68,12 @@ const startCalculations = () => {
         }
     };
 
-    // Función personalizada para la exponencial
+    
     const exp = (x) => {
         let sum = new BigNumber(1);
         let term = new BigNumber(1);
         let n = new BigNumber(1);
-        const maxIterations = 50; // Ajusta este valor según la precisión deseada
+        const maxIterations = 50; 
 
         for (let i = 1; i < maxIterations; i++) {
             term = term.times(x).dividedBy(n);
@@ -88,25 +89,28 @@ const startCalculations = () => {
         const elapsedTimeInDays = elapsedTimeInSeconds.dividedBy(86400);
         const totalDays = initialTimeInDays.plus(elapsedTimeInDays);
 
-        const futureGems = currentGems.times(customExponentiation(ONE.plus(dailyInterest), totalDays));
+        const futureGems = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
         const profit = futureGems.minus(currentGems);
         const profitGrowth = profit.dividedBy(currentGems).times(100);
 
         document.getElementById('gemsAfterTime').textContent = `Gems after ${totalDays.integerValue(BigNumber.ROUND_FLOOR).toString()} day(s): ${formatNumber(futureGems)}`;
         document.getElementById('profit').textContent = `Profit: ${formatNumber(profit)}`;
 
-        // Usamos la función logBase para calcular el tiempo necesario para alcanzar el objetivo
-        const timeToReachGoal = logBase(goalGems.dividedBy(currentGems), ONE.plus(dailyInterest));
-        const goalDate = new Date(startTime + timeToReachGoal.times(86400000).toNumber());
+        if (goalGems) {
+            const timeToReachGoal = logBase(goalGems.dividedBy(currentGems), ONE.plus(hourlyInterest)).dividedBy(24);
+            const goalDate = new Date(startTime + timeToReachGoal.times(86400000).toNumber());
 
-        document.getElementById('timeToReach').textContent = `You will reach your goal on ${goalDate.toLocaleString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric', 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            hour12: true 
-        })} (in ${timeToReachGoal.integerValue(BigNumber.ROUND_FLOOR).toString()} days).`;
+            document.getElementById('timeToReach').textContent = `You will reach your goal on ${goalDate.toLocaleString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: true 
+            })} (in ${timeToReachGoal.integerValue(BigNumber.ROUND_FLOOR).toString()} days).`;
+        } else {
+            document.getElementById('timeToReach').textContent = '';
+        }
 
         const profitPerSecond = profit.dividedBy(totalDays.times(86400));
         document.getElementById('profitPerSecond').textContent = `Profit per second: ${formatNumber(profitPerSecond)}`;
@@ -125,7 +129,7 @@ const startCalculations = () => {
         const futureAmountElement = document.getElementById('futureAmount');
         
         if (!targetDateInput.value) {
-            futureAmountElement.textContent = ''; // Limpiar el contenido si no hay fecha
+            futureAmountElement.textContent = ''; 
             return;
         }
 
@@ -139,7 +143,7 @@ const startCalculations = () => {
         const timeDifferenceInDays = new BigNumber(targetDate.getTime() - startTime).dividedBy(86400000);
         const totalDays = initialTimeInDays.plus(timeDifferenceInDays);
 
-        const futureAmount = currentGems.times(customExponentiation(ONE.plus(dailyInterest), totalDays));
+        const futureAmount = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
 
         futureAmountElement.textContent = `On ${targetDate.toLocaleString('en-US', { 
             year: 'numeric', 
@@ -154,14 +158,14 @@ const startCalculations = () => {
     updateResults();
     calculateFutureAmount();
 
-    // Set new intervals
-    growthInterval = setInterval(updateResults, 100);  // Update every 100 ms for performance balance
-    updateInterval = setInterval(calculateFutureAmount, 1000);  // Update future amount every second
+    
+    growthInterval = setInterval(updateResults, 100);  
+    updateInterval = setInterval(calculateFutureAmount, 1000);  
 };
 
 document.getElementById('calculateBtn').addEventListener('click', startCalculations);
 
-// Add event listeners to input fields to stop updates when typing
+
 ['currentGems', 'goalGems', 'years', 'months', 'days', 'hours', 'minutes', 'seconds', 'targetDate', 'targetTime'].forEach(id => {
     document.getElementById(id).addEventListener('input', function() {
         clearInterval(updateInterval);
@@ -169,7 +173,7 @@ document.getElementById('calculateBtn').addEventListener('click', startCalculati
     });
 });
 
-// Add event listeners for clearing future amount result when date and time fields are modified
+
 ['targetDate', 'targetTime'].forEach(id => {
     document.getElementById(id).addEventListener('input', function() {
         document.getElementById('futureAmount').textContent = '';
@@ -191,8 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <ul>
             <li><strong>Natural Logarithm (ln):</strong> Implemented using a series expansion method known for its high precision. This function is essential for performing inverse exponential growth calculations, such as determining the time required to reach a financial goal.</li>
             <li><strong>Logarithm in Any Base (logBase):</strong> Calculated using the change of base formula, this method allows determining logarithms in any desired base. Internally, the logBase function utilizes our custom ln implementation, providing significant flexibility in analyzing logarithmic growth.</li>
-            <li><strong>Exponentiation (customExponentiation):</strong> Handles both integer and non-integer exponents. For integer exponents, BigNumber.js’s built-in method is used, while for non-integer exponents, a custom implementation combining Taylor series and natural logarithm calculation is employed. This duality enables the calculator to handle a wide range of mathematical scenarios with precision.</li>
-            <li><strong>Exponential Function (exp):</strong> Implemented using a Taylor series expansion, this function allows the calculation of exponents for any real number. It is particularly useful in scenarios where the exponent is not an integer, providing accurate results without relying solely on BigNumber.js’s built-in functions.</li>
+            <li><strong>Exponentiation (customExponentiation):</strong> Handles both integer and non-integer exponents. For integer exponents, BigNumber.js's built-in method is used, while for non-integer exponents, a custom implementation combining Taylor series and natural logarithm calculation is employed. This duality enables the calculator to handle a wide range of mathematical scenarios with precision.</li>
+            <li><strong>Exponential Function (exp):</strong> Implemented using a Taylor series expansion, this function allows the calculation of exponents for any real number. It is particularly useful in scenarios where the exponent is not an integer, providing accurate results without relying solely on BigNumber.js's built-in functions.</li>
         </ul>
         
         <h4>Calculation Process</h4>
@@ -201,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <li><strong>Daily Interest Rate Application:</strong> The daily interest rate is applied to the current gem balance using the compound interest formula. This operation accounts for time variations, including seconds and fractional seconds, to provide a precise calculation of balance growth.</li>
             <li><strong>Time to Reach Goal Calculation:</strong> The time needed to reach the gem goal is calculated using the logarithmic property of exponential growth. This calculation relies on the custom logBase function, allowing precise determination of when the balance will reach the desired goal under the influence of interest.</li>
             <li><strong>Profit and Growth Rate Calculations:</strong> Profits and growth rates are calculated for various time intervals (second, minute, hour, day, week, month). These calculations are performed in real-time, allowing users to visualize the impact of interest rates on their gem balance continuously and accurately.</li>
-            <li><strong>Real-Time Results Update:</strong> Results are updated in real-time using JavaScript’s setInterval function. This allows the calculator to respond immediately to user input and adjust calculations as needed, while maintaining a balance between precision and performance.</li>
+            <li><strong>Real-Time Results Update:</strong> Results are updated in real-time using JavaScript's setInterval function. This allows the calculator to respond immediately to user input and adjust calculations as needed, while maintaining a balance between precision and performance.</li>
         </ol>
         
         <h4>Performance Considerations</h4>
