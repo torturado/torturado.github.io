@@ -1,198 +1,198 @@
-BigNumber.config({ DECIMAL_PLACES: 20, ROUNDING_MODE: BigNumber.ROUND_HALF_UP });
+document.addEventListener("DOMContentLoaded", () => {
+    BigNumber.config({ DECIMAL_PLACES: 20, ROUNDING_MODE: BigNumber.ROUND_HALF_UP });
 
-const ONE = new BigNumber(1);
+    const ONE = new BigNumber(1);
 
-let updateInterval;
-let growthInterval;
+    let updateInterval;
+    let growthInterval;
 
-const calculateFutureAmount = () => {
-    const targetDateInput = document.getElementById('targetDate');
-    const targetTimeInput = document.getElementById('targetTime');
-    const futureAmountElement = document.getElementById('futureAmount');
-    const futureAmountTooltip = futureAmountElement.nextElementSibling;
+    const calculateFutureAmount = () => {
+        const targetDateInput = document.getElementById('targetDate');
+        const targetTimeInput = document.getElementById('targetTime');
+        const futureAmountElement = document.getElementById('futureAmount');
+        const futureAmountTooltip = futureAmountElement.nextElementSibling;
 
-    if (!targetDateInput.value) {
-        futureAmountElement.textContent = ''; 
-        futureAmountElement.parentElement.style.display = 'none';
-        futureAmountTooltip.style.display = 'none'; 
-        return;
-    }
-
-    const targetDate = new Date(`${targetDateInput.value}T${targetTimeInput.value || '00:00'}`);
-    
-    if (isNaN(targetDate.getTime())) {
-        alert("Please enter a valid target date.");
-        return;
-    }
-
-    const timeDifferenceInDays = new BigNumber(targetDate.getTime() - startTime).dividedBy(86400000);
-    const totalDays = initialTimeInDays.plus(timeDifferenceInDays);
-
-    const futureAmount = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
-
-    futureAmountElement.textContent = `On ${targetDate.toLocaleString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',  
-        hour: '2-digit', 
-        minute: '2-digit', 
-        hour12: true 
-    })}, you will have: ${formatNumber(futureAmount)} gems`;
-    futureAmountElement.parentElement.style.display = 'block';
-    futureAmountTooltip.style.display = 'inline-block'; 
-};
-
-const startCalculations = () => {
-    clearInterval(updateInterval);
-    clearInterval(growthInterval);
-
-    const currentGems = new BigNumber(document.getElementById('currentGems').value);
-    const goalGems = document.getElementById('goalGems').value ? new BigNumber(document.getElementById('goalGems').value) : null;
-    const days = parseInt(document.getElementById('days').value) || 0;
-    const hours = parseInt(document.getElementById('hours').value) || 0;
-    const minutes = parseInt(document.getElementById('minutes').value) || 0;
-    const seconds = parseInt(document.getElementById('seconds').value) || 0;
-
-    if (isNaN(currentGems) || currentGems.lte(0)) {
-        alert("Please enter a valid number for Current Gems.");
-        return;
-    }
-
-    const dailyInterest = new BigNumber('0.004');
-    const hourlyInterest = dailyInterest.dividedBy(24);
-    const initialTimeInDays = new BigNumber(days)
-        .plus(new BigNumber(hours).dividedBy(24))
-        .plus(new BigNumber(minutes).dividedBy(1440))
-        .plus(new BigNumber(seconds).dividedBy(86400));
-
-    const formatNumber = (num, decimals = 0) => num.toFormat(decimals);
-
-    const startTime = Date.now();
-
-    const ln = (x) => {
-        if (x.lte(0)) throw new Error('ln(x) is undefined for x <= 0');
-        if (x.eq(ONE)) return new BigNumber(0);
-        const xMinusOne = x.minus(ONE);
-        const xPlusOne = x.plus(ONE);
-        const ratio = xMinusOne.dividedBy(xPlusOne);
-        const ratioSquared = ratio.times(ratio);
-
-        let result = ratio;
-        let term = ratio;
-        let n = new BigNumber(3);
-
-        for (let i = 1; i <= 20; i++) {  
-            term = term.times(ratioSquared);
-            result = result.plus(term.dividedBy(n));
-            n = n.plus(2);
+        if (!targetDateInput.value) {
+            futureAmountElement.textContent = ''; 
+            futureAmountElement.parentElement.style.display = 'none';
+            futureAmountTooltip.style.display = 'none'; 
+            return;
         }
 
-        return result.times(2);
-    };
-
-    const logBase = (x, base) => {
-        return ln(x).dividedBy(ln(base));
-    };
-
-    const customExponentiation = (base, exponent) => {
-        if (exponent.isInteger()) {
-            return base.exponentiatedBy(exponent);
-        } else {
-            return exp(exponent.times(ln(base)));
-        }
-    };
-
-    const exp = (x) => {
-        let sum = new BigNumber(1);
-        let term = new BigNumber(1);
-        let n = new BigNumber(1);
-        const maxIterations = 50; 
-
-        for (let i = 1; i < maxIterations; i++) {
-            term = term.times(x).dividedBy(n);
-            sum = sum.plus(term);
-            n = n.plus(1);
+        const targetDate = new Date(`${targetDateInput.value}T${targetTimeInput.value || '00:00'}`);
+        
+        if (isNaN(targetDate.getTime())) {
+            alert("Please enter a valid target date.");
+            return;
         }
 
-        return sum;
+        const timeDifferenceInDays = new BigNumber(targetDate.getTime() - startTime).dividedBy(86400000);
+        const totalDays = initialTimeInDays.plus(timeDifferenceInDays);
+
+        const futureAmount = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
+
+        futureAmountElement.textContent = `On ${targetDate.toLocaleString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',  
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        })}, you will have: ${formatNumber(futureAmount)} gems`;
+        futureAmountElement.parentElement.style.display = 'block';
+        futureAmountTooltip.style.display = 'inline-block'; 
     };
 
-    const updateResults = () => {
-        const elapsedTimeInSeconds = new BigNumber(Date.now() - startTime).dividedBy(1000);
-        const elapsedTimeInDays = elapsedTimeInSeconds.dividedBy(86400);
-        const totalDays = initialTimeInDays.plus(elapsedTimeInDays);
-    
-        const futureGems = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
-        const profit = futureGems.minus(currentGems);
-        const profitGrowth = profit.dividedBy(currentGems).times(100);
-    
-        document.getElementById('gemsAfterTime').textContent = `Gems after ${totalDays.integerValue(BigNumber.ROUND_FLOOR).toString()} day(s): ${formatNumber(futureGems)}`;
-        document.getElementById('profit').textContent = `Profit: ${formatNumber(profit)}`;
-    
-        const timeToReachElement = document.getElementById('timeToReach');
-        if (goalGems && !goalGems.isZero()) {
-            const timeToReachGoal = logBase(goalGems.dividedBy(currentGems), ONE.plus(hourlyInterest)).dividedBy(24);
-            const goalDate = new Date(startTime + timeToReachGoal.times(86400000).toNumber());
-    
-            timeToReachElement.textContent = `You will reach your goal on ${goalDate.toLocaleString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                hour12: true 
-            })} (in ${timeToReachGoal.integerValue(BigNumber.ROUND_FLOOR).toString()} days).`;
-            timeToReachElement.parentElement.style.display = 'block';
-        } else {
-            timeToReachElement.textContent = '';
-            timeToReachElement.parentElement.style.display = 'none';
-        }
-
-        const profitPerSecond = profit.dividedBy(totalDays.times(86400));
-        document.getElementById('profitPerSecond').textContent = `Profit per second: ${formatNumber(profitPerSecond)}`;
-        document.getElementById('profitPerMinute').textContent = `Profit per minute: ${formatNumber(profitPerSecond.times(60))}`;
-        document.getElementById('profitPerHour').textContent = `Profit per hour: ${formatNumber(profitPerSecond.times(3600))}`;
-        document.getElementById('profitPerDay').textContent = `Profit per day: ${formatNumber(profitPerSecond.times(86400))}`;
-        document.getElementById('profitPerWeek').textContent = `Profit per week: ${formatNumber(profitPerSecond.times(604800))}`;
-        document.getElementById('profitPerMonth').textContent = `Profit per month: ${formatNumber(profitPerSecond.times(2592000))}`;
-
-        document.getElementById('profitGrowth').textContent = `Profit Growth (%): ${profitGrowth.toFixed(6)}%`;
-    };
-
-    updateResults();
-    calculateFutureAmount();
-
-    growthInterval = setInterval(updateResults, 100);  
-    updateInterval = setInterval(calculateFutureAmount, 1000);  
-};
-
-document.getElementById('calculateBtn').addEventListener('click', () => {
-    startCalculations();
-    calculateFutureAmount();
-});
-
-document.getElementById('clearBtn').addEventListener('click', function() {
-    document.getElementById('targetDate').value = '';
-    document.getElementById('targetTime').value = '';
-    document.getElementById('futureAmount').textContent = '';
-    document.getElementById('futureAmount').parentElement.style.display = 'none';
-});
-
-['currentGems', 'goalGems', 'years', 'months', 'days', 'hours', 'minutes', 'seconds', 'targetDate', 'targetTime'].forEach(id => {
-    document.getElementById(id).addEventListener('input', function() {
+    const startCalculations = () => {
         clearInterval(updateInterval);
         clearInterval(growthInterval);
-    });
-});
 
-['targetDate', 'targetTime'].forEach(id => {
-    document.getElementById(id).addEventListener('input', function() {
+        const currentGems = new BigNumber(document.getElementById('currentGems').value);
+        const goalGems = document.getElementById('goalGems').value ? new BigNumber(document.getElementById('goalGems').value) : null;
+        const days = parseInt(document.getElementById('days').value) || 0;
+        const hours = parseInt(document.getElementById('hours').value) || 0;
+        const minutes = parseInt(document.getElementById('minutes').value) || 0;
+        const seconds = parseInt(document.getElementById('seconds').value) || 0;
+
+        if (isNaN(currentGems) || currentGems.lte(0)) {
+            alert("Please enter a valid number for Current Gems.");
+            return;
+        }
+
+        const dailyInterest = new BigNumber('0.004');
+        const hourlyInterest = dailyInterest.dividedBy(24);
+        const initialTimeInDays = new BigNumber(days)
+            .plus(new BigNumber(hours).dividedBy(24))
+            .plus(new BigNumber(minutes).dividedBy(1440))
+            .plus(new BigNumber(seconds).dividedBy(86400));
+
+        const formatNumber = (num, decimals = 0) => num.toFormat(decimals);
+
+        const startTime = Date.now();
+
+        const ln = (x) => {
+            if (x.lte(0)) throw new Error('ln(x) is undefined for x <= 0');
+            if (x.eq(ONE)) return new BigNumber(0);
+            const xMinusOne = x.minus(ONE);
+            const xPlusOne = x.plus(ONE);
+            const ratio = xMinusOne.dividedBy(xPlusOne);
+            const ratioSquared = ratio.times(ratio);
+
+            let result = ratio;
+            let term = ratio;
+            let n = new BigNumber(3);
+
+            for (let i = 1; i <= 20; i++) {  
+                term = term.times(ratioSquared);
+                result = result.plus(term.dividedBy(n));
+                n = n.plus(2);
+            }
+
+            return result.times(2);
+        };
+
+        const logBase = (x, base) => {
+            return ln(x).dividedBy(ln(base));
+        };
+
+        const customExponentiation = (base, exponent) => {
+            if (exponent.isInteger()) {
+                return base.exponentiatedBy(exponent);
+            } else {
+                return exp(exponent.times(ln(base)));
+            }
+        };
+
+        const exp = (x) => {
+            let sum = new BigNumber(1);
+            let term = new BigNumber(1);
+            let n = new BigNumber(1);
+            const maxIterations = 50; 
+
+            for (let i = 1; i < maxIterations; i++) {
+                term = term.times(x).dividedBy(n);
+                sum = sum.plus(term);
+                n = n.plus(1);
+            }
+
+            return sum;
+        };
+
+        const updateResults = () => {
+            const elapsedTimeInSeconds = new BigNumber(Date.now() - startTime).dividedBy(1000);
+            const elapsedTimeInDays = elapsedTimeInSeconds.dividedBy(86400);
+            const totalDays = initialTimeInDays.plus(elapsedTimeInDays);
+        
+            const futureGems = currentGems.times(customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)));
+            const profit = futureGems.minus(currentGems);
+            const profitGrowth = profit.dividedBy(currentGems).times(100);
+        
+            document.getElementById('gemsAfterTime').textContent = `Gems after ${totalDays.integerValue(BigNumber.ROUND_FLOOR).toString()} day(s): ${formatNumber(futureGems)}`;
+            document.getElementById('profit').textContent = `Profit: ${formatNumber(profit)}`;
+        
+            const timeToReachElement = document.getElementById('timeToReach');
+            if (goalGems && !goalGems.isZero()) {
+                const timeToReachGoal = logBase(goalGems.dividedBy(currentGems), ONE.plus(hourlyInterest)).dividedBy(24);
+                const goalDate = new Date(startTime + timeToReachGoal.times(86400000).toNumber());
+        
+                timeToReachElement.textContent = `You will reach your goal on ${goalDate.toLocaleString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    hour12: true 
+                })} (in ${timeToReachGoal.integerValue(BigNumber.ROUND_FLOOR).toString()} days).`;
+                timeToReachElement.parentElement.style.display = 'block';
+            } else {
+                timeToReachElement.textContent = '';
+                timeToReachElement.parentElement.style.display = 'none';
+            }
+
+            const profitPerSecond = profit.dividedBy(totalDays.times(86400));
+            document.getElementById('profitPerSecond').textContent = `Profit per second: ${formatNumber(profitPerSecond)}`;
+            document.getElementById('profitPerMinute').textContent = `Profit per minute: ${formatNumber(profitPerSecond.times(60))}`;
+            document.getElementById('profitPerHour').textContent = `Profit per hour: ${formatNumber(profitPerSecond.times(3600))}`;
+            document.getElementById('profitPerDay').textContent = `Profit per day: ${formatNumber(profitPerSecond.times(86400))}`;
+            document.getElementById('profitPerWeek').textContent = `Profit per week: ${formatNumber(profitPerSecond.times(604800))}`;
+            document.getElementById('profitPerMonth').textContent = `Profit per month: ${formatNumber(profitPerSecond.times(2592000))}`;
+
+            document.getElementById('profitGrowth').textContent = `Profit Growth (%): ${profitGrowth.toFixed(6)}%`;
+        };
+
+        updateResults();
+        calculateFutureAmount();
+
+        growthInterval = setInterval(updateResults, 100);  
+        updateInterval = setInterval(calculateFutureAmount, 1000);  
+    };
+
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+        startCalculations();
+        calculateFutureAmount();
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', function() {
+        document.getElementById('targetDate').value = '';
+        document.getElementById('targetTime').value = '';
         document.getElementById('futureAmount').textContent = '';
         document.getElementById('futureAmount').parentElement.style.display = 'none';
     });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
+    ['currentGems', 'goalGems', 'years', 'months', 'days', 'hours', 'minutes', 'seconds', 'targetDate', 'targetTime'].forEach(id => {
+        document.getElementById(id).addEventListener('input', function() {
+            clearInterval(updateInterval);
+            clearInterval(growthInterval);
+        });
+    });
+
+    ['targetDate', 'targetTime'].forEach(id => {
+        document.getElementById(id).addEventListener('input', function() {
+            document.getElementById('futureAmount').textContent = '';
+            document.getElementById('futureAmount').parentElement.style.display = 'none';
+        });
+    });
+
     const technicalInfoBtn = document.getElementById("technicalInfoBtn");
     const technicalInfoModal = document.getElementById("technicalInfoModal");
     const technicalInfoContent = document.getElementById("technicalInfoContent");
@@ -248,13 +248,13 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleModal(false);
         }
     });
-});
 
-document.getElementById('goalGems').addEventListener('input', function() {
-    clearInterval(updateInterval);
-    clearInterval(growthInterval);
-    if (this.value === '') {
-        document.getElementById('timeToReach').textContent = '';
-        document.getElementById('timeToReach').parentElement.style.display = 'none';
-    }
+    document.getElementById('goalGems').addEventListener('input', function() {
+        clearInterval(updateInterval);
+        clearInterval(growthInterval);
+        if (this.value === '') {
+            document.getElementById('timeToReach').textContent = '';
+            document.getElementById('timeToReach').parentElement.style.display = 'none';
+        }
+    });
 });
