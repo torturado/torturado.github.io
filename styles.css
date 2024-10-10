@@ -155,10 +155,12 @@ button:hover {
 }
 
 .result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
     margin: 10px 0;
     padding-right: 30px;
-    text-align: left;
 }
 
 .result-item .tooltip {
@@ -284,4 +286,10 @@ p {
 @keyframes modalopen {
     from { opacity: 0; transform: translateY(-10%); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+.total-gems {
+    margin-left: 20px;
+    font-size: 14px;
+    color: #FFD700; /* Color dorado para resaltar */
 }
