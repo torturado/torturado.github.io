@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             return exp(exponent.times(ln(base)));
         }
-    };
+    }; 
 
     const calculateFutureAmount = () => {
         const targetDateInput = document.getElementById('targetDate');
@@ -83,12 +83,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const targetDate = new Date(`${targetDateInput.value}T${targetTimeInput.value || '00:00'}`);
         
         if (isNaN(targetDate.getTime())) {
-            alert("Please enter a valid target date.");
+            alert("Por favor, ingresa una fecha objetivo válida.");
             return;
         }
 
         if (!calculatorState.startTime) {
-            alert("Calculation has not been started. Please click 'Calculate!'.");
+            alert("El cálculo no ha sido iniciado. Por favor, haz clic en 'Calculate!'.");
             return;
         }
 
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Handle negative totalDays
         if (totalDays.lte(0)) {
-            futureAmountElement.textContent = `The target date is in the past. Please select a future date.`;
+            futureAmountElement.textContent = `La fecha objetivo está en el pasado. Por favor, selecciona una fecha futura.`;
             futureAmountElement.parentElement.style.display = 'block';
             futureAmountTooltip.style.display = 'inline-block'; 
             return;
@@ -105,16 +105,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const futureAmount = calculatorState.currentGems.times(customExponentiation(ONE.plus(calculatorState.hourlyInterest), totalDays.times(24)));
 
-        futureAmountElement.textContent = `On ${targetDate.toLocaleString('en-US', { 
+        futureAmountElement.textContent = `El ${targetDate.toLocaleString('es-ES', { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric',  
             hour: '2-digit', 
             minute: '2-digit', 
             hour12: true 
-        })}, you will have: ${formatNumber(futureAmount)} gems`;
+        })}, tendrás: ${formatNumber(futureAmount)} gemas`;
         futureAmountElement.parentElement.style.display = 'block';
         futureAmountTooltip.style.display = 'inline-block'; 
+    };
+
+    // Función auxiliar para actualizar beneficios y totales
+    const updateProfitAndTotal = (profitId, totalGemsId, multiplier, label, profitPerSecond) => {
+        const profit = profitPerSecond.times(multiplier);
+        document.getElementById(profitId).textContent = `Profit per ${label}: ${formatNumber(profit)}`;
+        const totalGems = calculatorState.currentGems.plus(profit);
+        document.getElementById(totalGemsId).textContent = `Total gems after ${label}: ${formatNumber(totalGems)}`;
     };
 
     const startCalculations = () => {
@@ -131,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Validate currentGems
         if (isNaN(currentGemsInput) || Number(currentGemsInput) <= 0) {
-            alert("Please enter a valid number for Current Gems.");
+            alert("Por favor, ingresa un número válido para Current Gems.");
             return;
         }
 
@@ -163,20 +171,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const timeToReachElement = document.getElementById('timeToReach');
             if (calculatorState.goalGems && !calculatorState.goalGems.isZero()) {
                 if (calculatorState.goalGems.lte(calculatorState.currentGems)) {
-                    timeToReachElement.textContent = `Your current gems already meet or exceed the goal.`;
+                    timeToReachElement.textContent = `Tus gemas actuales ya cumplen o superan el objetivo.`;
                     timeToReachElement.parentElement.style.display = 'block';
                 } else {
                     const timeToReachGoal = logBase(calculatorState.goalGems.dividedBy(calculatorState.currentGems), ONE.plus(calculatorState.hourlyInterest)).dividedBy(24);
                     const goalDate = new Date(calculatorState.startTime + timeToReachGoal.times(86400000).toNumber());
-            
-                    timeToReachElement.textContent = `You will reach your goal on ${goalDate.toLocaleString('en-US', { 
+        
+                    timeToReachElement.textContent = `Alcanzarás tu objetivo el ${goalDate.toLocaleString('es-ES', { 
                         year: 'numeric', 
                         month: 'long', 
                         day: 'numeric', 
                         hour: '2-digit', 
                         minute: '2-digit', 
                         hour12: true 
-                    })} (in ${timeToReachGoal.integerValue(BigNumber.ROUND_FLOOR).toString()} days).`;
+                    })} (en ${timeToReachGoal.integerValue(BigNumber.ROUND_FLOOR).toString()} día(s)).`;
                     timeToReachElement.parentElement.style.display = 'block';
                 }
             } else {
@@ -186,12 +194,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const profitPerSecond = profit.dividedBy(totalDays.times(86400));
             document.getElementById('profitPerSecond').textContent = `Profit per second: ${formatNumber(profitPerSecond)}`;
-            document.getElementById('profitPerMinute').textContent = `Profit per minute: ${formatNumber(profitPerSecond.times(60))}`;
-            document.getElementById('profitPerHour').textContent = `Profit per hour: ${formatNumber(profitPerSecond.times(3600))}`;
-            document.getElementById('profitPerDay').textContent = `Profit per day: ${formatNumber(profitPerSecond.times(86400))}`;
-            document.getElementById('profitPerWeek').textContent = `Profit per week: ${formatNumber(profitPerSecond.times(604800))}`;
-            document.getElementById('profitPerMonth').textContent = `Profit per month: ${formatNumber(profitPerSecond.times(2592000))}`;
-
+            
+            // Actualizar beneficios y totales utilizando la función auxiliar
+            updateProfitAndTotal('profitPerSecond', 'totalGemsPerSecond', 1, 'second', profitPerSecond);
+            updateProfitAndTotal('profitPerMinute', 'totalGemsPerMinute', 60, 'minute', profitPerSecond);
+            updateProfitAndTotal('profitPerHour', 'totalGemsPerHour', 3600, 'hour', profitPerSecond);
+            updateProfitAndTotal('profitPerDay', 'totalGemsPerDay', 86400, 'day', profitPerSecond);
+            updateProfitAndTotal('profitPerWeek', 'totalGemsPerWeek', 604800, 'week', profitPerSecond);
+            updateProfitAndTotal('profitPerMonth', 'totalGemsPerMonth', 2592000, 'month', profitPerSecond);
+        
             document.getElementById('profitGrowth').textContent = `Profit Growth (%): ${profitGrowth.toFixed(6)}%`;
         };
 
