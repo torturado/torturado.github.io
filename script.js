@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         currentGems: new BigNumber(0),
         goalGems: null,
         initialTimeInDays: new BigNumber(0),
-        dailyInterest: new BigNumber('0.004'),
+        dailyInterest: new BigNumber('0.0025'),
         hourlyInterest: null
     };
 
