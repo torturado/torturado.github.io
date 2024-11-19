@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EXP Bank Calculator</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.1.2/bignumber.min.js'></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="styles.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bignumber.js@9.1.2/bignumber.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </noscript>
 </head>
+
 <body>
     <div class="container">
         <h1>EXP Bank Calculator</h1>
         <div class="info-button-container">
-            <button id="technicalInfoBtn" class="info-button">i</button>
+            <button id="technicalInfoBtn" class="info-button" aria-label="More technical information">i</button>
         </div>
         <div class="calculator">
             <div class="input-group">
-                <input type="number" id="currentGems" placeholder="Current Gems">
-                <div class="tooltip">
+                <input type="number" id="currentGems" placeholder="Current Gems" required aria-label="Current Gems">
+                <div class="tooltip" role="tooltip" aria-hidden="true">
                     <div class="icon">i</div>
                     <div class="tooltiptext">Enter your current number of gems</div>
                 </div>
@@ -35,7 +41,8 @@
                 <input type="number" id="seconds" placeholder="S">
                 <div class="tooltip">
                     <div class="icon">i</div>
-                    <div class="tooltiptext">Enter the time period for calculation (Years, Months, Days, Hours, Minutes, Seconds)</div>
+                    <div class="tooltiptext">Enter the time period for calculation (Years, Months, Days, Hours, Minutes,
+                        Seconds)</div>
                 </div>
             </div>
             <div class="future-amount-input">
@@ -160,6 +167,7 @@
             <div id="technicalInfoContent"></div>
         </div>
     </div>
+    <script src="script.min.js" defer></script>
 </body>
-<script src="script.js"></script>
+
 </html>
