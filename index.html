@@ -31,6 +31,17 @@
             </div>
             <div class="input-group">
                 <input type="number" id="goalGems" placeholder="Goal Gems">
+                <div class="tooltip" role="tooltip" aria-hidden="true">
+                    <div class="icon">i</div>
+                    <div class="tooltiptext">Enter your target number of gems</div>
+                </div>
+            </div>
+            <div class="input-group">
+                <input type="number" id="additionalGems" placeholder="Additional Gems">
+                <div class="tooltip" role="tooltip" aria-hidden="true">
+                    <div class="icon">i</div>
+                    <div class="tooltiptext">Enter the amount of additional gems you want to calculate time for</div>
+                </div>
             </div>
             <div class="time-input">
                 <input type="number" id="years" placeholder="Y">
@@ -46,12 +57,12 @@
                 </div>
             </div>
             <div class="future-amount-input">
-                <input type="date" id="targetDate">
-                <input type="time" id="targetTime">
+                <input type="date" id="targetDate" placeholder="MM/DD/YYYY">
+                <input type="time" id="targetTime" placeholder="HH:MM AM/PM">
                 <button id="clearBtn">Clear</button>
                 <div class="tooltip">
                     <div class="icon">i</div>
-                    <div class="tooltiptext">Enter date and time for future calculation</div>
+                    <div class="tooltiptext">Enter date and time for future calculation (MM/DD/YYYY and AM/PM format)</div>
                 </div>
             </div>
             <p>Daily Interest: <span id="dailyInterest">0.25%</span></p>
