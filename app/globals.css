@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 17% 93%;  /* #EEEEEE */
+    --foreground: 220 17% 16%;  /* #222831 */
+
+    --card: 220 17% 93%;  /* #EEEEEE */
+    --card-foreground: 220 17% 16%;  /* #222831 */
+ 
+    --popover: 220 17% 93%;  /* #EEEEEE */
+    --popover-foreground: 220 17% 16%;  /* #222831 */
+ 
+    --primary: 183 20% 57%;  /* #76ABAE */
+    --primary-foreground: 220 17% 16%;  /* #222831 */
+ 
+    --secondary: 217 12% 28%;  /* #31363F */
+    --secondary-foreground: 220 17% 93%;  /* #EEEEEE */
+ 
+    --muted: 217 12% 28%;  /* #31363F */
+    --muted-foreground: 220 17% 93%;  /* #EEEEEE */
+ 
+    --accent: 183 20% 57%;  /* #76ABAE */
+    --accent-foreground: 220 17% 16%;  /* #222831 */
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 220 17% 93%;  /* #EEEEEE */
+
+    --border: 217 12% 28%;  /* #31363F */
+    --input: 217 12% 28%;  /* #31363F */
+    --ring: 183 20% 57%;  /* #76ABAE */
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 220 17% 13%;  /* Más oscuro que #222831 */
+    --foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
+ 
+    --card: 220 17% 16%;  /* #222831 */
+    --card-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
+ 
+    --popover: 220 17% 16%;  /* #222831 */
+    --popover-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
+ 
+    --primary: 183 15% 45%;  /* Versión más suave de #76ABAE */
+    --primary-foreground: 220 17% 16%;  /* #222831 */
+ 
+    --secondary: 217 12% 25%;  /* Versión más oscura de #31363F */
+    --secondary-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
+ 
+    --muted: 217 12% 25%;  /* Versión más oscura de #31363F */
+    --muted-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
+ 
+    --accent: 183 15% 45%;  /* Versión más suave de #76ABAE */
+    --accent-foreground: 220 17% 16%;  /* #222831 */
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
+ 
+    --border: 217 12% 25%;  /* Versión más oscura de #31363F */
+    --input: 217 12% 25%;  /* Versión más oscura de #31363F */
+    --ring: 183 15% 45%;  /* Versión más suave de #76ABAE */
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply antialiased;
+  }
+} 
