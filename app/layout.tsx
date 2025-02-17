@@ -25,6 +25,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7064814834765701"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${inter.variable} ${poppins.variable} ${spaceGrotesk.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="min-h-screen bg-background transition-colors duration-300">
