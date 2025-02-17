@@ -27,10 +27,26 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Google AdSense */}
         <script 
           async 
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7064814834765701"
           crossOrigin="anonymous"
+        />
+        {/* Google Analytics */}
+        <script 
+          async 
+          src="https://www.googletagmanager.com/gtag/js?id=G-Y8LMTRNGRJ"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-Y8LMTRNGRJ');
+            `
+          }}
         />
       </head>
       <body className={`${inter.variable} ${poppins.variable} ${spaceGrotesk.variable} font-sans`}>
