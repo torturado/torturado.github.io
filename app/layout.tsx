@@ -28,6 +28,7 @@ export const metadata = {
     index: true,
     follow: true,
   },
+  metadataBase: new URL('https://exp-calculator.vercel.app'),
 }
 
 export default function RootLayout({
