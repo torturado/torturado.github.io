@@ -18,6 +18,9 @@ export function Footer() {
             <Link href="/cookies" className="hover:underline">
               Cookie Policy
             </Link>
+            <Link href="/contact" className="hover:underline">
+              Contact
+            </Link>
           </nav>
         </div>
       </div>
