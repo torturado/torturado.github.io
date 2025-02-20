@@ -114,10 +114,24 @@ export default function Calculator() {
       const currentTotal = newState.currentGems.plus(totalProfit)
       const profitGrowth = totalProfit.dividedBy(newState.currentGems).times(100)
 
+      // Calcular todos los profits en tiempo real
+      const currentProfitPerSecond = currentTotal.times(newState.hourlyInterest!).dividedBy(3600)
+      const currentProfitPerMinute = currentProfitPerSecond.times(60)
+      const currentProfitPerHour = currentProfitPerSecond.times(3600)
+      const currentProfitPerDay = currentProfitPerSecond.times(86400)
+      const currentProfitPerWeek = currentProfitPerSecond.times(604800)
+      const currentProfitPerMonth = currentProfitPerSecond.times(2592000)
+
       const newResults: Record<string, string> = {
         currentGems: `Gems after ${Math.floor(elapsedTime / 86400)} day(s): ${formatNumber(currentTotal)}`,
         profit: `Profit: ${formatNumber(totalProfit)}`,
         profitGrowth: `Profit Growth (%): ${profitGrowth.toFixed(6)}%`,
+        profitPerSecond: `Profit per second: ${formatNumber(currentProfitPerSecond)}`,
+        profitPerMinute: `Profit per minute: ${formatNumber(currentProfitPerMinute)}`,
+        profitPerHour: `Profit per hour: ${formatNumber(currentProfitPerHour)}`,
+        profitPerDay: `Profit per day: ${formatNumber(currentProfitPerDay)}`,
+        profitPerWeek: `Profit per week: ${formatNumber(currentProfitPerWeek)}`,
+        profitPerMonth: `Profit per month: ${formatNumber(currentProfitPerMonth)}`
       }
 
       // Manejar Goal Gems
@@ -130,7 +144,8 @@ export default function Calculator() {
             ONE.plus(newState.hourlyInterest!),
           ).dividedBy(24)
 
-          newResults.timeToGoal = `You will reach your goal in ${timeToGoal.toFixed(2)} days`
+          const goalDate = new Date(Date.now() + timeToGoal.times(86400000).toNumber())
+          newResults.timeToGoal = `You will reach your goal in ${timeToGoal.toFixed(2)} days (${formatDateUS(goalDate)})`
         }
       }
 
@@ -142,15 +157,9 @@ export default function Calculator() {
           ONE.plus(newState.hourlyInterest!),
         ).dividedBy(24)
 
-        newResults.timeToAdditional = `You will get ${formatNumber(newState.additionalGems)} additional gems in ${timeToAdditional.toFixed(2)} days`
+        const additionalDate = new Date(Date.now() + timeToAdditional.times(86400000).toNumber())
+        newResults.timeToAdditional = `You will get ${formatNumber(newState.additionalGems)} additional gems in ${timeToAdditional.toFixed(2)} days (${formatDateUS(additionalDate)})`
       }
-
-      newResults.profitPerSecond = `Profit per second: ${formatNumber(profitPerSecond)}`
-      newResults.profitPerMinute = `Profit per minute: ${formatNumber(profitPerSecond.times(60))}`
-      newResults.profitPerHour = `Profit per hour: ${formatNumber(profitPerSecond.times(3600))}`
-      newResults.profitPerDay = `Profit per day: ${formatNumber(profitPerSecond.times(86400))}`
-      newResults.profitPerWeek = `Profit per week: ${formatNumber(profitPerSecond.times(604800))}`
-      newResults.profitPerMonth = `Profit per month: ${formatNumber(profitPerSecond.times(2592000))}`
 
       setResults(newResults)
     }
