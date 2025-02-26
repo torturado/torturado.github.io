@@ -16,7 +16,7 @@ export function Footer() {
             </p>
             <div className="flex items-center space-x-4">
               <Link 
-                href="https://github.com" 
+                href="https://github.com/torturado" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -25,7 +25,7 @@ export function Footer() {
                 <span className="sr-only">GitHub</span>
               </Link>
               <Link 
-                href="mailto:contact@example.com" 
+                href="mailto:expcalculator.cupped755@passinbox.com" 
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail size={20} />
