@@ -26,9 +26,9 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: 'https://torturado.github.io/og-image.png',
-        width: 1200,
-        height: 630,
+        url: 'https://torturado.github.io/og-image.jpg',
+        width: 800,
+        height: 800,
         alt: 'EXP Bank Calculator',
       },
     ],
