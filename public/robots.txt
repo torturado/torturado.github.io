@@ -1,3 +1,10 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Allow Google bot to crawl all content
+User-agent: Googlebot
+Allow: /
+
+# Sitemap location
+Sitemap: https://torturado.github.io/sitemap.xml

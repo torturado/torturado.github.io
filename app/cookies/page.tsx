@@ -14,7 +14,6 @@ export default function CookiePolicy() {
               <li>Essential cookies: Required for basic site functionality</li>
               <li>Preference cookies: Remember your settings and choices</li>
               <li>Analytics cookies: Help us understand how visitors use our site</li>
-              <li>Advertising cookies: Used by Google AdSense for targeted advertising</li>
             </ul>
           </div>
         </section>
@@ -63,78 +62,53 @@ export default function CookiePolicy() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3">4. Advertising Cookies</h2>
+          <h2 className="text-2xl font-semibold mb-3">4. Your Cookie Choices</h2>
           <div className="space-y-3">
-            <h3 className="text-xl font-medium">4.1 Google AdSense</h3>
-            <p>Google AdSense uses cookies to:</p>
+            <h3 className="text-xl font-medium">4.1 Managing Cookies</h3>
+            <p>You have control over cookies on your device:</p>
             <ul className="list-disc ml-6 space-y-1">
-              <li>Display relevant advertisements</li>
-              <li>Measure ad performance and effectiveness</li>
-              <li>Prevent repeated ads</li>
-              <li>Remember your ad preferences</li>
-            </ul>
-
-            <h3 className="text-xl font-medium">4.2 Third-Party Advertising</h3>
-            <p>Advertisers may also set their own cookies to:</p>
-            <ul className="list-disc ml-6 space-y-1">
-              <li>Measure ad effectiveness</li>
-              <li>Provide targeted advertising</li>
-              <li>Prevent fraud and improve security</li>
+              <li>Browser Settings: Most browsers allow you to control cookies through their settings</li>
+              <li>Delete Cookies: You can delete existing cookies at any time</li>
+              <li>Block Cookies: You can set your browser to block cookies altogether</li>
+              <li>Private Browsing: Using incognito/private browsing mode may limit cookie storage</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3">5. Managing Your Cookie Preferences</h2>
+          <h2 className="text-2xl font-semibold mb-3">5. How to Control Cookies</h2>
           <div className="space-y-3">
-            <h3 className="text-xl font-medium">5.1 Browser Settings</h3>
-            <p>You can manage cookies through your browser settings:</p>
+            <h3 className="text-xl font-medium">5.1 Browser Controls</h3>
+            <p>You can manage cookies through your browser settings. Here's how to access cookie controls in popular browsers:</p>
             <ul className="list-disc ml-6 space-y-1">
-              <li>Chrome: Settings → Privacy and Security → Cookies</li>
-              <li>Firefox: Options → Privacy & Security → Cookies</li>
-              <li>Safari: Preferences → Privacy → Cookies</li>
-              <li>Edge: Settings → Privacy & Security → Cookies</li>
+              <li>Chrome: Settings → Privacy and Security → Cookies and other site data</li>
+              <li>Firefox: Options → Privacy & Security → Cookies and Site Data</li>
+              <li>Safari: Preferences → Privacy → Cookies and website data</li>
+              <li>Edge: Settings → Cookies and site permissions → Cookies and site data</li>
             </ul>
 
             <h3 className="text-xl font-medium">5.2 Opt-Out Options</h3>
-            <p>You can opt out of:</p>
+            <p>For specific services, you can use these opt-out tools:</p>
             <ul className="list-disc ml-6 space-y-1">
               <li>Google Analytics: <a href="https://tools.google.com/dlpage/gaoptout" className="text-blue-500 hover:underline">Google Analytics Opt-out Browser Add-on</a></li>
-              <li>Google AdSense: <a href="https://www.google.com/settings/ads" className="text-blue-500 hover:underline">Google Ads Settings</a></li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3">6. Impact of Disabling Cookies</h2>
-          <div className="space-y-3">
-            <p>If you choose to disable cookies:</p>
-            <ul className="list-disc ml-6 space-y-1">
-              <li>Essential calculator functions will still work</li>
-              <li>Theme preferences won't be saved between visits</li>
-              <li>Some features may have limited functionality</li>
-              <li>Ads may become less relevant to your interests</li>
-            </ul>
-          </div>
+          <h2 className="text-2xl font-semibold mb-3">6. Updates to This Policy</h2>
+          <p>We may update this Cookie Policy from time to time. We will notify you of any changes by posting the new Cookie Policy on this page and updating the "Last Updated" date.</p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3">7. Updates to This Policy</h2>
-          <div className="space-y-3">
-            <p>We may update this Cookie Policy to reflect:</p>
-            <ul className="list-disc ml-6 space-y-1">
-              <li>Changes in how we use cookies</li>
-              <li>New features or functionality added to our calculator</li>
-              <li>Changes in privacy laws and regulations</li>
-              <li>Feedback and questions from users</li>
-            </ul>
-          </div>
+          <h2 className="text-2xl font-semibold mb-3">7. Contact Us</h2>
+          <p>If you have any questions about our Cookie Policy, please contact us:</p>
+          <address className="mt-2 not-italic">
+            <a href="mailto:expcalculator.cupped755@passinbox.com" className="text-blue-500 hover:underline">expcalculator.cupped755@passinbox.com</a>
+          </address>
         </section>
 
-        <footer className="mt-8 pt-4 border-t text-sm text-gray-600">
-          <p>Last modified: {new Date().toLocaleDateString()}</p>
-          <p>Contact: expcalculator.cupped755@passinbox.com</p>
-        </footer>
+        <p className="text-sm text-muted-foreground mt-8">Last updated: February 26, 2025</p>
       </div>
     </div>
   )
