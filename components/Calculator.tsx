@@ -13,6 +13,7 @@ import { formatNumber, logBase, customExponentiation, formatDateUS } from "@/uti
 import TechnicalInfoModal from "./TechnicalInfoModal"
 import { InfoIcon } from 'lucide-react'
 import { ThemeToggle } from "@/components/theme-toggle"
+import LoadingState from "./LoadingState"
 
 const ONE = new BigNumber(1)
 
@@ -72,8 +73,16 @@ export default function Calculator() {
   const updateIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const futureAmountIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Add a loading state
+  const [isCalculatorReady, setIsCalculatorReady] = useState(false)
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    
+    // Track analytics event for important fields
+    if (typeof window !== 'undefined' && window.trackEvent && ['currentGems', 'goalGems', 'additionalGems'].includes(e.target.name)) {
+      window.trackEvent('Calculator Input', `Changed ${e.target.name}`, e.target.value)
+    }
   }
 
   const handleSliderChange = (name: string, value: number[]) => {
@@ -169,6 +178,11 @@ export default function Calculator() {
     futureAmountIntervalRef.current = setInterval(calculateFutureAmount, 1000)
 
     setActiveTab("results")
+    
+    // Track analytics event for calculation
+    if (typeof window !== 'undefined' && window.trackEvent) {
+      window.trackEvent('Calculator', 'Calculate', `Gems: ${inputs.currentGems}`, Number(inputs.currentGems) || 0)
+    }
   }
 
   const calculateFutureAmount = () => {
@@ -203,9 +217,17 @@ export default function Calculator() {
       ...prev,
       futureAmount: `On ${formatDateUS(targetDate)}, you will have: ${formatNumber(futureGems)} gems`,
     }))
+    
+    // Track analytics event for future date calculation
+    if (typeof window !== 'undefined' && window.trackEvent) {
+      window.trackEvent('Calculator', 'Future Calculation', formatDateUS(targetDate))
+    }
   }
 
   useEffect(() => {
+    // Mark calculator as ready after initial render
+    setIsCalculatorReady(true)
+    
     return () => {
       clearInterval(updateIntervalRef.current!)
       clearInterval(futureAmountIntervalRef.current!)
@@ -213,8 +235,8 @@ export default function Calculator() {
   }, [])
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <Card>
+    <LoadingState>
+      <Card className="w-full">
         <CardHeader className="bg-card">
           <CardTitle className="text-2xl flex justify-between items-center">
             EXP Bank Calculator
@@ -361,7 +383,7 @@ export default function Calculator() {
         </CardContent>
         <TechnicalInfoModal isOpen={showTechnicalInfo} onClose={() => setShowTechnicalInfo(false)} />
       </Card>
-    </div>
+    </LoadingState>
   )
 }
 

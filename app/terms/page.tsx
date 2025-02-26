@@ -49,18 +49,15 @@ export default function TermsOfService() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3">4. Advertising and Third-Party Services</h2>
+          <h2 className="text-2xl font-semibold mb-3">4. Third-Party Services</h2>
           <div className="space-y-3">
-            <h3 className="text-xl font-medium">4.1 Google AdSense</h3>
-            <p>Our website displays advertisements through Google AdSense. By using the Service, you agree:</p>
+            <h3 className="text-xl font-medium">4.1 Google Analytics</h3>
+            <p>Our website uses Google Analytics for tracking and analytics. By using the Service, you agree:</p>
             <ul className="list-disc ml-6 space-y-1">
-              <li>To view advertisements as part of the Service</li>
-              <li>That ad content is controlled by Google, not us</li>
-              <li>To Google's advertising policies and terms</li>
+              <li>To the collection of anonymous usage data for analytics purposes</li>
+              <li>That analytics data is processed according to Google's privacy policy</li>
+              <li>That you can opt out using Google Analytics Opt-out Browser Add-on</li>
             </ul>
-
-            <h3 className="text-xl font-medium">4.2 Third-Party Links</h3>
-            <p>Our Service may contain links to third-party websites. We are not responsible for their content or privacy practices.</p>
           </div>
         </section>
 
