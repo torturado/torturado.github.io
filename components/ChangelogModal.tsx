@@ -15,7 +15,7 @@ interface Change {
 const CHANGELOG: Change[] = [
   {
     version: '1.0.0',
-    date: '2024-02-27',
+    date: '2025-02-27',
     changes: [
       'Added tips/strategies and FAQ pages'
     ]
