@@ -51,12 +51,21 @@ export default function TermsOfService() {
         <section>
           <h2 className="text-2xl font-semibold mb-3">4. Third-Party Services</h2>
           <div className="space-y-3">
-            <h3 className="text-xl font-medium">4.1 Google Analytics</h3>
-            <p>Our website uses Google Analytics for tracking and analytics. By using the Service, you agree:</p>
+            <h3 className="text-xl font-medium">4.1 Hosting</h3>
+            <p>Our website is hosted on GitHub Pages. By using the Service, you also agree to:</p>
             <ul className="list-disc ml-6 space-y-1">
-              <li>To the collection of anonymous usage data for analytics purposes</li>
-              <li>That analytics data is processed according to Google's privacy policy</li>
-              <li>That you can opt out using Google Analytics Opt-out Browser Add-on</li>
+              <li>GitHub's Terms of Service and Privacy Policy</li>
+              <li>The collection of basic information by GitHub Pages for security purposes</li>
+              <li>The processing of your requests through GitHub's servers</li>
+            </ul>
+
+            <h3 className="text-xl font-medium">4.2 Analytics</h3>
+            <p>Our website uses Umami Analytics, a privacy-focused analytics solution. By using the Service, you agree:</p>
+            <ul className="list-disc ml-6 space-y-1">
+              <li>To the collection of anonymous usage data for improving our service</li>
+              <li>That no personal information is collected or stored</li>
+              <li>That no cookies are used for tracking purposes</li>
+              <li>That the analytics comply with GDPR and privacy regulations</li>
             </ul>
           </div>
         </section>
@@ -114,7 +123,7 @@ export default function TermsOfService() {
         </section>
 
         <footer className="mt-8 pt-4 border-t text-sm text-gray-600">
-          <p>Last modified: {new Date().toLocaleDateString()}</p>
+          <p>Last modified: February 27, 2025</p>
           <p>Contact: expcalculator.cupped755@passinbox.com</p>
         </footer>
       </div>
