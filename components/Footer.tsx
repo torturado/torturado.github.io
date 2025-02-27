@@ -44,10 +44,10 @@ export function Footer() {
               <Link href="#calculator" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors">
                 Calculator
               </Link>
-              <Link href="#faq" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors">
+              <Link href="/faq" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors">
                 FAQ
               </Link>
-              <Link href="#tips" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors">
+              <Link href="/tips" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors">
                 Tips & Strategies
               </Link>
             </nav>
