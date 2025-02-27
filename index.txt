@@ -1,15 +1,25 @@
-1:HL["/_next/static/css/301c305fe7d10247.css","style",{"crossOrigin":""}]
-0:["BXMo2eOHHFbYZko7rPvZx",[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],"$L2",[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/301c305fe7d10247.css","precedence":"next","crossOrigin":""}]],"$L3"]]]]
-4:I[3994,["555","static/chunks/555-f6684374fcd7aadb.js","185","static/chunks/app/layout-8e70a1ce5349015e.js"],""]
-7:I[1815,["555","static/chunks/555-f6684374fcd7aadb.js","185","static/chunks/app/layout-8e70a1ce5349015e.js"],"ThemeProvider"]
+1:HL["/_next/static/css/77e5c4191485f2d3.css","style",{"crossOrigin":""}]
+0:["BK0m4IBwiEdToK-KntNvY",[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],"$L2",[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/77e5c4191485f2d3.css","precedence":"next","crossOrigin":""}]],"$L3"]]]]
+4:I[3994,["48","static/chunks/48-bbbd6fda51e2feab.js","185","static/chunks/app/layout-fb932a17d95eb6cb.js"],""]
+7:I[1815,["48","static/chunks/48-bbbd6fda51e2feab.js","185","static/chunks/app/layout-fb932a17d95eb6cb.js"],"ThemeProvider"]
 8:I[6954,[],""]
 9:I[7264,[],""]
-b:I[8326,["555","static/chunks/555-f6684374fcd7aadb.js","479","static/chunks/479-1e2461351bda9f81.js","931","static/chunks/app/page-76a7eac2df51a453.js"],""]
-c:I[7166,["555","static/chunks/555-f6684374fcd7aadb.js","479","static/chunks/479-1e2461351bda9f81.js","931","static/chunks/app/page-76a7eac2df51a453.js"],"ThemeToggle"]
-d:I[4815,["555","static/chunks/555-f6684374fcd7aadb.js","479","static/chunks/479-1e2461351bda9f81.js","931","static/chunks/app/page-76a7eac2df51a453.js"],""]
-5:T5cc,
+b:I[8326,["572","static/chunks/572-d3a1033b48e1bb42.js","48","static/chunks/48-bbbd6fda51e2feab.js","114","static/chunks/114-c9f17a05aa939970.js","106","static/chunks/106-2743bb2c6776f905.js","931","static/chunks/app/page-68ebc0ed14916ff4.js"],""]
+c:I[7166,["572","static/chunks/572-d3a1033b48e1bb42.js","48","static/chunks/48-bbbd6fda51e2feab.js","114","static/chunks/114-c9f17a05aa939970.js","106","static/chunks/106-2743bb2c6776f905.js","931","static/chunks/app/page-68ebc0ed14916ff4.js"],"ThemeToggle"]
+d:I[1621,["572","static/chunks/572-d3a1033b48e1bb42.js","48","static/chunks/48-bbbd6fda51e2feab.js","114","static/chunks/114-c9f17a05aa939970.js","106","static/chunks/106-2743bb2c6776f905.js","931","static/chunks/app/page-68ebc0ed14916ff4.js"],""]
+5:Ta7b,
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            
+            // Configura el modo de consentimiento predeterminado (todo en 'denied' para cumplir con GDPR/RGPD)
+            gtag('consent', 'default', {
+              'analytics_storage': 'denied',
+              'ad_storage': 'denied',
+              'ad_user_data': 'denied',
+              'ad_personalization': 'denied',
+              'wait_for_update': 500  // Espera hasta 500ms a que el usuario tome una decisión
+            });
+            
             gtag('js', new Date());
             
             // Enhanced analytics configuration with privacy features
@@ -43,7 +53,24 @@ d:I[4815,["555","static/chunks/555-f6684374fcd7aadb.js","479","static/chunks/479
                 });
               }
             });
-          6:Taa3,
+            
+            // Verificar si hay consentimiento almacenado y aplicarlo inmediatamente
+            if (localStorage.getItem('cookieConsent') === 'accepted') {
+              gtag('consent', 'update', {
+                'analytics_storage': 'granted',
+                'ad_storage': 'granted',
+                'ad_user_data': 'granted',
+                'ad_personalization': 'granted'
+              });
+            } else if (localStorage.getItem('cookieConsent') === 'rejected') {
+              gtag('consent', 'update', {
+                'analytics_storage': 'denied',
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied'
+              });
+            }
+          6:T133b,
             function showCookieConsent() {
               if (!localStorage.getItem('cookieConsent')) {
                 const banner = document.createElement('div');
@@ -63,13 +90,14 @@ d:I[4815,["555","static/chunks/555-f6684374fcd7aadb.js","479","static/chunks/479
                 banner.innerHTML = `
                   <div>
                     <p style="margin: 0; font-size: 0.875rem;">
-                      We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.
-                      <a href="/cookies" style="color: #3b82f6; text-decoration: underline;">Learn more</a>
+                      Utilizamos cookies para mejorar su experiencia y analizar el uso del sitio. También compartimos información sobre su uso con nuestros socios de análisis y publicidad.
+                      <a href="/cookies" style="color: #3b82f6; text-decoration: underline;">Más información</a>
                     </p>
                   </div>
                   <div style="display: flex; gap: 0.5rem;">
-                    <button id="accept-cookies" style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; border: none; cursor: pointer;">Accept</button>
-                    <button id="reject-cookies" style="background: transparent; border: 1px solid #d1d5db; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">Reject</button>
+                    <button id="accept-cookies" style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; border: none; cursor: pointer;">Aceptar todo</button>
+                    <button id="accept-analytics" style="background: transparent; border: 1px solid #3b82f6; color: #3b82f6; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">Solo análisis</button>
+                    <button id="reject-cookies" style="background: transparent; border: 1px solid #d1d5db; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">Rechazar todo</button>
                   </div>
                 `;
                 
@@ -80,7 +108,20 @@ d:I[4815,["555","static/chunks/555-f6684374fcd7aadb.js","479","static/chunks/479
                   banner.remove();
                   gtag('consent', 'update', {
                     'analytics_storage': 'granted',
-                    'ad_storage': 'granted'
+                    'ad_storage': 'granted',
+                    'ad_user_data': 'granted',
+                    'ad_personalization': 'granted'
+                  });
+                });
+                
+                document.getElementById('accept-analytics').addEventListener('click', function() {
+                  localStorage.setItem('cookieConsent', 'analytics');
+                  banner.remove();
+                  gtag('consent', 'update', {
+                    'analytics_storage': 'granted',
+                    'ad_storage': 'denied',
+                    'ad_user_data': 'denied',
+                    'ad_personalization': 'denied'
                   });
                 });
                 
@@ -89,8 +130,34 @@ d:I[4815,["555","static/chunks/555-f6684374fcd7aadb.js","479","static/chunks/479
                   banner.remove();
                   gtag('consent', 'update', {
                     'analytics_storage': 'denied',
-                    'ad_storage': 'denied'
+                    'ad_storage': 'denied',
+                    'ad_user_data': 'denied',
+                    'ad_personalization': 'denied'
                   });
+                });
+              } else if (localStorage.getItem('cookieConsent') === 'accepted') {
+                // Si el usuario ya aceptó, actualizamos el consentimiento
+                gtag('consent', 'update', {
+                  'analytics_storage': 'granted',
+                  'ad_storage': 'granted',
+                  'ad_user_data': 'granted',
+                  'ad_personalization': 'granted'
+                });
+              } else if (localStorage.getItem('cookieConsent') === 'analytics') {
+                // Si el usuario solo aceptó análisis
+                gtag('consent', 'update', {
+                  'analytics_storage': 'granted',
+                  'ad_storage': 'denied',
+                  'ad_user_data': 'denied',
+                  'ad_personalization': 'denied'
+                });
+              } else if (localStorage.getItem('cookieConsent') === 'rejected') {
+                // Si el usuario rechazó, mantenemos el consentimiento denegado
+                gtag('consent', 'update', {
+                  'analytics_storage': 'denied',
+                  'ad_storage': 'denied',
+                  'ad_user_data': 'denied',
+                  'ad_personalization': 'denied'
                 });
               }
             }
