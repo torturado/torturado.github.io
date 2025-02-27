@@ -195,7 +195,7 @@ export default function FAQPage() {
                 </p>
                 <ul className="list-disc mt-2 ml-6">
                   <li>Use the contact form in the <a href="/contact" className="text-blue-500 hover:underline">Contact page</a></li>
-                  <li>Report technical issues or bugs through our <a href="https://github.com/yourusername/exp-calculator/issues" className="text-blue-500 hover:underline">GitHub issue tracker</a></li>
+                  <li>Report technical issues or bugs through our <a href="https://github.com/torturado/torturado.github.io/issues" className="text-blue-500 hover:underline">GitHub issue tracker</a></li>
                   <li>Provide feature suggestions through the same channels</li>
                 </ul>
                 <p className="mt-2">
