@@ -1,6 +1,12 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
+Allow: /privacy
+Allow: /terms
+Allow: /cookies
+Allow: /contact
+Allow: /faq
+Allow: /tips
 
 # Allow Google bot to crawl all content
 User-agent: Googlebot
