@@ -20,7 +20,7 @@ export default function PrivacyPolicy() {
           <ul className="list-disc ml-6 mt-2 space-y-2">
             <li>Calculator Functions: All calculations are performed instantly and locally</li>
             <li>Theme Preferences: Stored locally to remember your preferred display settings</li>
-            <li>Analytics: We use Google Analytics to understand general usage patterns (opt-out available)</li>
+            <li>Analytics: We use Umami Analytics, a privacy-focused analytics tool that doesn't use cookies or collect personal information</li>
           </ul>
         </section>
 
@@ -29,20 +29,24 @@ export default function PrivacyPolicy() {
           <p>We use minimal storage technologies:</p>
           <ul className="list-disc ml-6 mt-2 space-y-2">
             <li>Essential Local Storage: Used only for saving calculator preferences and theme settings</li>
-            <li>Google Analytics: Uses cookies to track user behavior on the site</li>
+            <li>No Cookies: Our analytics solution (Umami) is cookie-free and respects your privacy</li>
           </ul>
-          <p className="mt-2">You can manage cookie preferences through your browser settings.</p>
+          <p className="mt-2">You can manage local storage through your browser settings.</p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-3">4. Third-Party Services</h2>
           <div className="space-y-3">
-            <h3 className="text-xl font-medium">Google Analytics</h3>
-            <p>We use Google Analytics to understand usage patterns. This service:</p>
+            <h3 className="text-xl font-medium">4.1 Hosting</h3>
+            <p>Our website is hosted on GitHub Pages, a static site hosting service provided by GitHub Inc. GitHub Pages may collect some basic information like IP addresses for security and diagnostic purposes according to their privacy policy.</p>
+
+            <h3 className="text-xl font-medium">4.2 Analytics</h3>
+            <p>We use Umami Analytics, a privacy-focused solution that:</p>
             <ul className="list-disc ml-6 space-y-1">
-              <li>Collects anonymous usage data</li>
-              <li>Sets cookies for tracking purposes</li>
-              <li>Follows Google's privacy practices (<a href="https://policies.google.com/privacy" className="text-blue-500 hover:underline">Privacy Policy</a>)</li>
+              <li>Collects anonymous usage data without cookies</li>
+              <li>Does not track personal information</li>
+              <li>Respects user privacy by default</li>
+              <li>Is fully compliant with GDPR and other privacy regulations</li>
             </ul>
           </div>
         </section>
@@ -52,8 +56,9 @@ export default function PrivacyPolicy() {
           <p>Your data security is paramount:</p>
           <ul className="list-disc ml-6 mt-2 space-y-2">
             <li>All calculator processing occurs locally in your browser</li>
-            <li>We use SSL/TLS encryption for all site communications</li>
-            <li>No personal data is stored on our servers</li>
+            <li>The website is served securely via GitHub Pages using HTTPS</li>
+            <li>Analytics data is collected anonymously on our Umami server</li>
+            <li>No personal data is collected or stored</li>
           </ul>
         </section>
 
@@ -61,9 +66,9 @@ export default function PrivacyPolicy() {
           <h2 className="text-2xl font-semibold mb-3">6. Your Choices</h2>
           <p>You maintain control of your privacy:</p>
           <ul className="list-disc ml-6 mt-2 space-y-2">
-            <li>Browser Settings: You can clear local storage and cookies at any time</li>
-            <li>Analytics Opt-Out: You can opt out of Google Analytics by using the <a href="https://tools.google.com/dlpage/gaoptout" className="text-blue-500 hover:underline">Google Analytics Opt-out Browser Add-on</a></li>
+            <li>Browser Settings: You can clear local storage at any time</li>
             <li>Do Not Track: We respect browser Do Not Track signals</li>
+            <li>Analytics: Our analytics solution is privacy-focused by default and doesn't require opt-out</li>
           </ul>
         </section>
 
@@ -80,7 +85,7 @@ export default function PrivacyPolicy() {
           </address>
         </section>
 
-        <p className="text-sm text-muted-foreground mt-8">Last updated: February 26, 2025</p>
+        <p className="text-sm text-muted-foreground mt-8">Last updated: February 27, 2025</p>
       </div>
     </div>
   )
