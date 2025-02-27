@@ -52,7 +52,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#000000" />
         <link rel="canonical" href="https://torturado.github.io" />
         
-        {/* Google Analytics (GA4) */}
+        {/* Google Analytics (GA4) with Consent Mode */}
         <Script 
           async 
           src="https://www.googletagmanager.com/gtag/js?id=G-Y8LMTRNGRJ"
@@ -62,6 +62,16 @@ export default function RootLayout({
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            
+            // Configura el modo de consentimiento predeterminado (todo en 'denied' para cumplir con GDPR/RGPD)
+            gtag('consent', 'default', {
+              'analytics_storage': 'denied',
+              'ad_storage': 'denied',
+              'ad_user_data': 'denied',
+              'ad_personalization': 'denied',
+              'wait_for_update': 500  // Espera hasta 500ms a que el usuario tome una decisión
+            });
+            
             gtag('js', new Date());
             
             // Enhanced analytics configuration with privacy features
@@ -95,6 +105,23 @@ export default function RootLayout({
                 });
               }
             });
+            
+            // Verificar si hay consentimiento almacenado y aplicarlo inmediatamente
+            if (localStorage.getItem('cookieConsent') === 'accepted') {
+              gtag('consent', 'update', {
+                'analytics_storage': 'granted',
+                'ad_storage': 'granted',
+                'ad_user_data': 'granted',
+                'ad_personalization': 'granted'
+              });
+            } else if (localStorage.getItem('cookieConsent') === 'rejected') {
+              gtag('consent', 'update', {
+                'analytics_storage': 'denied',
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied'
+              });
+            }
           `}
         </Script>
         
@@ -120,13 +147,14 @@ export default function RootLayout({
                 banner.innerHTML = \`
                   <div>
                     <p style="margin: 0; font-size: 0.875rem;">
-                      We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.
-                      <a href="/cookies" style="color: #3b82f6; text-decoration: underline;">Learn more</a>
+                      Utilizamos cookies para mejorar su experiencia y analizar el uso del sitio. También compartimos información sobre su uso con nuestros socios de análisis y publicidad.
+                      <a href="/cookies" style="color: #3b82f6; text-decoration: underline;">Más información</a>
                     </p>
                   </div>
                   <div style="display: flex; gap: 0.5rem;">
-                    <button id="accept-cookies" style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; border: none; cursor: pointer;">Accept</button>
-                    <button id="reject-cookies" style="background: transparent; border: 1px solid #d1d5db; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">Reject</button>
+                    <button id="accept-cookies" style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; border: none; cursor: pointer;">Aceptar todo</button>
+                    <button id="accept-analytics" style="background: transparent; border: 1px solid #3b82f6; color: #3b82f6; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">Solo análisis</button>
+                    <button id="reject-cookies" style="background: transparent; border: 1px solid #d1d5db; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">Rechazar todo</button>
                   </div>
                 \`;
                 
@@ -137,7 +165,20 @@ export default function RootLayout({
                   banner.remove();
                   gtag('consent', 'update', {
                     'analytics_storage': 'granted',
-                    'ad_storage': 'granted'
+                    'ad_storage': 'granted',
+                    'ad_user_data': 'granted',
+                    'ad_personalization': 'granted'
+                  });
+                });
+                
+                document.getElementById('accept-analytics').addEventListener('click', function() {
+                  localStorage.setItem('cookieConsent', 'analytics');
+                  banner.remove();
+                  gtag('consent', 'update', {
+                    'analytics_storage': 'granted',
+                    'ad_storage': 'denied',
+                    'ad_user_data': 'denied',
+                    'ad_personalization': 'denied'
                   });
                 });
                 
@@ -146,8 +187,34 @@ export default function RootLayout({
                   banner.remove();
                   gtag('consent', 'update', {
                     'analytics_storage': 'denied',
-                    'ad_storage': 'denied'
+                    'ad_storage': 'denied',
+                    'ad_user_data': 'denied',
+                    'ad_personalization': 'denied'
                   });
+                });
+              } else if (localStorage.getItem('cookieConsent') === 'accepted') {
+                // Si el usuario ya aceptó, actualizamos el consentimiento
+                gtag('consent', 'update', {
+                  'analytics_storage': 'granted',
+                  'ad_storage': 'granted',
+                  'ad_user_data': 'granted',
+                  'ad_personalization': 'granted'
+                });
+              } else if (localStorage.getItem('cookieConsent') === 'analytics') {
+                // Si el usuario solo aceptó análisis
+                gtag('consent', 'update', {
+                  'analytics_storage': 'granted',
+                  'ad_storage': 'denied',
+                  'ad_user_data': 'denied',
+                  'ad_personalization': 'denied'
+                });
+              } else if (localStorage.getItem('cookieConsent') === 'rejected') {
+                // Si el usuario rechazó, mantenemos el consentimiento denegado
+                gtag('consent', 'update', {
+                  'analytics_storage': 'denied',
+                  'ad_storage': 'denied',
+                  'ad_user_data': 'denied',
+                  'ad_personalization': 'denied'
                 });
               }
             }
@@ -170,4 +237,3 @@ export default function RootLayout({
     </html>
   )
 }
-
