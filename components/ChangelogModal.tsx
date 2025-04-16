@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = '1.0.1'
+const CURRENT_VERSION = '1.0.2'
 
 interface Change {
   version: string
@@ -26,6 +26,15 @@ const CHANGELOG: Change[] = [
     changes: [
       'Update robots.txt and sitemap.xml',
       'Replace Google Analytics with Umami Analytics'
+    ]
+  },
+  {
+    version: '1.0.2',
+    date: '2025-04-16',
+    changes: [
+      'Simplified introduction and features text on the main page',
+      'Replaced tips section with creator credit in the footer',
+      'Added honorable mentions to the footer'
     ]
   }
 ]
