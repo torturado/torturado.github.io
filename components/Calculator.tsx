@@ -16,7 +16,7 @@ import TechnicalInfoModal from "./TechnicalInfoModal"
 import { InfoIcon, HelpCircleIcon, AlertCircleIcon, TrendingUpIcon, ClockIcon, CalendarIcon, TargetIcon } from 'lucide-react'
 import { ThemeToggle } from "@/components/theme-toggle"
 import LoadingState from "./LoadingState"
-
+import Link from "next/link"
 // Create an SVG wrapper to solve Dark Reader extension compatibility issue
 const IconWrapper = ({ children }: { children: React.ReactNode }) => {
   return React.cloneElement(children as React.ReactElement, {
@@ -597,7 +597,9 @@ export default function Calculator() {
             </div>
           </CardTitle>
           <CardDescription>
-            Calculate your EXP Bank earnings and plan your gem growth
+            Calculate your EXP Bank earnings and plan your gem growth.
+            <br />
+            Made by @oyfg on Discord.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 bg-card">

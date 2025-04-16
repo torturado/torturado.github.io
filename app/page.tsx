@@ -50,7 +50,7 @@ export default function Home() {
         <section className="text-center py-8 mt-4">
           <h1 className="text-4xl font-bold mb-4">EXP Bank Calculator</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Calculate your EXP Bank earnings and plan your gem growth efficiently. Our advanced calculator helps you track and predict your gem accumulation over time.
+            Calculate your EXP Bank earnings and plan your gem growth. Track and predict your gem accumulation over time.
           </p>
         </section>
 
@@ -59,30 +59,30 @@ export default function Home() {
           <Card className="border border-input hover:border-primary/50 transition-colors">
             <CardHeader>
               <CardTitle>Real-time Calculations</CardTitle>
-              <CardDescription>Watch your gems grow in real-time with our live calculator</CardDescription>
+              <CardDescription>Watch your gems grow live</CardDescription>
             </CardHeader>
             <CardContent>
-              <p>Our calculator updates continuously, showing you exactly how your gems accumulate second by second.</p>
+              <p>Our calculator updates continuously, showing second-by-second accumulation.</p>
             </CardContent>
           </Card>
 
           <Card className="border border-input hover:border-primary/50 transition-colors">
             <CardHeader>
               <CardTitle>Future Predictions</CardTitle>
-              <CardDescription>Plan ahead with accurate growth projections</CardDescription>
+              <CardDescription>Plan with growth projections</CardDescription>
             </CardHeader>
             <CardContent>
-              <p>Set target dates and amounts to see when you'll reach your goals and plan your strategy accordingly.</p>
+              <p>Set targets and see when you'll reach your goals.</p>
             </CardContent>
           </Card>
 
           <Card className="border border-input hover:border-primary/50 transition-colors">
             <CardHeader>
               <CardTitle>Detailed Statistics</CardTitle>
-              <CardDescription>Comprehensive growth analytics</CardDescription>
+              <CardDescription>Comprehensive analytics</CardDescription>
             </CardHeader>
             <CardContent>
-              <p>View detailed breakdowns of your gem growth per second, minute, hour, day, week, and month.</p>
+              <p>View gem growth breakdowns per second, minute, hour, day, week, and month.</p>
             </CardContent>
           </Card>
         </section>
@@ -107,20 +107,6 @@ export default function Home() {
             <p className="mt-4">
               The calculator takes into account the standard 0.15% daily interest rate and compounds it continuously to give you the most accurate predictions possible.
             </p>
-          </div>
-        </section>
-
-        {/* Tips Section */}
-        <section className="max-w-4xl mx-auto" id="tips">
-          <h2 className="text-3xl font-bold mb-4 text-center">Tips for Maximizing Growth</h2>
-          <div className="space-y-4 bg-muted/20 p-6 rounded-lg">
-            <p>To get the most out of your EXP Bank:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Keep your gems in the bank as long as possible to maximize compound interest</li>
-              <li>Use the calculator to set realistic goals and track your progress</li>
-              <li>Check back regularly to monitor your growth and adjust your strategy</li>
-              <li>Consider adding more gems when possible to accelerate your growth</li>
-            </ul>
           </div>
         </section>
       </main>

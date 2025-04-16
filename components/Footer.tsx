@@ -83,6 +83,12 @@ export function Footer() {
           <p className="mt-2">
             This is a fan-made tool and is not affiliated with any official game publisher.
           </p>
+          <p className="mt-2">
+            Created by <span className="font-semibold">@oyfg</span> on Discord.
+          </p>
+          <p className="mt-2 text-xs opacity-75">
+            Honorable Mention: ChatGPT, Claude 3.5, Claude 3.7 Thinking, DeepSeek R1, gpt4o, gpt4.1, Gemini 2.5 Pro Exp 03-25
+          </p>
         </div>
       </div>
     </footer>
