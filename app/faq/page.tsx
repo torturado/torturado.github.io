@@ -46,7 +46,7 @@ export default function FAQPage() {
                 <ul className="list-disc mt-2 ml-6">
                   <li><strong>FV</strong> = Final value (future amount of gems)</li>
                   <li><strong>PV</strong> = Present value (current deposit amount)</li>
-                  <li><strong>r</strong> = Interest rate per period (0.0015 or 0.15% daily)</li>
+                  <li><strong>r</strong> = Interest rate per period (0.0010 or 0.10% daily)</li>
                   <li><strong>t</strong> = Number of time periods (days)</li>
                 </ul>
                 <p className="mt-2">
