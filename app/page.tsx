@@ -105,7 +105,7 @@ export default function Home() {
               <li>View real-time calculations and predictions</li>
             </ol>
             <p className="mt-4">
-              The calculator takes into account the standard 0.15% daily interest rate and compounds it continuously to give you the most accurate predictions possible.
+              The calculator takes into account the standard 0.10% daily interest rate and compounds it continuously to give you the most accurate predictions possible.
             </p>
           </div>
         </section>

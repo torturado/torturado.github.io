@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = '1.0.2'
+const CURRENT_VERSION = '1.1.0'
 
 interface Change {
   version: string
@@ -35,6 +35,26 @@ const CHANGELOG: Change[] = [
       'Simplified introduction and features text on the main page',
       'Replaced tips section with creator credit in the footer',
       'Added honorable mentions to the footer'
+    ]
+  },
+  {
+    version: '1.0.3',
+    date: '2025-06-18',
+    changes: [
+      'Reduced daily interest rate to 0.10%',
+      'Updated calculator to use the new interest rate'
+    ]
+  },
+  {
+    version: '1.1.0',
+    date: '2025-06-30',
+    changes: [
+      'Major performance optimization for large numbers (10B+ gems)',
+      'Implemented adaptive update intervals based on gem count and time periods',
+      'Added intelligent caching system for expensive calculations',
+      'Optimized mathematical functions (ln, exp, exponentiation) for better performance',
+      'Improved real-time updates to maintain smooth 100-200ms intervals even with extreme values',
+      'Enhanced user experience for calculations with very large gem amounts and long time periods'
     ]
   }
 ]
@@ -80,4 +100,4 @@ export function ChangelogModal() {
       </DialogContent>
     </Dialog>
   )
-} 
+}
