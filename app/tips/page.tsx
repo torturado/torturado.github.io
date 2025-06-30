@@ -33,7 +33,7 @@ export default function TipsPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="mb-4">
-                      The EXP Bank offers a 0.15% daily compound interest rate, making it an excellent way to grow your gems passively over time.
+                      The EXP Bank offers a 0.10% daily compound interest rate, making it an excellent way to grow your gems passively over time.
                     </p>
                     <h3 className="font-semibold text-lg mb-2">Beginner Tips:</h3>
                     <ul className="list-disc pl-6 space-y-2">
@@ -159,7 +159,7 @@ export default function TipsPage() {
                       <li>Use the calculator to find your "crossover point" where time value exceeds deposit value</li>
                     </ul>
                     <p className="mt-4 font-semibold">
-                      The "Rule of 462": At 0.15% daily interest, your gems will double in approximately 462 days.
+                      The "Rule of 462": At 0.10% daily interest, your gems will double in approximately 462 days.
                     </p>
                   </CardContent>
                 </Card>

@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Progress } from "./ui/progress"
-import { formatNumber, logBase, customExponentiation, formatDateUS } from "@/utils/bigNumberUtils"
+import { formatNumber, logBase, customExponentiation, formatDateUS, ln, exp } from "@/utils/bigNumberUtils"
 import TechnicalInfoModal from "./TechnicalInfoModal"
 import { InfoIcon, HelpCircleIcon, AlertCircleIcon, TrendingUpIcon, ClockIcon, CalendarIcon, TargetIcon } from 'lucide-react'
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -28,6 +28,48 @@ const IconWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 const ONE = new BigNumber(1)
+
+// Performance optimization: Memoization cache for expensive calculations
+const calculationMemoCache = new Map<string, { result: BigNumber; timestamp: number }>()
+const CACHE_TTL = 5000 // 5 seconds cache for expensive calculations
+
+// Helper function to get cached or calculate expensive operations
+const getCachedExponentiation = (base: BigNumber, exponent: BigNumber): BigNumber => {
+  const key = `${base.toString()}_${exponent.toString()}`
+  const cached = calculationMemoCache.get(key)
+  
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.result
+  }
+  
+  const result = customExponentiation(base, exponent)
+  calculationMemoCache.set(key, { result, timestamp: Date.now() })
+  
+  // Clean old cache entries periodically
+  if (calculationMemoCache.size > 100) {
+    const now = Date.now()
+    const entries = Array.from(calculationMemoCache.entries())
+    for (const [k, v] of entries) {
+      if (now - v.timestamp > CACHE_TTL * 2) {
+        calculationMemoCache.delete(k)
+      }
+    }
+  }
+  
+  return result
+}
+
+// Optimized approximation for very large exponentiations
+const fastExponentiation = (base: BigNumber, exponent: BigNumber): BigNumber => {
+  // For very large exponents, use logarithmic approximation
+  if (exponent.gt(10000)) {
+    // e^(ln(base) * exponent) but with optimized calculation
+    const lnBase = ln(base)
+    const product = lnBase.times(exponent)
+    return exp(product)
+  }
+  return getCachedExponentiation(base, exponent)
+}
 
 interface CalculatorState {
   startTime: number | null
@@ -222,56 +264,83 @@ export default function Calculator() {
 
     setState(newState)
 
-    // Cache for expensive calculations
+    // Enhanced cache for expensive calculations with better performance tracking
     let calculationCache = {
       futureGems: null as BigNumber | null,
       goalTimeCalc: null as {timeToGoal: BigNumber, progressPercent: number} | null,
       additionalTimeCalc: null as {timeToAdditional: BigNumber} | null,
       lastUpdateTime: 0,
       lastFullUpdateTime: 0,
+      lastLightUpdateTime: 0,
       detailedStats: null as Record<string, Result> | null,
       goalResult: null as Result | null,
-      additionalResult: null as Result | null
+      additionalResult: null as Result | null,
+      // Performance metrics
+      baseCalculations: {
+        profitPerSecond: null as BigNumber | null,
+        hourlyInterestRate: null as BigNumber | null,
+        lastCalculationTime: 0
+      }
     };
 
     const updateResults = () => {
       const currentTime = Date.now();
       const elapsedTime = (currentTime - newState.startTime!) / 1000;
       
-      // Determine update strategy based primarily on time period, not just gem size
+      // Enhanced performance-based update strategy
       const totalTimeInSeconds = initialTimeInDays.times(86400);
+      const isVeryLongTimePeriod = totalTimeInSeconds.gt(365 * 86400); // > 1 year
       const isLongTimePeriod = totalTimeInSeconds.gt(30 * 86400); // > 30 days
       const isMediumTimePeriod = totalTimeInSeconds.gt(7 * 86400); // > 7 days
       
-      // Secondary factor - large gem counts
+      // More granular gem size categories for better performance
+      const hasExtremeGems = newState.currentGems.gt(50000000000); // > 50B
+      const hasVeryLargeGems = newState.currentGems.gt(10000000000); // > 10B
       const hasLargeGems = newState.currentGems.gt(1000000000); // > 1B
       
-      // Set update intervals - prioritize time periods but consider gem size too
-      const lightUpdateInterval = isLongTimePeriod ? 150 : 
-                                  isMediumTimePeriod ? 120 : 
+      // Adaptive intervals based on both time period and gem size
+      const lightUpdateInterval = isVeryLongTimePeriod ? 300 :
+                                  isLongTimePeriod ? 200 : 
+                                  isMediumTimePeriod ? 150 : 
+                                  hasExtremeGems ? 250 :
+                                  hasVeryLargeGems ? 180 :
                                   hasLargeGems ? 130 : 100;
       
-      const fullUpdateInterval = isLongTimePeriod ? 1500 : 
-                                 isMediumTimePeriod ? 1000 : 
+      const fullUpdateInterval = isVeryLongTimePeriod ? 3000 :
+                                 isLongTimePeriod ? 2000 : 
+                                 isMediumTimePeriod ? 1200 : 
+                                 hasExtremeGems ? 2500 :
+                                 hasVeryLargeGems ? 1800 :
                                  hasLargeGems ? 1200 : 500;
       
       const timeSinceLastUpdate = currentTime - calculationCache.lastUpdateTime;
       const timeSinceLastFullUpdate = currentTime - calculationCache.lastFullUpdateTime;
+      const timeSinceLastLightUpdate = currentTime - calculationCache.lastLightUpdateTime;
       
-      // Determine update type
-      const needsLightUpdate = timeSinceLastUpdate >= lightUpdateInterval;
+      // Determine update type with more granular control
+      const needsLightUpdate = timeSinceLastLightUpdate >= lightUpdateInterval;
       const needsFullUpdate = timeSinceLastFullUpdate >= fullUpdateInterval;
       
       // Skip update if not needed for performance
       if (!needsLightUpdate && !needsFullUpdate) return;
       
-      // Most essential calculations (always done)
-      const profitPerSecond = newState.currentGems.times(newState.hourlyInterest!).dividedBy(3600)
-      const totalProfit = profitPerSecond.times(elapsedTime)
-      const currentTotal = newState.currentGems.plus(totalProfit)
-      const profitGrowth = totalProfit.dividedBy(newState.currentGems).times(100)
+      // Cache base calculations to avoid repeated computation
+      let profitPerSecond: BigNumber;
+      if (calculationCache.baseCalculations.profitPerSecond && 
+          currentTime - calculationCache.baseCalculations.lastCalculationTime < 1000) {
+        profitPerSecond = calculationCache.baseCalculations.profitPerSecond;
+      } else {
+        profitPerSecond = newState.currentGems.times(newState.hourlyInterest!).dividedBy(3600);
+        calculationCache.baseCalculations.profitPerSecond = profitPerSecond;
+        calculationCache.baseCalculations.lastCalculationTime = currentTime;
+      }
+      
+      const totalProfit = profitPerSecond.times(elapsedTime);
+      const currentTotal = newState.currentGems.plus(totalProfit);
+      const profitGrowth = totalProfit.dividedBy(newState.currentGems).times(100);
       
       if (needsLightUpdate) {
+        calculationCache.lastLightUpdateTime = currentTime;
         calculationCache.lastUpdateTime = currentTime;
       }
 
@@ -279,13 +348,22 @@ export default function Calculator() {
       let currentProfitPerSecond, currentProfitPerMinute, currentProfitPerHour, 
           currentProfitPerDay, currentProfitPerWeek, currentProfitPerMonth, futureGems;
       
-      // Handle future gems calculation - more expensive for longer time periods
+      // Optimized future gems calculation with better caching and approximations
       if (initialTimeInDays.gt(0)) {
         if (needsFullUpdate || !calculationCache.futureGems) {
-          // Expensive calculation - only perform on full updates or if cache is empty
-          futureGems = newState.currentGems.times(
-            customExponentiation(ONE.plus(newState.hourlyInterest!), initialTimeInDays.times(24))
-          );
+          // Use optimized exponentiation for very large calculations
+          const hoursTotal = initialTimeInDays.times(24);
+          const interestBase = ONE.plus(newState.hourlyInterest!);
+          
+          // For extremely large time periods or gem amounts, use fast approximation
+          if (hoursTotal.gt(8760) || hasExtremeGems) { // > 1 year or > 50B gems
+            futureGems = newState.currentGems.times(fastExponentiation(interestBase, hoursTotal));
+          } else if (hoursTotal.gt(720) || hasVeryLargeGems) { // > 30 days or > 10B gems
+            futureGems = newState.currentGems.times(getCachedExponentiation(interestBase, hoursTotal));
+          } else {
+            futureGems = newState.currentGems.times(customExponentiation(interestBase, hoursTotal));
+          }
+          
           calculationCache.futureGems = futureGems;
         } else {
           // Use cached value for light updates
@@ -383,7 +461,7 @@ export default function Calculator() {
         // Add detailed stats to results
         Object.assign(newResults, detailedStats);
         
-        // Handle Goal Gems calculation (expensive)
+        // Optimized Goal Gems calculation with better caching strategy
         if (newState.goalGems) {
           if (newState.goalGems.lte(newState.currentGems)) {
             const goalResult = {
@@ -395,24 +473,40 @@ export default function Calculator() {
             calculationCache.goalResult = goalResult;
             calculationCache.goalTimeCalc = null;
           } else {
-            // Calculate or use cached values for extremely large numbers
+            // Enhanced caching strategy for goal calculations
             let timeToGoal: BigNumber;
             let progressPercent: number;
             
-            if (calculationCache.goalTimeCalc && hasLargeGems) {
-              // For extremely large numbers, reuse previous calculation
-              timeToGoal = calculationCache.goalTimeCalc.timeToGoal;
-              progressPercent = calculationCache.goalTimeCalc.progressPercent;
+            // More aggressive caching for large numbers
+            const shouldUseCache = calculationCache.goalTimeCalc && 
+                                   (hasVeryLargeGems || hasExtremeGems);
+            
+            if (shouldUseCache) {
+              timeToGoal = calculationCache.goalTimeCalc!.timeToGoal;
+              // Recalculate progress more frequently as it changes
+              progressPercent = Math.min((currentTotal.dividedBy(newState.goalGems).times(100)).toNumber(), 100);
             } else {
-              // Expensive calculation
-              timeToGoal = logBase(
-                newState.goalGems.dividedBy(newState.currentGems),
-                ONE.plus(newState.hourlyInterest!),
-              ).dividedBy(24);
+              // Optimized logarithm calculation for large numbers
+              const ratio = newState.goalGems.dividedBy(newState.currentGems);
+              const interestBase = ONE.plus(newState.hourlyInterest!);
+              
+              // Use cached logarithm if available
+              const logKey = `log_${ratio.toString()}_${interestBase.toString()}`;
+              const cachedLog = calculationMemoCache.get(logKey);
+              
+              if (cachedLog && Date.now() - cachedLog.timestamp < CACHE_TTL * 2) {
+                timeToGoal = cachedLog.result.dividedBy(24);
+              } else {
+                timeToGoal = logBase(ratio, interestBase).dividedBy(24);
+                calculationMemoCache.set(logKey, { 
+                  result: timeToGoal.times(24), 
+                  timestamp: Date.now() 
+                });
+              }
               
               progressPercent = Math.min((currentTotal.dividedBy(newState.goalGems).times(100)).toNumber(), 100);
               
-              // Cache for next time
+              // Cache for next time with longer TTL for large numbers
               calculationCache.goalTimeCalc = { timeToGoal, progressPercent };
             }
             
@@ -431,19 +525,34 @@ export default function Calculator() {
           }
         }
         
-        // Handle Additional Gems calculation (expensive)
+        // Optimized Additional Gems calculation with enhanced caching
         if (newState.additionalGems) {
-          // Use cached calculation for extremely large numbers if available
           let timeToAdditional: BigNumber;
           
-          if (calculationCache.additionalTimeCalc && hasLargeGems) {
-            timeToAdditional = calculationCache.additionalTimeCalc.timeToAdditional;
+          // More aggressive caching for large numbers
+          const shouldUseCache = calculationCache.additionalTimeCalc && 
+                                 (hasVeryLargeGems || hasExtremeGems);
+          
+          if (shouldUseCache) {
+            timeToAdditional = calculationCache.additionalTimeCalc!.timeToAdditional;
           } else {
             const targetTotal = newState.currentGems.plus(newState.additionalGems);
-            timeToAdditional = logBase(
-              targetTotal.dividedBy(newState.currentGems),
-              ONE.plus(newState.hourlyInterest!),
-            ).dividedBy(24);
+            const ratio = targetTotal.dividedBy(newState.currentGems);
+            const interestBase = ONE.plus(newState.hourlyInterest!);
+            
+            // Use cached logarithm calculation
+            const logKey = `log_add_${ratio.toString()}_${interestBase.toString()}`;
+            const cachedLog = calculationMemoCache.get(logKey);
+            
+            if (cachedLog && Date.now() - cachedLog.timestamp < CACHE_TTL * 2) {
+              timeToAdditional = cachedLog.result.dividedBy(24);
+            } else {
+              timeToAdditional = logBase(ratio, interestBase).dividedBy(24);
+              calculationMemoCache.set(logKey, { 
+                result: timeToAdditional.times(24), 
+                timestamp: Date.now() 
+              });
+            }
             
             // Cache for future use
             calculationCache.additionalTimeCalc = { timeToAdditional };
@@ -482,27 +591,36 @@ export default function Calculator() {
     // Initial calculation
     updateResults()
     
-    // Adjust update frequency based primarily on time period
+    // Enhanced adaptive update frequency system
     const totalTimeInSeconds = initialTimeInDays.times(86400);
+    const isVeryLongTimePeriod = totalTimeInSeconds.gt(365 * 86400); // > 1 year
     const isLongTimePeriod = totalTimeInSeconds.gt(30 * 86400); // > 30 days
     const isMediumTimePeriod = totalTimeInSeconds.gt(7 * 86400); // > 7 days
     
-    // Consider gem count as a secondary factor
-    const hasVeryLargeGems = newState.currentGems.gt(5000000000); // > 5B
+    // More granular gem size detection
+    const hasExtremeGems = newState.currentGems.gt(50000000000); // > 50B
+    const hasVeryLargeGems = newState.currentGems.gt(10000000000); // > 10B
+    const hasLargeGems = newState.currentGems.gt(1000000000); // > 1B
     
-    // Base interval prioritizes time period but considers gems too
-    const baseInterval = isLongTimePeriod ? 160 : 
-                         isMediumTimePeriod ? 130 :
-                         hasVeryLargeGems ? 150 : 100;
+    // Optimized base interval with better performance scaling
+    const baseInterval = isVeryLongTimePeriod ? 250 :
+                         isLongTimePeriod ? 180 : 
+                         isMediumTimePeriod ? 140 :
+                         hasExtremeGems ? 220 :
+                         hasVeryLargeGems ? 160 :
+                         hasLargeGems ? 130 : 100;
     
-    updateIntervalRef.current = setInterval(updateResults, baseInterval)
+    updateIntervalRef.current = setInterval(updateResults, baseInterval);
     
-    // Future amount calculation frequency - affected more by time period
-    const futureUpdateInterval = isLongTimePeriod ? 1800 :
-                                isMediumTimePeriod ? 1200 :
-                                hasVeryLargeGems ? 1500 : 1000;
+    // Future amount calculation with much less frequent updates for large numbers
+    const futureUpdateInterval = isVeryLongTimePeriod ? 4000 :
+                                isLongTimePeriod ? 2500 :
+                                isMediumTimePeriod ? 1500 :
+                                hasExtremeGems ? 3500 :
+                                hasVeryLargeGems ? 2000 :
+                                hasLargeGems ? 1200 : 1000;
     
-    futureAmountIntervalRef.current = setInterval(calculateFutureAmount, futureUpdateInterval)
+    futureAmountIntervalRef.current = setInterval(calculateFutureAmount, futureUpdateInterval);
 
     setActiveTab("results")
     
@@ -885,4 +1003,3 @@ export default function Calculator() {
     </LoadingState>
   )
 }
-
