@@ -316,9 +316,9 @@ export default function TipsPage() {
 											</li>
 										</ul>
 										<p className="mt-4 font-semibold">
-											The "Rule of 308": At 0.15% daily
+											The "Rule of 462": At 0.15% daily
 											interest, your gems will double in
-											approximately 308 days.
+											approximately 462 days.
 										</p>
 									</CardContent>
 								</Card>
