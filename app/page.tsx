@@ -17,7 +17,7 @@ export default function Home() {
             <CalculatorIcon className="h-6 w-6" />
             <span className="text-xl font-semibold">EXP Bank Calculator</span>
           </div>
-          
+
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">
@@ -34,7 +34,7 @@ export default function Home() {
             </Link>
             <ThemeToggle />
           </nav>
-          
+
           {/* Mobile Navigation (simplified) */}
           <div className="md:hidden flex items-center">
             <ThemeToggle />
@@ -105,7 +105,7 @@ export default function Home() {
               <li>View real-time calculations and predictions</li>
             </ol>
             <p className="mt-4">
-              The calculator takes into account the standard 0.10% daily interest rate and compounds it continuously to give you the most accurate predictions possible.
+              The calculator takes into account the standard 0.15% daily interest rate and compounds it continuously to give you the most accurate predictions possible.
             </p>
           </div>
         </section>
@@ -113,4 +113,3 @@ export default function Home() {
     </>
   )
 }
-
