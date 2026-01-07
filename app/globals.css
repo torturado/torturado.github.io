@@ -3,77 +3,99 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 220 17% 93%;  /* #EEEEEE */
-    --foreground: 220 17% 16%;  /* #222831 */
+	:root {
+		/* Neutrals - warm gray scale */
+		--background: 0 0% 98%;
+		--foreground: 0 0% 9%;
 
-    --card: 220 17% 93%;  /* #EEEEEE */
-    --card-foreground: 220 17% 16%;  /* #222831 */
- 
-    --popover: 220 17% 93%;  /* #EEEEEE */
-    --popover-foreground: 220 17% 16%;  /* #222831 */
- 
-    --primary: 183 20% 57%;  /* #76ABAE */
-    --primary-foreground: 220 17% 16%;  /* #222831 */
- 
-    --secondary: 217 12% 28%;  /* #31363F */
-    --secondary-foreground: 220 17% 93%;  /* #EEEEEE */
- 
-    --muted: 217 12% 28%;  /* #31363F */
-    --muted-foreground: 220 17% 93%;  /* #EEEEEE */
- 
-    --accent: 183 20% 57%;  /* #76ABAE */
-    --accent-foreground: 220 17% 16%;  /* #222831 */
- 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 220 17% 93%;  /* #EEEEEE */
+		--card: 0 0% 100%;
+		--card-foreground: 0 0% 9%;
 
-    --border: 217 12% 28%;  /* #31363F */
-    --input: 217 12% 28%;  /* #31363F */
-    --ring: 183 20% 57%;  /* #76ABAE */
- 
-    --radius: 0.5rem;
-  }
- 
-  .dark {
-    --background: 220 17% 13%;  /* Más oscuro que #222831 */
-    --foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
- 
-    --card: 220 17% 16%;  /* #222831 */
-    --card-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
- 
-    --popover: 220 17% 16%;  /* #222831 */
-    --popover-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
- 
-    --primary: 183 15% 45%;  /* Versión más suave de #76ABAE */
-    --primary-foreground: 220 17% 16%;  /* #222831 */
- 
-    --secondary: 217 12% 25%;  /* Versión más oscura de #31363F */
-    --secondary-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
- 
-    --muted: 217 12% 25%;  /* Versión más oscura de #31363F */
-    --muted-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
- 
-    --accent: 183 15% 45%;  /* Versión más suave de #76ABAE */
-    --accent-foreground: 220 17% 16%;  /* #222831 */
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 220 17% 85%;  /* Menos brillante que #EEEEEE */
- 
-    --border: 217 12% 25%;  /* Versión más oscura de #31363F */
-    --input: 217 12% 25%;  /* Versión más oscura de #31363F */
-    --ring: 183 15% 45%;  /* Versión más suave de #76ABAE */
-  }
+		--popover: 0 0% 100%;
+		--popover-foreground: 0 0% 9%;
+
+		/* Accent - muted teal */
+		--primary: 183 25% 45%;
+		--primary-foreground: 0 0% 98%;
+
+		/* Secondary - neutral gray */
+		--secondary: 0 0% 94%;
+		--secondary-foreground: 0 0% 9%;
+
+		/* Muted */
+		--muted: 0 0% 94%;
+		--muted-foreground: 0 0% 45%;
+
+		/* Accent alias */
+		--accent: 183 25% 45%;
+		--accent-foreground: 0 0% 98%;
+
+		/* Semantic - Error */
+		--destructive: 0 65% 50%;
+		--destructive-foreground: 0 0% 98%;
+
+		/* Semantic - Success */
+		--success: 142 60% 40%;
+		--success-foreground: 0 0% 98%;
+
+		/* Borders and inputs */
+		--border: 0 0% 89%;
+		--input: 0 0% 89%;
+		--ring: 183 25% 45%;
+
+		--radius: 0.5rem;
+	}
+
+	.dark {
+		/* Neutrals - inverted */
+		--background: 0 0% 7%;
+		--foreground: 0 0% 95%;
+
+		--card: 0 0% 10%;
+		--card-foreground: 0 0% 95%;
+
+		--popover: 0 0% 10%;
+		--popover-foreground: 0 0% 95%;
+
+		/* Accent - slightly brighter for dark mode */
+		--primary: 183 20% 50%;
+		--primary-foreground: 0 0% 9%;
+
+		/* Secondary */
+		--secondary: 0 0% 15%;
+		--secondary-foreground: 0 0% 95%;
+
+		/* Muted */
+		--muted: 0 0% 15%;
+		--muted-foreground: 0 0% 60%;
+
+		/* Accent alias */
+		--accent: 183 20% 50%;
+		--accent-foreground: 0 0% 9%;
+
+		/* Semantic - Error */
+		--destructive: 0 55% 55%;
+		--destructive-foreground: 0 0% 98%;
+
+		/* Semantic - Success */
+		--success: 142 50% 45%;
+		--success-foreground: 0 0% 9%;
+
+		/* Borders and inputs */
+		--border: 0 0% 20%;
+		--input: 0 0% 20%;
+		--ring: 183 20% 50%;
+	}
 }
- 
+
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply antialiased;
-  }
-} 
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+	html {
+		@apply antialiased;
+	}
+}

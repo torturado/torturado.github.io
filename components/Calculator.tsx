@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -35,7 +34,6 @@ import {
 	HelpCircleIcon,
 	InfoIcon,
 	TargetIcon,
-	TrendingUpIcon,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import LoadingState from "./LoadingState";
@@ -52,6 +50,149 @@ const IconWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 const ONE = new BigNumber(1);
+
+// Discord EXP ranks with minimum gem requirements
+interface DiscordRank {
+	name: string;
+	minGems: string;
+	displayValue: string;
+	icon: string;
+}
+
+const DISCORD_RANKS: DiscordRank[] = [
+	{
+		name: "Member",
+		minGems: "0",
+		displayValue: "0M+",
+		icon: "/ranks/member.webp",
+	},
+	{
+		name: "Ethereal",
+		minGems: "160000000",
+		displayValue: "160M+",
+		icon: "/ranks/ethereal.webp",
+	},
+	{
+		name: "Luminary",
+		minGems: "800000000",
+		displayValue: "800M+",
+		icon: "/ranks/luminary.webp",
+	},
+	{
+		name: "Radiant",
+		minGems: "1600000000",
+		displayValue: "1.6B+",
+		icon: "/ranks/radiant.webp",
+	},
+	{
+		name: "Catalyst",
+		minGems: "4000000000",
+		displayValue: "4B+",
+		icon: "/ranks/catalyst.webp",
+	},
+	{
+		name: "Divine",
+		minGems: "12000000000",
+		displayValue: "12B+",
+		icon: "/ranks/diivine.webp",
+	},
+	{
+		name: "Cosmic",
+		minGems: "48000000000",
+		displayValue: "48B+",
+		icon: "/ranks/cosmic.webp",
+	},
+];
+
+// Helper function to find a rank by exact gem value match (including multipliers)
+const findRankByValue = (
+	value: string
+): { rank: DiscordRank; multiplier: number } | null => {
+	if (!value || value === "") return null;
+	const valueBN = new BigNumber(value);
+	if (valueBN.isNaN()) return null;
+
+	// Check each rank and its multipliers
+	for (let i = DISCORD_RANKS.length - 1; i >= 0; i--) {
+		const rank = DISCORD_RANKS[i];
+		if (rank.name === "Member") continue;
+
+		const rankMin = new BigNumber(rank.minGems);
+		if (valueBN.gte(rankMin)) {
+			// Check if it's an exact multiple
+			const ratio = valueBN.dividedBy(rankMin);
+			if (ratio.isInteger() && ratio.gte(1)) {
+				return { rank, multiplier: ratio.toNumber() };
+			}
+		}
+	}
+	return null;
+};
+
+// Get available multipliers for a rank (up to but NOT reaching the next rank threshold)
+const getAvailableMultipliers = (rank: DiscordRank): number[] => {
+	const rankIndex = DISCORD_RANKS.findIndex((r) => r.name === rank.name);
+	const rankMin = new BigNumber(rank.minGems);
+
+	// For Cosmic (highest rank), show up to x10
+	if (rankIndex === DISCORD_RANKS.length - 1) {
+		return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+	}
+
+	// For other ranks, calculate how many multipliers fit BEFORE reaching the next rank
+	const nextRank = DISCORD_RANKS[rankIndex + 1];
+	const nextRankMin = new BigNumber(nextRank.minGems);
+
+	// Max multiplier is the largest N where (rankMin * N) < nextRankMin
+	// This equals floor((nextRankMin - 1) / rankMin)
+	const maxMultiplier = nextRankMin
+		.minus(1)
+		.dividedBy(rankMin)
+		.integerValue(BigNumber.ROUND_DOWN)
+		.toNumber();
+
+	// If max is 0 or less, only x1 is available
+	if (maxMultiplier < 1) return [1];
+
+	// Generate array from 1 to maxMultiplier (but cap at 10 for sanity)
+	const cappedMax = Math.min(maxMultiplier, 10);
+	return Array.from({ length: cappedMax }, (_, i) => i + 1);
+};
+
+// Helper function to find the equivalent rank for a gem value (highest rank the value qualifies for)
+// Also calculates the multiplier (e.g., Divine x2 if you have 24B and Divine is 12B)
+interface RankWithMultiplier {
+	rank: DiscordRank;
+	multiplier: number;
+}
+
+const findEquivalentRank = (value: string): RankWithMultiplier | null => {
+	if (!value || value === "") return null;
+	const valueBN = new BigNumber(value);
+	if (valueBN.isNaN() || valueBN.lte(0)) return null;
+
+	// Find the highest rank that the value meets or exceeds
+	let equivalentRank: DiscordRank | null = null;
+	for (const rank of DISCORD_RANKS) {
+		if (valueBN.gte(new BigNumber(rank.minGems))) {
+			equivalentRank = rank;
+		}
+	}
+
+	if (!equivalentRank || equivalentRank.name === "Member") return null;
+
+	// Calculate multiplier: how many times the rank threshold fits into the value
+	const rankMinGems = new BigNumber(equivalentRank.minGems);
+	const multiplier = valueBN
+		.dividedBy(rankMinGems)
+		.integerValue(BigNumber.ROUND_DOWN)
+		.toNumber();
+
+	return {
+		rank: equivalentRank,
+		multiplier: multiplier,
+	};
+};
 
 // Performance optimization: Memoization cache for expensive calculations
 const calculationMemoCache = new Map<
@@ -148,7 +289,7 @@ export default function Calculator() {
 		goalGems: null,
 		additionalGems: null,
 		initialTimeInDays: new BigNumber(0),
-		dailyInterest: new BigNumber("0.0015"),
+		dailyInterest: new BigNumber("0.0025"),
 		hourlyInterest: null,
 	});
 
@@ -183,12 +324,28 @@ export default function Calculator() {
 		targetDate: { hasError: false, message: "" },
 	});
 
+	// State for selected Discord rank and multiplier (for Goal Gems quick presets)
+	const [selectedRank, setSelectedRank] = useState<DiscordRank | null>(null);
+	const [selectedMultiplier, setSelectedMultiplier] = useState<number>(1);
+
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setInputs((prev) => ({ ...prev, [name]: value }));
 
 		// Validate inputs in real-time
 		validateField(name, value);
+
+		// Detect if goalGems matches a rank (with multiplier)
+		if (name === "goalGems") {
+			const matched = findRankByValue(value);
+			if (matched) {
+				setSelectedRank(matched.rank);
+				setSelectedMultiplier(matched.multiplier);
+			} else {
+				setSelectedRank(null);
+				setSelectedMultiplier(1);
+			}
+		}
 
 		// Track analytics event for important fields
 		if (
@@ -197,6 +354,40 @@ export default function Calculator() {
 			["currentGems", "goalGems", "additionalGems"].includes(name)
 		) {
 			window.trackEvent("Calculator Input", `Changed ${name}`, value);
+		}
+	};
+
+	// Handle rank button click - sets goalGems to the rank's minimum value
+	const handleRankSelect = (rank: DiscordRank) => {
+		setInputs((prev) => ({ ...prev, goalGems: rank.minGems }));
+		setSelectedRank(rank);
+		setSelectedMultiplier(1);
+		validateField("goalGems", rank.minGems);
+
+		// Track analytics event
+		if (typeof window !== "undefined" && window.trackEvent) {
+			window.trackEvent("Calculator Input", "Selected Rank", rank.name);
+		}
+	};
+
+	// Handle multiplier button click - sets goalGems to rank * multiplier
+	const handleMultiplierSelect = (multiplier: number) => {
+		if (!selectedRank) return;
+
+		const value = new BigNumber(selectedRank.minGems)
+			.times(multiplier)
+			.toString();
+		setInputs((prev) => ({ ...prev, goalGems: value }));
+		setSelectedMultiplier(multiplier);
+		validateField("goalGems", value);
+
+		// Track analytics event
+		if (typeof window !== "undefined" && window.trackEvent) {
+			window.trackEvent(
+				"Calculator Input",
+				"Selected Multiplier",
+				`${selectedRank.name} x${multiplier}`
+			);
 		}
 	};
 
@@ -492,19 +683,19 @@ export default function Calculator() {
 					value: `Profit: ${formatNumber(totalProfit)}`,
 					icon: (
 						<IconWrapper>
-							<TrendingUpIcon className="h-5 w-5 text-green-500" />
+							<TargetIcon className="h-5 w-5 text-success" />
 						</IconWrapper>
 					),
-					color: "text-green-500",
+					color: "text-success",
 				},
 				profitGrowth: {
 					value: `Profit Growth: ${profitGrowth.toFixed(6)}%`,
 					icon: (
 						<IconWrapper>
-							<TrendingUpIcon className="h-5 w-5 text-green-500" />
+							<TargetIcon className="h-5 w-5 text-success" />
 						</IconWrapper>
 					),
-					color: "text-green-500",
+					color: "text-success",
 				},
 			};
 
@@ -944,34 +1135,30 @@ export default function Calculator() {
 		<LoadingState>
 			<Card className="w-full">
 				<CardHeader className="bg-card">
-					<CardTitle className="text-2xl flex justify-between items-center">
+					<CardTitle className="text-xl flex justify-between items-center">
 						EXP Bank Calculator
-						<div className="flex items-center gap-2">
-							<ThemeToggle />
-							<TooltipProvider>
-								<Tooltip>
-									<TooltipTrigger asChild>
-										<Button
-											variant="outline"
-											size="icon"
-											onClick={() =>
-												setShowTechnicalInfo(true)
-											}
-										>
-											<IconWrapper>
-												<InfoIcon className="h-4 w-4" />
-											</IconWrapper>
-											<span className="sr-only">
-												Technical Information
-											</span>
-										</Button>
-									</TooltipTrigger>
-									<TooltipContent>
-										<p>View technical information</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
-						</div>
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<Button
+										variant="ghost"
+										size="icon"
+										onClick={() =>
+											setShowTechnicalInfo(true)
+										}
+										className="h-8 w-8"
+									>
+										<InfoIcon className="h-4 w-4" />
+										<span className="sr-only">
+											Technical Information
+										</span>
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>View technical information</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					</CardTitle>
 					<CardDescription>
 						Calculate your EXP Bank earnings and plan your gem
@@ -980,22 +1167,22 @@ export default function Calculator() {
 						Made by @oyfg on Discord.
 					</CardDescription>
 				</CardHeader>
-				<CardContent className="p-6 bg-card">
+				<CardContent className="p-6 bg-card rounded-[10px]">
 					<Tabs
 						value={activeTab}
 						onValueChange={setActiveTab}
 						className="space-y-4"
 					>
-						<TabsList className="grid w-full grid-cols-2 bg-charcoal text-bright_gray">
+						<TabsList className="grid w-full grid-cols-2 bg-muted">
 							<TabsTrigger
 								value="input"
-								className="data-[state=active]:bg-moonstone data-[state=active]:text-gunmetal"
+								className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
 							>
 								Input
 							</TabsTrigger>
 							<TabsTrigger
 								value="results"
-								className="data-[state=active]:bg-moonstone data-[state=active]:text-gunmetal"
+								className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
 							>
 								Results
 							</TabsTrigger>
@@ -1111,6 +1298,152 @@ export default function Calculator() {
 											{inputErrors.goalGems.message}
 										</p>
 									)}
+									{/* Discord Rank Quick Presets */}
+									<div className="mt-3">
+										<p className="text-xs text-muted-foreground mb-2">
+											Quick presets (Discord ranks):
+										</p>
+										<div className="flex flex-wrap gap-2">
+											{DISCORD_RANKS.filter(
+												(rank) => rank.name !== "Member"
+											).map((rank) => (
+												<TooltipProvider
+													key={rank.name}
+													delayDuration={150}
+												>
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<button
+																type="button"
+																onClick={() =>
+																	handleRankSelect(
+																		rank
+																	)
+																}
+																className={`relative p-1.5 rounded-lg border transition-colors ${
+																	selectedRank?.name ===
+																	rank.name
+																		? "border-primary bg-primary/10"
+																		: "border-input hover:border-primary/50 bg-card"
+																}`}
+															>
+																<img
+																	src={
+																		rank.icon
+																	}
+																	alt={
+																		rank.name
+																	}
+																	className="w-8 h-8 object-contain"
+																/>
+																{selectedRank?.name ===
+																	rank.name && (
+																	<div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full" />
+																)}
+															</button>
+														</TooltipTrigger>
+														<TooltipContent>
+															<p className="font-medium">
+																{rank.name} —{" "}
+																{
+																	rank.displayValue
+																}
+															</p>
+														</TooltipContent>
+													</Tooltip>
+												</TooltipProvider>
+											))}
+										</div>
+										{/* Multiplier selector - shows when a rank is selected */}
+										{selectedRank && (
+											<div className="mt-2 p-2 bg-muted/30 rounded-lg border border-input">
+												<div className="flex items-center gap-2 flex-wrap">
+													<div className="flex items-center gap-1.5">
+														<img
+															src={
+																selectedRank.icon
+															}
+															alt={
+																selectedRank.name
+															}
+															className="w-5 h-5 object-contain"
+														/>
+														<span className="text-xs font-medium text-foreground">
+															{selectedRank.name}
+														</span>
+													</div>
+													<div className="flex gap-1 flex-wrap">
+														{getAvailableMultipliers(
+															selectedRank
+														).map((mult) => (
+															<button
+																key={mult}
+																type="button"
+																onClick={() =>
+																	handleMultiplierSelect(
+																		mult
+																	)
+																}
+																className={`px-2 py-0.5 text-xs font-medium rounded transition-all ${
+																	selectedMultiplier ===
+																	mult
+																		? "bg-primary text-primary-foreground"
+																		: "bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
+																}`}
+															>
+																x{mult}
+															</button>
+														))}
+													</div>
+												</div>
+											</div>
+										)}
+										{/* Equivalence indicator - only shows for custom values that don't match a preset */}
+										{inputs.goalGems &&
+											!selectedRank &&
+											findEquivalentRank(
+												inputs.goalGems
+											) && (
+												<p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+													<span>
+														Equivalent rank:
+													</span>
+													<img
+														src={
+															findEquivalentRank(
+																inputs.goalGems
+															)!.rank.icon
+														}
+														alt={
+															findEquivalentRank(
+																inputs.goalGems
+															)!.rank.name
+														}
+														className="w-4 h-4 inline-block"
+													/>
+													<span className="font-medium text-primary">
+														{
+															findEquivalentRank(
+																inputs.goalGems
+															)!.rank.name
+														}
+														{findEquivalentRank(
+															inputs.goalGems
+														)!.multiplier > 1 && (
+															<span className="ml-0.5">
+																x
+																{
+																	findEquivalentRank(
+																		inputs.goalGems
+																	)!
+																		.multiplier
+																}
+															</span>
+														)}
+													</span>
+												</p>
+											)}
+									</div>
 								</div>
 								<div className="space-y-2">
 									<div className="flex items-center justify-between">
@@ -1262,39 +1595,9 @@ export default function Calculator() {
 								</div>
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<div className="space-y-2">
-										<div className="flex items-center justify-between">
-											<Label htmlFor="targetDate">
-												Target Date
-											</Label>
-											<TooltipProvider>
-												<Tooltip>
-													<TooltipTrigger asChild>
-														<Button
-															variant="ghost"
-															size="icon"
-															className="h-4 w-4"
-														>
-															<IconWrapper>
-																<HelpCircleIcon className="h-4 w-4" />
-															</IconWrapper>
-															<span className="sr-only">
-																Information
-																about target
-																date
-															</span>
-														</Button>
-													</TooltipTrigger>
-													<TooltipContent>
-														<p className="max-w-xs">
-															Set a future date to
-															calculate how many
-															gems you'll have at
-															that time.
-														</p>
-													</TooltipContent>
-												</Tooltip>
-											</TooltipProvider>
-										</div>
+										<Label htmlFor="targetDate">
+											Target Date
+										</Label>
 										<Input
 											id="targetDate"
 											type="date"
@@ -1330,19 +1633,23 @@ export default function Calculator() {
 										/>
 									</div>
 								</div>
-								<p className="text-gunmetal">
+								<p className="text-muted-foreground text-sm">
 									Daily Interest:{" "}
 									{state.dailyInterest.times(100).toFixed(2)}%
 								</p>
 								<Button
 									onClick={calculateResults}
-									className="w-full bg-moonstone text-gunmetal hover:bg-moonstone/80 transition-all duration-300 text-lg font-medium py-2"
+									className="w-full"
+									size="lg"
 								>
-									Calculate!
+									Calculate
 								</Button>
 							</div>
 						</TabsContent>
-						<TabsContent value="results" className="space-y-6">
+						<TabsContent
+							value="results"
+							className="space-y-6 bg-muted/30 -mx-6 -mb-6 p-6 rounded-b-lg"
+						>
 							{results ? (
 								<div className="space-y-6">
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1464,24 +1771,22 @@ export default function Calculator() {
 												setActiveTab("input")
 											}
 											variant="outline"
-											className="hover:bg-primary/10"
 										>
-											Return to Calculator
+											Back to Input
 										</Button>
 									</div>
 								</div>
 							) : (
 								<div className="text-center py-10">
-									<p className="text-gunmetal text-lg mb-4">
-										No results yet. Please enter your data
-										and click Calculate!
+									<p className="text-muted-foreground mb-4">
+										No results yet. Enter your data and
+										click Calculate.
 									</p>
 									<Button
 										onClick={() => setActiveTab("input")}
 										variant="outline"
-										className="hover:bg-primary/10"
 									>
-										Return to Calculator
+										Go to Input
 									</Button>
 								</div>
 							)}
