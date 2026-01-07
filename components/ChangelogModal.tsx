@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = "1.2.0";
+const CURRENT_VERSION = "2.0.0";
 
 interface Change {
 	version: string;
@@ -69,6 +69,36 @@ const CHANGELOG: Change[] = [
 			"Updated calculator to use the new interest rate",
 		],
 	},
+	{
+		version: "1.3.0",
+		date: "2026-01-07",
+		changes: [
+			"Increased daily interest rate to 0.25%",
+			"Updated calculator to use the new interest rate",
+		],
+	},
+	{
+		version: "1.3.1",
+		date: "2026-01-07",
+		changes: [
+			"Added Discord rank quick presets for Goal Gems (Ethereal, Luminary, Radiant, Catalyst, Divine, Cosmic)",
+			"Added multiplier selector (x1, x2, x3...) when a rank is selected",
+			"Added rank equivalence indicator with multipliers for custom gem values",
+		],
+	},
+	{
+		version: "2.0.0",
+		date: "2026-01-07",
+		changes: [
+			"Complete UI redesign with functional minimalist approach",
+			"New typography: replaced generic fonts with Geist for better readability",
+			"Simplified color palette: clean neutrals with a single accent color",
+			"Streamlined layout: removed unnecessary sections, keeping focus on the calculator",
+			"Improved visual hierarchy between Input and Results tabs",
+			"Minimized footer to essential links only",
+			"Cleaner, distraction-free interface for faster calculations",
+		],
+	},
 ];
 
 export function ChangelogModal() {
@@ -97,26 +127,29 @@ export function ChangelogModal() {
 						Calculator
 					</DialogDescription>
 				</DialogHeader>
-				<div className="space-y-4">
-					{CHANGELOG.map((change) => (
-						<div key={change.version} className="space-y-2">
-							<div className="flex justify-between items-center">
-								<h3 className="font-semibold">
-									Version {change.version}
-								</h3>
-								<span className="text-sm text-muted-foreground">
-									{change.date}
-								</span>
+				<div className="space-y-4 max-h-[70vh] overflow-y-auto">
+					{CHANGELOG.slice()
+						.reverse()
+						.slice(0, 5)
+						.map((change) => (
+							<div key={change.version} className="space-y-2">
+								<div className="flex justify-between items-center">
+									<h3 className="font-semibold">
+										Version {change.version}
+									</h3>
+									<span className="text-sm text-muted-foreground">
+										{change.date}
+									</span>
+								</div>
+								<ul className="list-disc pl-5 space-y-1">
+									{change.changes.map((item, index) => (
+										<li key={index} className="text-sm">
+											{item}
+										</li>
+									))}
+								</ul>
 							</div>
-							<ul className="list-disc pl-5 space-y-1">
-								{change.changes.map((item, index) => (
-									<li key={index} className="text-sm">
-										{item}
-									</li>
-								))}
-							</ul>
-						</div>
-					))}
+						))}
 				</div>
 			</DialogContent>
 		</Dialog>

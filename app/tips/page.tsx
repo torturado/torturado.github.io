@@ -55,7 +55,7 @@ export default function TipsPage() {
 									</CardHeader>
 									<CardContent>
 										<p className="mb-4">
-											The EXP Bank offers a 0.15% daily
+											The EXP Bank offers a 0.25% daily
 											compound interest rate, making it an
 											excellent way to grow your gems
 											passively over time.
@@ -316,9 +316,9 @@ export default function TipsPage() {
 											</li>
 										</ul>
 										<p className="mt-4 font-semibold">
-											The "Rule of 462": At 0.15% daily
+											The "Rule of 277": At 0.25% daily
 											interest, your gems will double in
-											approximately 462 days.
+											approximately 277 days.
 										</p>
 									</CardContent>
 								</Card>
@@ -454,7 +454,7 @@ export default function TipsPage() {
 											<li>
 												<strong>Income Focus:</strong>{" "}
 												With 1B+ gems, you can earn
-												1.5M+ gems daily in interest
+												2.5M+ gems daily in interest
 												alone
 											</li>
 											<li>
@@ -538,7 +538,7 @@ export default function TipsPage() {
 										</ul>
 										<p className="mt-4 font-semibold">
 											Example: A principal of 2 billion
-											gems generates approximately 3
+											gems generates approximately 5
 											million gems daily in interest.
 										</p>
 									</CardContent>
