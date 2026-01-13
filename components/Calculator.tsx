@@ -669,6 +669,7 @@ export default function Calculator() {
 			}
 
 			// Results object initialization with essential data
+			// We use a functional update later to preserve fields like futureAmount
 			const newResults: Record<string, Result> = {
 				currentGems: {
 					value: `Current gems: ${formatNumber(currentTotal)}`,
@@ -984,11 +985,23 @@ export default function Calculator() {
 				}
 			}
 
-			setResults(newResults);
+			// Use functional update to preserve results that are updated by other intervals (like futureAmount)
+			setResults((prev) => {
+				const updatedResults = { ...newResults };
+				if (prev?.futureAmount) {
+					updatedResults.futureAmount = prev.futureAmount;
+				}
+				return updatedResults;
+			});
 		};
 
 		// Initial calculation
 		updateResults();
+		calculateFutureAmount(
+			newState.startTime!,
+			newState.currentGems,
+			newState.hourlyInterest!
+		);
 
 		// Enhanced adaptive update frequency system
 		const totalTimeInSeconds = initialTimeInDays.times(86400);
@@ -1034,7 +1047,7 @@ export default function Calculator() {
 			: 1000;
 
 		futureAmountIntervalRef.current = setInterval(
-			calculateFutureAmount,
+			() => calculateFutureAmount(),
 			futureUpdateInterval
 		);
 
@@ -1051,26 +1064,31 @@ export default function Calculator() {
 		}
 	};
 
-	const calculateFutureAmount = () => {
+	const calculateFutureAmount = (
+		forcedStartTime?: number,
+		currentGemsAtStart?: BigNumber,
+		hourlyInterestAtStart?: BigNumber
+	) => {
 		if (!inputs.targetDate) return;
 
 		const targetDate = new Date(
 			`${inputs.targetDate}T${inputs.targetTime || "00:00"}`
 		);
 		if (isNaN(targetDate.getTime())) {
-			alert("Please enter a valid target date.");
+			// Only alert if this was triggered by a user action, not an interval
+			if (forcedStartTime) alert("Please enter a valid target date.");
 			return;
 		}
 
-		if (!state.startTime) {
-			alert(
-				"Calculation has not been started. Please click 'Calculate!'"
-			);
+		const startTime = forcedStartTime || state.startTime;
+
+		if (!startTime) {
+			// Don't alert here if it's an interval update, as state might not be ready yet
 			return;
 		}
 
 		const futureDays = new BigNumber(
-			targetDate.getTime() - state.startTime
+			targetDate.getTime() - startTime
 		).dividedBy(86400000);
 		const totalDays = state.initialTimeInDays.plus(futureDays);
 
@@ -1090,9 +1108,20 @@ export default function Calculator() {
 			return;
 		}
 
-		const futureGems = state.currentGems.times(
+		const currentGems = forcedStartTime
+			? currentGemsAtStart
+			: state.currentGems;
+		const hourlyInterest = forcedStartTime
+			? hourlyInterestAtStart
+			: state.hourlyInterest;
+
+		if (!currentGems || !hourlyInterest || currentGems.isNaN()) {
+			return;
+		}
+
+		const futureGems = currentGems.times(
 			customExponentiation(
-				ONE.plus(state.hourlyInterest!),
+				ONE.plus(hourlyInterest),
 				totalDays.times(24)
 			)
 		);
@@ -1528,7 +1557,7 @@ export default function Calculator() {
 														use the sliders or enter
 														values directly.
 													</p>
-												</TooltipContent>
+														</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>
 									</div>
