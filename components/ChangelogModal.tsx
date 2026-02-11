@@ -87,15 +87,6 @@ const CHANGELOG: Change[] = [
 		],
 	},
 	{
-		version: "2.0.1",
-		date: "2026-02-11",
-		changes: [
-			"Increased daily interest rate to 0.40%",
-			"Updated calculator to use the new interest rate",
-			"Updated tips and FAQ pages to reflect the new rate",
-		],
-	},
-	{
 		version: "2.0.0",
 		date: "2026-01-07",
 		changes: [
@@ -106,6 +97,15 @@ const CHANGELOG: Change[] = [
 			"Improved visual hierarchy between Input and Results tabs",
 			"Minimized footer to essential links only",
 			"Cleaner, distraction-free interface for faster calculations",
+		],
+	},
+	{
+		version: "2.0.1",
+		date: "2026-02-11",
+		changes: [
+			"Increased daily interest rate to 0.40%",
+			"Updated calculator to use the new interest rate",
+			"Updated tips and FAQ pages to reflect the new rate",
 		],
 	},
 ];
