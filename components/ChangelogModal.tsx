@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = "2.0.0";
+const CURRENT_VERSION = "2.0.1";
 
 interface Change {
 	version: string;
@@ -84,6 +84,15 @@ const CHANGELOG: Change[] = [
 			"Added Discord rank quick presets for Goal Gems (Ethereal, Luminary, Radiant, Catalyst, Divine, Cosmic)",
 			"Added multiplier selector (x1, x2, x3...) when a rank is selected",
 			"Added rank equivalence indicator with multipliers for custom gem values",
+		],
+	},
+	{
+		version: "2.0.1",
+		date: "2026-02-11",
+		changes: [
+			"Increased daily interest rate to 0.40%",
+			"Updated calculator to use the new interest rate",
+			"Updated tips and FAQ pages to reflect the new rate",
 		],
 	},
 	{
