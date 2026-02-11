@@ -7,7 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"deploy": "npx rimraf node_modules/.cache/gh-pages && npm run build && echo. > out\\.nojekyll && npx gh-pages -d out --dotfiles --branch gh-pages"
+		"deploy": "npx rimraf node_modules/.cache/gh-pages && npm run build && npx gh-pages -d out --dotfiles --branch gh-pages"
 	},
 	"dependencies": {
 		"@radix-ui/react-accordion": "^1.2.3",
@@ -28,6 +28,7 @@
 		"next-themes": "^0.4.4",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
+		"styled-jsx": "^5.1.7",
 		"tailwind-merge": "^2.6.0",
 		"tailwindcss-animate": "^1.0.7"
 	},
