@@ -38,7 +38,7 @@ export default function FAQPage() {
 									The EXP Bank is a special financial system
 									that allows players to deposit gems and earn
 									compound interest over time. With a fixed
-									0.40% daily interest rate, the bank provides
+									0.50% daily interest rate, the bank provides
 									a reliable way to grow your gem wealth
 									passively.
 								</p>
@@ -59,7 +59,7 @@ export default function FAQPage() {
 							<AccordionContent className="text-base">
 								<p>
 									Interest in the EXP Bank is calculated using
-									compound interest at a daily rate of 0.40%.
+									compound interest at a daily rate of 0.50%.
 									Compound interest means you earn interest
 									not only on your initial deposit but also on
 									the interest already accumulated.
@@ -79,7 +79,7 @@ export default function FAQPage() {
 									</li>
 									<li>
 										<strong>r</strong> = Interest rate per
-										period (0.004 or 0.40% daily)
+										period (0.005 or 0.50% daily)
 									</li>
 									<li>
 										<strong>t</strong> = Number of time
@@ -245,8 +245,8 @@ export default function FAQPage() {
 							<AccordionContent className="text-base">
 								<p>
 									The EXP Bank's interest rate is fixed at
-									0.40% daily. The rate was recently updated
-									from 0.25% to provide better returns for
+									0.50% daily. The rate was recently updated
+									from 0.40% to provide better returns for
 									players.
 								</p>
 								<p className="mt-2">

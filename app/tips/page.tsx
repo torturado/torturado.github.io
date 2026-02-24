@@ -55,7 +55,7 @@ export default function TipsPage() {
 									</CardHeader>
 									<CardContent>
 										<p className="mb-4">
-											The EXP Bank offers a 0.40% daily
+											The EXP Bank offers a 0.50% daily
 											compound interest rate, making it an
 											excellent way to grow your gems
 											passively over time.
@@ -316,9 +316,9 @@ export default function TipsPage() {
 											</li>
 										</ul>
 										<p className="mt-4 font-semibold">
-											The "Rule of 277": At 0.40% daily
+											The "Rule of 139": At 0.50% daily
 											interest, your gems will double in
-											approximately 277 days.
+											approximately 139 days.
 										</p>
 									</CardContent>
 								</Card>

@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = "2.0.1";
+const CURRENT_VERSION = "2.0.2";
 
 interface Change {
 	version: string;
@@ -108,6 +108,15 @@ const CHANGELOG: Change[] = [
 			"Updated tips and FAQ pages to reflect the new rate",
 		],
 	},
+	{
+		version: "2.0.2",
+		date: "2026-02-24",
+		changes: [
+			"Increased daily interest rate to 0.50%",
+			"Updated calculator to use the new interest rate",
+			"Updated tips and FAQ pages to reflect the new rate",
+		],
+	},
 ];
 
 export function ChangelogModal() {
@@ -116,7 +125,7 @@ export function ChangelogModal() {
 	useEffect(() => {
 		// Check if user has seen this version
 		const lastSeenVersion = localStorage.getItem(
-			"lastSeenChangelogVersion"
+			"lastSeenChangelogVersion",
 		);
 
 		if (!lastSeenVersion || lastSeenVersion !== CURRENT_VERSION) {
