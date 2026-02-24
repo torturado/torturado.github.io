@@ -106,7 +106,7 @@ const DISCORD_RANKS: DiscordRank[] = [
 
 // Helper function to find a rank by exact gem value match (including multipliers)
 const findRankByValue = (
-	value: string
+	value: string,
 ): { rank: DiscordRank; multiplier: number } | null => {
 	if (!value || value === "") return null;
 	const valueBN = new BigNumber(value);
@@ -204,7 +204,7 @@ const CACHE_TTL = 5000; // 5 seconds cache for expensive calculations
 // Helper function to get cached or calculate expensive operations
 const getCachedExponentiation = (
 	base: BigNumber,
-	exponent: BigNumber
+	exponent: BigNumber,
 ): BigNumber => {
 	const key = `${base.toString()}_${exponent.toString()}`;
 	const cached = calculationMemoCache.get(key);
@@ -233,7 +233,7 @@ const getCachedExponentiation = (
 // Optimized approximation for very large exponentiations
 const fastExponentiation = (
 	base: BigNumber,
-	exponent: BigNumber
+	exponent: BigNumber,
 ): BigNumber => {
 	// For very large exponents, use logarithmic approximation
 	if (exponent.gt(10000)) {
@@ -289,7 +289,7 @@ export default function Calculator() {
 		goalGems: null,
 		additionalGems: null,
 		initialTimeInDays: new BigNumber(0),
-		dailyInterest: new BigNumber("0.004"),
+		dailyInterest: new BigNumber("0.005"),
 		hourlyInterest: null,
 	});
 
@@ -386,7 +386,7 @@ export default function Calculator() {
 			window.trackEvent(
 				"Calculator Input",
 				"Selected Multiplier",
-				`${selectedRank.name} x${multiplier}`
+				`${selectedRank.name} x${multiplier}`,
 			);
 		}
 	};
@@ -443,7 +443,7 @@ export default function Calculator() {
 		// Validate current gems (required field)
 		const currentGemsError = validateField(
 			"currentGems",
-			inputs.currentGems
+			inputs.currentGems,
 		);
 		if (currentGemsError.hasError) {
 			hasErrors = true;
@@ -460,7 +460,7 @@ export default function Calculator() {
 		if (inputs.additionalGems) {
 			const additionalGemsError = validateField(
 				"additionalGems",
-				inputs.additionalGems
+				inputs.additionalGems,
 			);
 			if (additionalGemsError.hasError) {
 				hasErrors = true;
@@ -470,7 +470,7 @@ export default function Calculator() {
 		if (inputs.targetDate) {
 			const targetDateError = validateField(
 				"targetDate",
-				inputs.targetDate
+				inputs.targetDate,
 			);
 			if (targetDateError.hasError) {
 				hasErrors = true;
@@ -507,7 +507,7 @@ export default function Calculator() {
 				: null,
 			hourlyInterest: customExponentiation(
 				ONE.plus(state.dailyInterest),
-				new BigNumber(1).dividedBy(24)
+				new BigNumber(1).dividedBy(24),
 			).minus(ONE),
 			initialTimeInDays,
 			startTime: Date.now(),
@@ -556,30 +556,30 @@ export default function Calculator() {
 			const lightUpdateInterval = isVeryLongTimePeriod
 				? 300
 				: isLongTimePeriod
-				? 200
-				: isMediumTimePeriod
-				? 150
-				: hasExtremeGems
-				? 250
-				: hasVeryLargeGems
-				? 180
-				: hasLargeGems
-				? 130
-				: 100;
+					? 200
+					: isMediumTimePeriod
+						? 150
+						: hasExtremeGems
+							? 250
+							: hasVeryLargeGems
+								? 180
+								: hasLargeGems
+									? 130
+									: 100;
 
 			const fullUpdateInterval = isVeryLongTimePeriod
 				? 3000
 				: isLongTimePeriod
-				? 2000
-				: isMediumTimePeriod
-				? 1200
-				: hasExtremeGems
-				? 2500
-				: hasVeryLargeGems
-				? 1800
-				: hasLargeGems
-				? 1200
-				: 500;
+					? 2000
+					: isMediumTimePeriod
+						? 1200
+						: hasExtremeGems
+							? 2500
+							: hasVeryLargeGems
+								? 1800
+								: hasLargeGems
+									? 1200
+									: 500;
 
 			const timeSinceLastUpdate =
 				currentTime - calculationCache.lastUpdateTime;
@@ -648,16 +648,16 @@ export default function Calculator() {
 					if (hoursTotal.gt(8760) || hasExtremeGems) {
 						// > 1 year or > 50B gems
 						futureGems = newState.currentGems.times(
-							fastExponentiation(interestBase, hoursTotal)
+							fastExponentiation(interestBase, hoursTotal),
 						);
 					} else if (hoursTotal.gt(720) || hasVeryLargeGems) {
 						// > 30 days or > 10B gems
 						futureGems = newState.currentGems.times(
-							getCachedExponentiation(interestBase, hoursTotal)
+							getCachedExponentiation(interestBase, hoursTotal),
 						);
 					} else {
 						futureGems = newState.currentGems.times(
-							customExponentiation(interestBase, hoursTotal)
+							customExponentiation(interestBase, hoursTotal),
 						);
 					}
 
@@ -723,12 +723,12 @@ export default function Calculator() {
 				}
 
 				const futureDate = new Date(
-					Date.now() + initialTimeInDays.times(86400000).toNumber()
+					Date.now() + initialTimeInDays.times(86400000).toNumber(),
 				);
 
 				newResults.specifiedTimeGems = {
 					value: `After ${timeDescription.trim()}, you will have: ${formatNumber(
-						futureGems
+						futureGems,
 					)} gems (${formatDateUS(futureDate)})`,
 					icon: (
 						<IconWrapper>
@@ -757,32 +757,32 @@ export default function Calculator() {
 				const detailedStats: Record<string, Result> = {
 					profitPerSecond: {
 						value: `Profit per second: ${formatNumber(
-							currentProfitPerSecond
+							currentProfitPerSecond,
 						)}`,
 					},
 					profitPerMinute: {
 						value: `Profit per minute: ${formatNumber(
-							currentProfitPerMinute
+							currentProfitPerMinute,
 						)}`,
 					},
 					profitPerHour: {
 						value: `Profit per hour: ${formatNumber(
-							currentProfitPerHour
+							currentProfitPerHour,
 						)}`,
 					},
 					profitPerDay: {
 						value: `Profit per day: ${formatNumber(
-							currentProfitPerDay
+							currentProfitPerDay,
 						)}`,
 					},
 					profitPerWeek: {
 						value: `Profit per week: ${formatNumber(
-							currentProfitPerWeek
+							currentProfitPerWeek,
 						)}`,
 					},
 					profitPerMonth: {
 						value: `Profit per month: ${formatNumber(
-							currentProfitPerMonth
+							currentProfitPerMonth,
 						)}`,
 					},
 				};
@@ -827,15 +827,15 @@ export default function Calculator() {
 									.dividedBy(newState.goalGems)
 									.times(100)
 									.toNumber(),
-								100
+								100,
 							);
 						} else {
 							// Optimized logarithm calculation for large numbers
 							const ratio = newState.goalGems.dividedBy(
-								newState.currentGems
+								newState.currentGems,
 							);
 							const interestBase = ONE.plus(
-								newState.hourlyInterest!
+								newState.hourlyInterest!,
 							);
 
 							// Use cached logarithm if available
@@ -850,7 +850,7 @@ export default function Calculator() {
 							} else {
 								timeToGoal = logBase(
 									ratio,
-									interestBase
+									interestBase,
 								).dividedBy(24);
 								calculationMemoCache.set(logKey, {
 									result: timeToGoal.times(24),
@@ -863,7 +863,7 @@ export default function Calculator() {
 									.dividedBy(newState.goalGems)
 									.times(100)
 									.toNumber(),
-								100
+								100,
 							);
 
 							// Cache for next time with longer TTL for large numbers
@@ -874,12 +874,12 @@ export default function Calculator() {
 						}
 
 						const goalDate = new Date(
-							Date.now() + timeToGoal.times(86400000).toNumber()
+							Date.now() + timeToGoal.times(86400000).toNumber(),
 						);
 
 						const goalResult = {
 							value: `You will reach your goal in ${timeToGoal.toFixed(
-								2
+								2,
 							)} days (${formatDateUS(goalDate)})`,
 							icon: (
 								<IconWrapper>
@@ -911,10 +911,10 @@ export default function Calculator() {
 								.timeToAdditional;
 					} else {
 						const targetTotal = newState.currentGems.plus(
-							newState.additionalGems
+							newState.additionalGems,
 						);
 						const ratio = targetTotal.dividedBy(
-							newState.currentGems
+							newState.currentGems,
 						);
 						const interestBase = ONE.plus(newState.hourlyInterest!);
 
@@ -930,7 +930,7 @@ export default function Calculator() {
 						} else {
 							timeToAdditional = logBase(
 								ratio,
-								interestBase
+								interestBase,
 							).dividedBy(24);
 							calculationMemoCache.set(logKey, {
 								result: timeToAdditional.times(24),
@@ -945,14 +945,15 @@ export default function Calculator() {
 					}
 
 					const additionalDate = new Date(
-						Date.now() + timeToAdditional.times(86400000).toNumber()
+						Date.now() +
+							timeToAdditional.times(86400000).toNumber(),
 					);
 
 					const additionalResult = {
 						value: `You will get ${formatNumber(
-							newState.additionalGems
+							newState.additionalGems,
 						)} additional gems in ${timeToAdditional.toFixed(
-							2
+							2,
 						)} days (${formatDateUS(additionalDate)})`,
 						icon: (
 							<IconWrapper>
@@ -1000,7 +1001,7 @@ export default function Calculator() {
 		calculateFutureAmount(
 			newState.startTime!,
 			newState.currentGems,
-			newState.hourlyInterest!
+			newState.hourlyInterest!,
 		);
 
 		// Enhanced adaptive update frequency system
@@ -1018,16 +1019,16 @@ export default function Calculator() {
 		const baseInterval = isVeryLongTimePeriod
 			? 250
 			: isLongTimePeriod
-			? 180
-			: isMediumTimePeriod
-			? 140
-			: hasExtremeGems
-			? 220
-			: hasVeryLargeGems
-			? 160
-			: hasLargeGems
-			? 130
-			: 100;
+				? 180
+				: isMediumTimePeriod
+					? 140
+					: hasExtremeGems
+						? 220
+						: hasVeryLargeGems
+							? 160
+							: hasLargeGems
+								? 130
+								: 100;
 
 		updateIntervalRef.current = setInterval(updateResults, baseInterval);
 
@@ -1035,20 +1036,20 @@ export default function Calculator() {
 		const futureUpdateInterval = isVeryLongTimePeriod
 			? 4000
 			: isLongTimePeriod
-			? 2500
-			: isMediumTimePeriod
-			? 1500
-			: hasExtremeGems
-			? 3500
-			: hasVeryLargeGems
-			? 2000
-			: hasLargeGems
-			? 1200
-			: 1000;
+				? 2500
+				: isMediumTimePeriod
+					? 1500
+					: hasExtremeGems
+						? 3500
+						: hasVeryLargeGems
+							? 2000
+							: hasLargeGems
+								? 1200
+								: 1000;
 
 		futureAmountIntervalRef.current = setInterval(
 			() => calculateFutureAmount(),
-			futureUpdateInterval
+			futureUpdateInterval,
 		);
 
 		setActiveTab("results");
@@ -1059,7 +1060,7 @@ export default function Calculator() {
 				"Calculator",
 				"Calculate",
 				`Gems: ${inputs.currentGems}`,
-				Number(inputs.currentGems) || 0
+				Number(inputs.currentGems) || 0,
 			);
 		}
 	};
@@ -1067,12 +1068,12 @@ export default function Calculator() {
 	const calculateFutureAmount = (
 		forcedStartTime?: number,
 		currentGemsAtStart?: BigNumber,
-		hourlyInterestAtStart?: BigNumber
+		hourlyInterestAtStart?: BigNumber,
 	) => {
 		if (!inputs.targetDate) return;
 
 		const targetDate = new Date(
-			`${inputs.targetDate}T${inputs.targetTime || "00:00"}`
+			`${inputs.targetDate}T${inputs.targetTime || "00:00"}`,
 		);
 		if (isNaN(targetDate.getTime())) {
 			// Only alert if this was triggered by a user action, not an interval
@@ -1088,7 +1089,7 @@ export default function Calculator() {
 		}
 
 		const futureDays = new BigNumber(
-			targetDate.getTime() - startTime
+			targetDate.getTime() - startTime,
 		).dividedBy(86400000);
 		const totalDays = state.initialTimeInDays.plus(futureDays);
 
@@ -1120,16 +1121,13 @@ export default function Calculator() {
 		}
 
 		const futureGems = currentGems.times(
-			customExponentiation(
-				ONE.plus(hourlyInterest),
-				totalDays.times(24)
-			)
+			customExponentiation(ONE.plus(hourlyInterest), totalDays.times(24)),
 		);
 		setResults((prev) => ({
 			...prev,
 			futureAmount: {
 				value: `On ${formatDateUS(
-					targetDate
+					targetDate,
 				)}, you will have: ${formatNumber(futureGems)} gems`,
 				icon: (
 					<IconWrapper>
@@ -1145,7 +1143,7 @@ export default function Calculator() {
 			window.trackEvent(
 				"Calculator",
 				"Future Calculation",
-				formatDateUS(targetDate)
+				formatDateUS(targetDate),
 			);
 		}
 	};
@@ -1334,7 +1332,8 @@ export default function Calculator() {
 										</p>
 										<div className="flex flex-wrap gap-2">
 											{DISCORD_RANKS.filter(
-												(rank) => rank.name !== "Member"
+												(rank) =>
+													rank.name !== "Member",
 											).map((rank) => (
 												<TooltipProvider
 													key={rank.name}
@@ -1346,7 +1345,7 @@ export default function Calculator() {
 																type="button"
 																onClick={() =>
 																	handleRankSelect(
-																		rank
+																		rank,
 																	)
 																}
 																className={`relative p-1.5 rounded-lg border transition-colors ${
@@ -1403,14 +1402,14 @@ export default function Calculator() {
 													</div>
 													<div className="flex gap-1 flex-wrap">
 														{getAvailableMultipliers(
-															selectedRank
+															selectedRank,
 														).map((mult) => (
 															<button
 																key={mult}
 																type="button"
 																onClick={() =>
 																	handleMultiplierSelect(
-																		mult
+																		mult,
 																	)
 																}
 																className={`px-2 py-0.5 text-xs font-medium rounded transition-all ${
@@ -1431,7 +1430,7 @@ export default function Calculator() {
 										{inputs.goalGems &&
 											!selectedRank &&
 											findEquivalentRank(
-												inputs.goalGems
+												inputs.goalGems,
 											) && (
 												<p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
 													<span>
@@ -1440,12 +1439,12 @@ export default function Calculator() {
 													<img
 														src={
 															findEquivalentRank(
-																inputs.goalGems
+																inputs.goalGems,
 															)!.rank.icon
 														}
 														alt={
 															findEquivalentRank(
-																inputs.goalGems
+																inputs.goalGems,
 															)!.rank.name
 														}
 														className="w-4 h-4 inline-block"
@@ -1453,17 +1452,17 @@ export default function Calculator() {
 													<span className="font-medium text-primary">
 														{
 															findEquivalentRank(
-																inputs.goalGems
+																inputs.goalGems,
 															)!.rank.name
 														}
 														{findEquivalentRank(
-															inputs.goalGems
+															inputs.goalGems,
 														)!.multiplier > 1 && (
 															<span className="ml-0.5">
 																x
 																{
 																	findEquivalentRank(
-																		inputs.goalGems
+																		inputs.goalGems,
 																	)!
 																		.multiplier
 																}
@@ -1557,7 +1556,7 @@ export default function Calculator() {
 														use the sliders or enter
 														values directly.
 													</p>
-														</TooltipContent>
+												</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>
 									</div>
@@ -1587,23 +1586,24 @@ export default function Calculator() {
 														unit === "years"
 															? 100
 															: unit === "months"
-															? 12
-															: unit === "days"
-															? 31
-															: 59
+																? 12
+																: unit ===
+																	  "days"
+																	? 31
+																	: 59
 													}
 													step={1}
 													value={[
 														parseInt(
 															inputs[
 																unit as keyof CalculatorInputs
-															] || "0"
+															] || "0",
 														),
 													]}
 													onValueChange={(value) =>
 														handleSliderChange(
 															unit,
-															value
+															value,
 														)
 													}
 												/>
@@ -1691,7 +1691,7 @@ export default function Calculator() {
 													"profitGrowth",
 													"timeToGoal",
 													"timeToAdditional",
-												].includes(key)
+												].includes(key),
 											)
 											.map(([key, result]) => (
 												<Card
@@ -1732,7 +1732,7 @@ export default function Calculator() {
 																		/>
 																		<p className="text-xs text-right mt-1">
 																			{result.progress.toFixed(
-																				2
+																				2,
 																			)}
 																			%
 																		</p>
@@ -1759,7 +1759,7 @@ export default function Calculator() {
 														"profitPerDay",
 														"profitPerWeek",
 														"profitPerMonth",
-													].includes(key)
+													].includes(key),
 												)
 												.map(([key, result]) => (
 													<Card
