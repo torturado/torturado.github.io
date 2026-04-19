@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "exp-bank-calculator",
+      "type": "skill-md",
+      "description": "Use this skill when you need to estimate EXP Bank gem growth, time-to-goal, or rank thresholds on torturado.github.io.",
+      "url": "/.well-known/agent-skills/exp-bank-calculator/SKILL.md",
+      "digest": "sha256:pending"
+    }
+  ]
+}
