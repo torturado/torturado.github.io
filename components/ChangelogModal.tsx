@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = "2.0.2";
+const CURRENT_VERSION = "2.1.0";
 
 interface Change {
 	version: string;
@@ -115,6 +115,23 @@ const CHANGELOG: Change[] = [
 			"Increased daily interest rate to 0.50%",
 			"Updated calculator to use the new interest rate",
 			"Updated tips and FAQ pages to reflect the new rate",
+		],
+	},
+	{
+		version: "2.1.0",
+		date: "2026-04-19",
+		changes: [
+			"Upgraded the app to Next.js 16 and refreshed build/config settings",
+			"Extracted calculator logic into a shared expCalculator utility for reuse outside the UI",
+			"Added WebMCP browser tools plus agent-facing discovery files (agents.md, llms.txt, and .well-known manifests)",
+			"Improved metadata, canonical links, viewport handling, and production security meta tags",
+			"Enhanced accessibility with a skip link, stronger focus-visible styles, reduced-motion support, and clearer aria labels",
+			"Lazy-loaded the calculator on the homepage and optimized the analytics script loading behavior",
+			"Converted the calculator inputs into a semantic form with tool metadata for agent-assisted usage",
+			"Upgraded Discord rank preset icons to next/image and improved quick preset accessibility",
+			"Fixed manual Goal Gems rank detection so round values like 20B now map to the highest reached rank (Divine x1)",
+			"Updated robots.txt and sitemap.xml to expose AI/agent discovery files and refreshed crawl metadata",
+			"Automated .nojekyll generation during deploy and removed the legacy public/index.html export file",
 		],
 	},
 ];
