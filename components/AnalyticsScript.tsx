@@ -7,7 +7,9 @@ export function AnalyticsScript() {
   const UMAMI_URL = process.env.NEXT_PUBLIC_UMAMI_URL
 
   if (!UMAMI_WEBSITE_ID || !UMAMI_URL) {
-    console.warn('Faltan variables de entorno para Umami Analytics')
+    if (process.env.NODE_ENV !== "production") {
+      console.info("Missing Umami environment variables; analytics disabled")
+    }
     return null
   }
 
@@ -15,6 +17,7 @@ export function AnalyticsScript() {
     <Script
       async
       defer
+      strategy="afterInteractive"
       data-website-id={UMAMI_WEBSITE_ID}
       src={`${UMAMI_URL}/script.js`}
       data-auto-track="true"

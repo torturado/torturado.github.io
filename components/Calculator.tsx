@@ -35,6 +35,7 @@ import {
 	InfoIcon,
 	TargetIcon,
 } from "lucide-react";
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import LoadingState from "./LoadingState";
 import TechnicalInfoModal from "./TechnicalInfoModal";
@@ -104,29 +105,37 @@ const DISCORD_RANKS: DiscordRank[] = [
 	},
 ];
 
-// Helper function to find a rank by exact gem value match (including multipliers)
-const findRankByValue = (
+interface RankWithMultiplier {
+	rank: DiscordRank;
+	multiplier: number;
+}
+
+// Helper function to find the highest Discord rank a gem value qualifies for
+const findRankSelectionForValue = (
 	value: string,
-): { rank: DiscordRank; multiplier: number } | null => {
+): RankWithMultiplier | null => {
 	if (!value || value === "") return null;
 	const valueBN = new BigNumber(value);
-	if (valueBN.isNaN()) return null;
+	if (valueBN.isNaN() || valueBN.lte(0)) return null;
 
-	// Check each rank and its multipliers
-	for (let i = DISCORD_RANKS.length - 1; i >= 0; i--) {
-		const rank = DISCORD_RANKS[i];
-		if (rank.name === "Member") continue;
-
-		const rankMin = new BigNumber(rank.minGems);
-		if (valueBN.gte(rankMin)) {
-			// Check if it's an exact multiple
-			const ratio = valueBN.dividedBy(rankMin);
-			if (ratio.isInteger() && ratio.gte(1)) {
-				return { rank, multiplier: ratio.toNumber() };
-			}
+	let selectedRank: DiscordRank | null = null;
+	for (const rank of DISCORD_RANKS) {
+		if (valueBN.gte(new BigNumber(rank.minGems))) {
+			selectedRank = rank;
 		}
 	}
-	return null;
+
+	if (!selectedRank || selectedRank.name === "Member") return null;
+
+	const multiplier = valueBN
+		.dividedBy(selectedRank.minGems)
+		.integerValue(BigNumber.ROUND_DOWN)
+		.toNumber();
+
+	return {
+		rank: selectedRank,
+		multiplier,
+	};
 };
 
 // Get available multipliers for a rank (up to but NOT reaching the next rank threshold)
@@ -157,41 +166,6 @@ const getAvailableMultipliers = (rank: DiscordRank): number[] => {
 	// Generate array from 1 to maxMultiplier (but cap at 10 for sanity)
 	const cappedMax = Math.min(maxMultiplier, 10);
 	return Array.from({ length: cappedMax }, (_, i) => i + 1);
-};
-
-// Helper function to find the equivalent rank for a gem value (highest rank the value qualifies for)
-// Also calculates the multiplier (e.g., Divine x2 if you have 24B and Divine is 12B)
-interface RankWithMultiplier {
-	rank: DiscordRank;
-	multiplier: number;
-}
-
-const findEquivalentRank = (value: string): RankWithMultiplier | null => {
-	if (!value || value === "") return null;
-	const valueBN = new BigNumber(value);
-	if (valueBN.isNaN() || valueBN.lte(0)) return null;
-
-	// Find the highest rank that the value meets or exceeds
-	let equivalentRank: DiscordRank | null = null;
-	for (const rank of DISCORD_RANKS) {
-		if (valueBN.gte(new BigNumber(rank.minGems))) {
-			equivalentRank = rank;
-		}
-	}
-
-	if (!equivalentRank || equivalentRank.name === "Member") return null;
-
-	// Calculate multiplier: how many times the rank threshold fits into the value
-	const rankMinGems = new BigNumber(equivalentRank.minGems);
-	const multiplier = valueBN
-		.dividedBy(rankMinGems)
-		.integerValue(BigNumber.ROUND_DOWN)
-		.toNumber();
-
-	return {
-		rank: equivalentRank,
-		multiplier: multiplier,
-	};
 };
 
 // Performance optimization: Memoization cache for expensive calculations
@@ -327,6 +301,10 @@ export default function Calculator() {
 	// State for selected Discord rank and multiplier (for Goal Gems quick presets)
 	const [selectedRank, setSelectedRank] = useState<DiscordRank | null>(null);
 	const [selectedMultiplier, setSelectedMultiplier] = useState<number>(1);
+	const equivalentGoalRank =
+		inputs.goalGems && !selectedRank
+			? findRankSelectionForValue(inputs.goalGems)
+			: null;
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -335,9 +313,9 @@ export default function Calculator() {
 		// Validate inputs in real-time
 		validateField(name, value);
 
-		// Detect if goalGems matches a rank (with multiplier)
+		// Detect the highest Discord rank reached by the manual goalGems value
 		if (name === "goalGems") {
-			const matched = findRankByValue(value);
+			const matched = findRankSelectionForValue(value);
 			if (matched) {
 				setSelectedRank(matched.rank);
 				setSelectedMultiplier(matched.multiplier);
@@ -1148,6 +1126,13 @@ export default function Calculator() {
 		}
 	};
 
+	const handleCalculatorSubmit = (
+		event: React.FormEvent<HTMLFormElement>,
+	) => {
+		event.preventDefault();
+		calculateResults();
+	};
+
 	useEffect(() => {
 		// Mark calculator as ready after initial render
 		setIsCalculatorReady(true);
@@ -1215,7 +1200,13 @@ export default function Calculator() {
 							</TabsTrigger>
 						</TabsList>
 						<TabsContent value="input" className="space-y-4">
-							<div className="space-y-4">
+							<form
+								className="space-y-4"
+								onSubmit={handleCalculatorSubmit}
+								toolname="calculate-exp-growth-form"
+								tooldescription="Fill in EXP Bank calculator inputs and compute gem growth on this page."
+								toolautosubmit
+							>
 								<div className="space-y-2">
 									<div className="flex items-center justify-between">
 										<Label htmlFor="currentGems">
@@ -1253,6 +1244,7 @@ export default function Calculator() {
 										id="currentGems"
 										type="number"
 										name="currentGems"
+										toolparamdescription="Current deposited gems. This is the only required field."
 										placeholder="Enter your current gems"
 										value={inputs.currentGems}
 										onChange={handleInputChange}
@@ -1308,6 +1300,7 @@ export default function Calculator() {
 										id="goalGems"
 										type="number"
 										name="goalGems"
+										toolparamdescription="Optional target total gems to estimate time-to-goal."
 										placeholder="Enter your gem goal"
 										value={inputs.goalGems}
 										onChange={handleInputChange}
@@ -1348,6 +1341,7 @@ export default function Calculator() {
 																		rank,
 																	)
 																}
+																aria-label={`Set goal to ${rank.name} (${rank.displayValue})`}
 																className={`relative p-1.5 rounded-lg border transition-colors ${
 																	selectedRank?.name ===
 																	rank.name
@@ -1355,13 +1349,16 @@ export default function Calculator() {
 																		: "border-input hover:border-primary/50 bg-card"
 																}`}
 															>
-																<img
+																<Image
 																	src={
 																		rank.icon
 																	}
 																	alt={
 																		rank.name
 																	}
+																	width={32}
+																	height={32}
+																	loading="lazy"
 																	className="w-8 h-8 object-contain"
 																/>
 																{selectedRank?.name ===
@@ -1387,13 +1384,13 @@ export default function Calculator() {
 											<div className="mt-2 p-2 bg-muted/30 rounded-lg border border-input">
 												<div className="flex items-center gap-2 flex-wrap">
 													<div className="flex items-center gap-1.5">
-														<img
-															src={
-																selectedRank.icon
-															}
-															alt={
-																selectedRank.name
-															}
+														<Image
+															src={selectedRank.icon}
+															alt=""
+															aria-hidden="true"
+															width={20}
+															height={20}
+															loading="lazy"
 															className="w-5 h-5 object-contain"
 														/>
 														<span className="text-xs font-medium text-foreground">
@@ -1413,11 +1410,11 @@ export default function Calculator() {
 																	)
 																}
 																className={`px-2 py-0.5 text-xs font-medium rounded transition-all ${
-																	selectedMultiplier ===
-																	mult
+																	selectedMultiplier === mult
 																		? "bg-primary text-primary-foreground"
 																		: "bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
 																}`}
+																aria-label={`Set ${selectedRank.name} multiplier to x${mult}`}
 															>
 																x{mult}
 															</button>
@@ -1426,45 +1423,37 @@ export default function Calculator() {
 												</div>
 											</div>
 										)}
-										{/* Equivalence indicator - only shows for custom values that don't match a preset */}
+										{/* Fallback equivalence indicator when no quick preset is selected */}
 										{inputs.goalGems &&
 											!selectedRank &&
-											findEquivalentRank(
-												inputs.goalGems,
-											) && (
+											equivalentGoalRank && (
 												<p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
 													<span>
 														Equivalent rank:
 													</span>
-													<img
+													<Image
 														src={
-															findEquivalentRank(
-																inputs.goalGems,
-															)!.rank.icon
+															equivalentGoalRank.rank
+																.icon
 														}
-														alt={
-															findEquivalentRank(
-																inputs.goalGems,
-															)!.rank.name
-														}
+														alt=""
+														aria-hidden="true"
+														width={16}
+														height={16}
+														loading="lazy"
 														className="w-4 h-4 inline-block"
 													/>
 													<span className="font-medium text-primary">
 														{
-															findEquivalentRank(
-																inputs.goalGems,
-															)!.rank.name
+															equivalentGoalRank.rank
+																.name
 														}
-														{findEquivalentRank(
-															inputs.goalGems,
-														)!.multiplier > 1 && (
+														{equivalentGoalRank.multiplier >
+															1 && (
 															<span className="ml-0.5">
 																x
 																{
-																	findEquivalentRank(
-																		inputs.goalGems,
-																	)!
-																		.multiplier
+																	equivalentGoalRank.multiplier
 																}
 															</span>
 														)}
@@ -1511,6 +1500,7 @@ export default function Calculator() {
 										id="additionalGems"
 										type="number"
 										name="additionalGems"
+										toolparamdescription="Optional extra gems to earn beyond the current balance."
 										placeholder="Enter additional gems"
 										value={inputs.additionalGems}
 										onChange={handleInputChange}
@@ -1610,6 +1600,7 @@ export default function Calculator() {
 												<Input
 													type="number"
 													name={unit}
+													toolparamdescription={`Optional ${unit} component of the calculation duration.`}
 													value={
 														inputs[
 															unit as keyof CalculatorInputs
@@ -1631,6 +1622,7 @@ export default function Calculator() {
 											id="targetDate"
 											type="date"
 											name="targetDate"
+											toolparamdescription="Optional future date for the target-date calculator flow."
 											value={inputs.targetDate}
 											onChange={handleInputChange}
 											className={`bg-card border-input text-card-foreground ${
@@ -1656,6 +1648,7 @@ export default function Calculator() {
 											id="targetTime"
 											type="time"
 											name="targetTime"
+											toolparamdescription="Optional time paired with the target date."
 											value={inputs.targetTime}
 											onChange={handleInputChange}
 											className="bg-card border-input text-card-foreground"
@@ -1667,13 +1660,13 @@ export default function Calculator() {
 									{state.dailyInterest.times(100).toFixed(2)}%
 								</p>
 								<Button
-									onClick={calculateResults}
+									type="submit"
 									className="w-full"
 									size="lg"
 								>
 									Calculate
 								</Button>
-							</div>
+							</form>
 						</TabsContent>
 						<TabsContent
 							value="results"

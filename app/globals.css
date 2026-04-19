@@ -92,10 +92,42 @@
 	* {
 		@apply border-border;
 	}
+	:focus-visible {
+		outline: 2px solid hsl(var(--ring));
+		outline-offset: 2px;
+	}
+	.skip-link {
+		position: absolute;
+		top: -40px;
+		left: 0;
+		z-index: 1000;
+		background: hsl(var(--primary));
+		color: hsl(var(--primary-foreground));
+		padding: 0.5rem 1rem;
+		border-radius: 0 0 0.5rem 0;
+		transition: top 0.2s ease;
+	}
+	.skip-link:focus-visible {
+		top: 0;
+	}
 	body {
 		@apply bg-background text-foreground;
 	}
 	html {
 		@apply antialiased;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		html:focus-within {
+			scroll-behavior: auto;
+		}
+
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
 	}
 }

@@ -1,4 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
+
 User-agent: *
 Allow: /
 Allow: /privacy
@@ -7,9 +9,43 @@ Allow: /cookies
 Allow: /contact
 Allow: /faq
 Allow: /tips
+Allow: /agents.md
+Allow: /llms.txt
+Allow: /.well-known/
 
 # Allow Google bot to crawl all content
 User-agent: Googlebot
+Allow: /
+
+# Explicit AI crawler rules
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Google-CloudVertexBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Bytespider
 Allow: /
 
 # Sitemap location
