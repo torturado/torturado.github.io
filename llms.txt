@@ -1,0 +1,18 @@
+EXP Bank Calculator
+URL: https://torturado.github.io
+
+Summary:
+- Static calculator for EXP Bank gem growth.
+- Fixed daily interest rate: 0.50%.
+- No login, no HTTP API, no OAuth, no MCP server.
+
+Important URLs:
+- https://torturado.github.io/
+- https://torturado.github.io/faq
+- https://torturado.github.io/agents.md
+- https://torturado.github.io/.well-known/agent-skills/index.json
+
+Agent notes:
+- Prefer WebMCP on the homepage when available.
+- Otherwise read /agents.md and use the UI manually.
+- This site is hosted on GitHub Pages, so custom response headers and true markdown content negotiation are not available from code alone.
