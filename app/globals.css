@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		/* Neutrals - warm gray scale */
+		--background: 0 0% 98%;
+		--foreground: 0 0% 9%;
+
+		--card: 0 0% 100%;
+		--card-foreground: 0 0% 9%;
+
+		--popover: 0 0% 100%;
+		--popover-foreground: 0 0% 9%;
+
+		/* Accent - muted teal */
+		--primary: 183 25% 45%;
+		--primary-foreground: 0 0% 98%;
+
+		/* Secondary - neutral gray */
+		--secondary: 0 0% 94%;
+		--secondary-foreground: 0 0% 9%;
+
+		/* Muted */
+		--muted: 0 0% 94%;
+		--muted-foreground: 0 0% 45%;
+
+		/* Accent alias */
+		--accent: 183 25% 45%;
+		--accent-foreground: 0 0% 98%;
+
+		/* Semantic - Error */
+		--destructive: 0 65% 50%;
+		--destructive-foreground: 0 0% 98%;
+
+		/* Semantic - Success */
+		--success: 142 60% 40%;
+		--success-foreground: 0 0% 98%;
+
+		/* Borders and inputs */
+		--border: 0 0% 89%;
+		--input: 0 0% 89%;
+		--ring: 183 25% 45%;
+
+		--radius: 0.5rem;
+	}
+
+	.dark {
+		/* Neutrals - inverted */
+		--background: 0 0% 7%;
+		--foreground: 0 0% 95%;
+
+		--card: 0 0% 10%;
+		--card-foreground: 0 0% 95%;
+
+		--popover: 0 0% 10%;
+		--popover-foreground: 0 0% 95%;
+
+		/* Accent - slightly brighter for dark mode */
+		--primary: 183 20% 50%;
+		--primary-foreground: 0 0% 9%;
+
+		/* Secondary */
+		--secondary: 0 0% 15%;
+		--secondary-foreground: 0 0% 95%;
+
+		/* Muted */
+		--muted: 0 0% 15%;
+		--muted-foreground: 0 0% 60%;
+
+		/* Accent alias */
+		--accent: 183 20% 50%;
+		--accent-foreground: 0 0% 9%;
+
+		/* Semantic - Error */
+		--destructive: 0 55% 55%;
+		--destructive-foreground: 0 0% 98%;
+
+		/* Semantic - Success */
+		--success: 142 50% 45%;
+		--success-foreground: 0 0% 9%;
+
+		/* Borders and inputs */
+		--border: 0 0% 20%;
+		--input: 0 0% 20%;
+		--ring: 183 20% 50%;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	:focus-visible {
+		outline: 2px solid hsl(var(--ring));
+		outline-offset: 2px;
+	}
+	.skip-link {
+		position: absolute;
+		top: -40px;
+		left: 0;
+		z-index: 1000;
+		background: hsl(var(--primary));
+		color: hsl(var(--primary-foreground));
+		padding: 0.5rem 1rem;
+		border-radius: 0 0 0.5rem 0;
+		transition: top 0.2s ease;
+	}
+	.skip-link:focus-visible {
+		top: 0;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+	html {
+		@apply antialiased;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		html:focus-within {
+			scroll-behavior: auto;
+		}
+
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}
