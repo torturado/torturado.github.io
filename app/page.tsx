@@ -9,7 +9,9 @@ import {
 } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
 import dynamic from "next/dynamic";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { createRouteMetadata } from "./routeMetadata";
 
 const Calculator = dynamic(() => import("../components/Calculator"), {
 	loading: () => (
@@ -17,6 +19,14 @@ const Calculator = dynamic(() => import("../components/Calculator"), {
 			Loading calculator...
 		</div>
 	),
+});
+
+export const metadata: Metadata = createRouteMetadata({
+	title: "EXP Bank Calculator | Gem Growth Calculator",
+	description:
+		"Static GitHub Pages calculator for EXP Bank gem growth, goal planning, and compound-interest projections at a 0.50% daily rate.",
+	canonicalPath: "/",
+	markdownPath: "/index.md",
 });
 
 export default function Home() {

@@ -7,11 +7,17 @@ Allow: /privacy
 Allow: /terms
 Allow: /cookies
 Allow: /contact
+Allow: /index.md
+Allow: /faq.md
+Allow: /tips.md
+Allow: /privacy.md
+Allow: /terms.md
+Allow: /cookies.md
+Allow: /contact.md
 Allow: /faq
 Allow: /tips
 Allow: /agents.md
 Allow: /llms.txt
-Allow: /.well-known/
 
 # Allow Google bot to crawl all content
 User-agent: Googlebot

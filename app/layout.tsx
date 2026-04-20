@@ -60,9 +60,6 @@ export const metadata: Metadata = {
 		index: true,
 		follow: true,
 	},
-	alternates: {
-		canonical: "/",
-	},
 	metadataBase,
 };
 
@@ -97,7 +94,6 @@ export default function RootLayout({
 				{umamiOrigin && (
 					<link rel="preconnect" href={umamiOrigin} crossOrigin="" />
 				)}
-				<link rel="alternate" type="text/markdown" href="/agents.md" />
 				<link rel="describedby" href="/llms.txt" />
 				<link rel="service-doc" href="/agents.md" />
 				<AnalyticsScript />

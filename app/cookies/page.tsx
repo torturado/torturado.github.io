@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+import { createRouteMetadata } from "../routeMetadata";
+
+export const metadata: Metadata = createRouteMetadata({
+	title: "Cookie and Storage Policy | EXP Bank Calculator",
+	description:
+		"Cookie and storage policy for the EXP Bank Calculator, covering local storage, cookie-free analytics, and browser privacy controls.",
+	canonicalPath: "/cookies",
+	markdownPath: "/cookies.md",
+});
+
 export default function CookiePolicy() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
