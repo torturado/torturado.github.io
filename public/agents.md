@@ -6,9 +6,25 @@ Agent-facing guide for `https://torturado.github.io`.
 
 - Static GitHub Pages site for estimating EXP Bank gem growth with compound interest.
 - Primary task: calculate future gem balances from a starting deposit at a fixed 0.50% daily rate.
-- No server-side API, no login, no OAuth, and no protected resources.
+- No HTTP API.
+- No OAuth or OIDC authorization server.
+- No OAuth protected-resource metadata.
+- No MCP server.
+- Browser-side WebMCP tools are exposed on the homepage.
 
-## Main routes
+## Canonical machine docs
+
+- `/agents.md`
+- `/llms.txt`
+- `/index.md`
+- `/faq.md`
+- `/tips.md`
+- `/privacy.md`
+- `/terms.md`
+- `/cookies.md`
+- `/contact.md`
+
+## Main HTML routes
 
 - `/` calculator UI and WebMCP tool surface
 - `/faq` product and formula explanations
@@ -29,6 +45,7 @@ Agent-facing guide for `https://torturado.github.io`.
 - Read static documentation directly from the site.
 - Use WebMCP on the homepage when the browser supports `navigator.modelContext`.
 - Use the calculator UI manually if WebMCP is unavailable.
+- Fetch the published `.md` files directly for route-specific summaries.
 
 ## WebMCP tools
 
@@ -38,8 +55,17 @@ Agent-facing guide for `https://torturado.github.io`.
 - `list-exp-ranks`
   - Output: the Discord rank preset thresholds used by the site
 
-## Constraints
+## Not published on this site
 
-- The site is published on GitHub Pages.
-- Response headers and HTTP content negotiation are not configurable from the repository alone.
-- That means the site can publish static discovery files, but cannot natively emit custom `Link` headers or serve `Accept: text/markdown` variants from the same URL without adding infrastructure in front of GitHub Pages.
+- `/.well-known/api-catalog`
+- `/.well-known/api-catalog.json`
+- `/.well-known/openid-configuration`
+- `/.well-known/oauth-authorization-server`
+- `/.well-known/oauth-protected-resource`
+- `/.well-known/mcp/server-card.json`
+
+## GitHub Pages limitations
+
+- HTTP `Link` response headers are not configurable in this deployment.
+- `Accept: text/markdown` negotiation is not supported for `/`.
+- Agents should use the HTML `<link>` elements or fetch the published `.md` files directly.

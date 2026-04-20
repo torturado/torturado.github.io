@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+import { createRouteMetadata } from "../routeMetadata";
+
+export const metadata: Metadata = createRouteMetadata({
+	title: "Contact | EXP Bank Calculator",
+	description:
+		"Contact details, response expectations, bug-report guidance, and feature-request instructions for the EXP Bank Calculator.",
+	canonicalPath: "/contact",
+	markdownPath: "/contact.md",
+});
+
 export default function Contact() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">

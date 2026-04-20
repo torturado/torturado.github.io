@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+import { createRouteMetadata } from "../routeMetadata";
+
+export const metadata: Metadata = createRouteMetadata({
+	title: "Privacy Policy | EXP Bank Calculator",
+	description:
+		"Privacy policy for the EXP Bank Calculator, including local processing, local storage, GitHub Pages hosting, and Umami analytics.",
+	canonicalPath: "/privacy",
+	markdownPath: "/privacy.md",
+});
+
 export default function PrivacyPolicy() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">

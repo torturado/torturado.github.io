@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+import { createRouteMetadata } from "../routeMetadata";
+
+export const metadata: Metadata = createRouteMetadata({
+	title: "Terms of Service | EXP Bank Calculator",
+	description:
+		"Terms of service for the EXP Bank Calculator, including license, restrictions, disclaimers, hosting, and analytics terms.",
+	canonicalPath: "/terms",
+	markdownPath: "/terms.md",
+});
+
 export default function TermsOfService() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">

@@ -4,15 +4,31 @@ URL: https://torturado.github.io
 Summary:
 - Static calculator for EXP Bank gem growth.
 - Fixed daily interest rate: 0.50%.
-- No login, no HTTP API, no OAuth, no MCP server.
+- No HTTP API.
+- No OAuth or OIDC authorization server.
+- No OAuth protected-resource metadata.
+- No MCP server.
+- Browser-side WebMCP tools are available on the homepage.
 
-Important URLs:
+Machine docs:
 - https://torturado.github.io/
+- https://torturado.github.io/index.md
 - https://torturado.github.io/faq
+- https://torturado.github.io/faq.md
+- https://torturado.github.io/tips.md
+- https://torturado.github.io/privacy.md
+- https://torturado.github.io/terms.md
+- https://torturado.github.io/cookies.md
+- https://torturado.github.io/contact.md
 - https://torturado.github.io/agents.md
-- https://torturado.github.io/.well-known/agent-skills/index.json
+- https://torturado.github.io/llms.txt
 
 Agent notes:
 - Prefer WebMCP on the homepage when available.
 - Otherwise read /agents.md and use the UI manually.
-- This site is hosted on GitHub Pages, so custom response headers and true markdown content negotiation are not available from code alone.
+- Agents can also fetch the published route-specific .md files directly.
+
+GitHub Pages limitations:
+- HTTP Link response headers are not configurable in this deployment.
+- Accept: text/markdown negotiation is not supported for /.
+- Use HTML link elements or fetch the published .md files directly.

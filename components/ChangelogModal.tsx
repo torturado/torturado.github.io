@@ -123,7 +123,7 @@ const CHANGELOG: Change[] = [
 		changes: [
 			"Upgraded the app to Next.js 16 and refreshed build/config settings",
 			"Extracted calculator logic into a shared expCalculator utility for reuse outside the UI",
-			"Added WebMCP browser tools plus agent-facing discovery files (agents.md, llms.txt, and .well-known manifests)",
+			"Added WebMCP browser tools plus agent-facing discovery files (agents.md, llms.txt, and route-specific markdown mirrors)",
 			"Improved metadata, canonical links, viewport handling, and production security meta tags",
 			"Enhanced accessibility with a skip link, stronger focus-visible styles, reduced-motion support, and clearer aria labels",
 			"Lazy-loaded the calculator on the homepage and optimized the analytics script loading behavior",
