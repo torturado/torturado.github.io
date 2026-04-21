@@ -284,6 +284,7 @@ export default function Calculator() {
 	const [results, setResults] = useState<Record<string, Result> | null>(null);
 	const [showTechnicalInfo, setShowTechnicalInfo] = useState(false);
 	const [activeTab, setActiveTab] = useState("input");
+	const [resultsKey, setResultsKey] = useState(0);
 
 	const updateIntervalRef = useRef<NodeJS.Timeout | null>(null);
 	const futureAmountIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -1031,6 +1032,7 @@ export default function Calculator() {
 		);
 
 		setActiveTab("results");
+		setResultsKey((prev) => prev + 1);
 
 		// Track analytics event for calculation
 		if (typeof window !== "undefined" && window.trackEvent) {
@@ -1145,7 +1147,7 @@ export default function Calculator() {
 
 	return (
 		<LoadingState>
-			<Card className="w-full">
+			<Card className="w-full animate-fade-in-up">
 				<CardHeader className="bg-card">
 					<CardTitle className="text-xl flex justify-between items-center">
 						EXP Bank Calculator
@@ -1248,9 +1250,9 @@ export default function Calculator() {
 										placeholder="Enter your current gems"
 										value={inputs.currentGems}
 										onChange={handleInputChange}
-										className={`bg-card border-input text-card-foreground ${
+										className={`bg-card border-input text-card-foreground transition-all duration-200 ease-out-quart focus:ring-2 focus:ring-ring/40 ${
 											inputErrors.currentGems.hasError
-												? "border-red-500"
+												? "border-red-500 animate-shake"
 												: ""
 										}`}
 									/>
@@ -1304,9 +1306,9 @@ export default function Calculator() {
 										placeholder="Enter your gem goal"
 										value={inputs.goalGems}
 										onChange={handleInputChange}
-										className={`bg-card border-input text-card-foreground ${
+										className={`bg-card border-input text-card-foreground transition-all duration-200 ease-out-quart focus:ring-2 focus:ring-ring/40 ${
 											inputErrors.goalGems.hasError
-												? "border-red-500"
+												? "border-red-500 animate-shake"
 												: ""
 										}`}
 									/>
@@ -1342,12 +1344,12 @@ export default function Calculator() {
 																	)
 																}
 																aria-label={`Set goal to ${rank.name} (${rank.displayValue})`}
-																className={`relative p-1.5 rounded-lg border transition-colors ${
-																	selectedRank?.name ===
-																	rank.name
-																		? "border-primary bg-primary/10"
-																		: "border-input hover:border-primary/50 bg-card"
-																}`}
+														className={`relative p-1.5 rounded-lg border transition-all duration-200 ease-out-quart active:scale-95 ${
+															selectedRank?.name ===
+															rank.name
+																? "border-primary bg-primary/10 animate-scale-pop"
+																: "border-input hover:border-primary/50 bg-card hover:scale-[1.02]"
+														}`}
 															>
 																<Image
 																	src={
@@ -1381,7 +1383,7 @@ export default function Calculator() {
 										</div>
 										{/* Multiplier selector - shows when a rank is selected */}
 										{selectedRank && (
-											<div className="mt-2 p-2 bg-muted/30 rounded-lg border border-input">
+											<div className="mt-2 p-2 bg-muted/30 rounded-lg border border-input animate-fade-in">
 												<div className="flex items-center gap-2 flex-wrap">
 													<div className="flex items-center gap-1.5">
 														<Image
@@ -1504,9 +1506,9 @@ export default function Calculator() {
 										placeholder="Enter additional gems"
 										value={inputs.additionalGems}
 										onChange={handleInputChange}
-										className={`bg-card border-input text-card-foreground ${
+										className={`bg-card border-input text-card-foreground transition-all duration-200 ease-out-quart focus:ring-2 focus:ring-ring/40 ${
 											inputErrors.additionalGems.hasError
-												? "border-red-500"
+												? "border-red-500 animate-shake"
 												: ""
 										}`}
 									/>
@@ -1618,19 +1620,19 @@ export default function Calculator() {
 										<Label htmlFor="targetDate">
 											Target Date
 										</Label>
-										<Input
-											id="targetDate"
-											type="date"
-											name="targetDate"
-											toolparamdescription="Optional future date for the target-date calculator flow."
-											value={inputs.targetDate}
-											onChange={handleInputChange}
-											className={`bg-card border-input text-card-foreground ${
-												inputErrors.targetDate.hasError
-													? "border-red-500"
-													: ""
-											}`}
-										/>
+									<Input
+										id="targetDate"
+										type="date"
+										name="targetDate"
+										toolparamdescription="Optional future date for the target-date calculator flow."
+										value={inputs.targetDate}
+										onChange={handleInputChange}
+										className={`bg-card border-input text-card-foreground transition-all duration-200 ease-out-quart focus:ring-2 focus:ring-ring/40 ${
+											inputErrors.targetDate.hasError
+												? "border-red-500 animate-shake"
+												: ""
+										}`}
+									/>
 										{inputErrors.targetDate.hasError && (
 											<p className="text-red-500 text-sm mt-1 flex items-center">
 												<IconWrapper>
@@ -1659,13 +1661,13 @@ export default function Calculator() {
 									Daily Interest:{" "}
 									{state.dailyInterest.times(100).toFixed(2)}%
 								</p>
-								<Button
-									type="submit"
-									className="w-full"
-									size="lg"
-								>
-									Calculate
-								</Button>
+									<Button
+										type="submit"
+										className="w-full active:scale-[0.98] transition-transform duration-100 ease-out-expo"
+										size="lg"
+									>
+										Calculate
+									</Button>
 							</form>
 						</TabsContent>
 						<TabsContent
@@ -1673,7 +1675,7 @@ export default function Calculator() {
 							className="space-y-6 bg-muted/30 -mx-6 -mb-6 p-6 rounded-b-lg"
 						>
 							{results ? (
-								<div className="space-y-6">
+								<div key={resultsKey} className="space-y-6 animate-tab-in">
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 										{Object.entries(results)
 											.filter(([key]) =>
@@ -1686,10 +1688,10 @@ export default function Calculator() {
 													"timeToAdditional",
 												].includes(key),
 											)
-											.map(([key, result]) => (
+											.map(([key, result], index) => (
 												<Card
 													key={key}
-													className="bg-card border-input overflow-hidden"
+													className={`bg-card border-input overflow-hidden animate-fade-in-up animate-stagger-${Math.min(index + 1, 6)}`}
 												>
 													<CardContent className="p-4">
 														<div className="flex items-start space-x-2">
@@ -1754,11 +1756,11 @@ export default function Calculator() {
 														"profitPerMonth",
 													].includes(key),
 												)
-												.map(([key, result]) => (
-													<Card
-														key={key}
-														className="bg-card border-input"
-													>
+											.map(([key, result], index) => (
+												<Card
+													key={key}
+													className={`bg-card border-input animate-fade-in-up animate-stagger-${Math.min(index + 4, 6)}`}
+												>
 														<CardContent className="p-3">
 															<p className="text-sm font-medium text-card-foreground">
 																{result.value}
@@ -1770,7 +1772,7 @@ export default function Calculator() {
 									</div>
 
 									{results.futureAmount && (
-										<Card className="bg-card border-input">
+										<Card className="bg-card border-input animate-fade-in-up animate-stagger-5">
 											<CardContent className="p-4">
 												<div className="flex items-center space-x-2">
 													<IconWrapper>
@@ -1788,14 +1790,15 @@ export default function Calculator() {
 									)}
 
 									<div className="mt-4 text-center">
-										<Button
-											onClick={() =>
-												setActiveTab("input")
-											}
-											variant="outline"
-										>
-											Back to Input
-										</Button>
+									<Button
+										onClick={() =>
+											setActiveTab("input")
+										}
+										variant="outline"
+										className="active:scale-[0.98] transition-transform duration-100 ease-out-expo hover:translate-y-[-1px]"
+									>
+										Back to Input
+									</Button>
 									</div>
 								</div>
 							) : (
@@ -1807,6 +1810,7 @@ export default function Calculator() {
 									<Button
 										onClick={() => setActiveTab("input")}
 										variant="outline"
+										className="active:scale-[0.98] transition-transform duration-100 ease-out-expo hover:translate-y-[-1px]"
 									>
 										Go to Input
 									</Button>

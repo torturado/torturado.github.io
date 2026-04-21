@@ -35,16 +35,16 @@ export default function Home() {
 			<ChangelogModal />
 			<section className="min-h-screen p-4 md:p-8 max-w-3xl mx-auto">
 				{/* Header - minimal */}
-				<header className="flex items-center justify-between mb-8">
-					<div>
+				<header className="flex items-center justify-between mb-8 animate-fade-in-up">
+					<div className="animate-fade-in-up">
 						<h1 className="text-2xl font-semibold tracking-tight">
 							EXP Bank Calculator
 						</h1>
-						<p className="text-muted-foreground text-sm mt-1">
+						<p className="text-muted-foreground text-sm mt-1 animate-fade-in-up animate-stagger-1">
 							Calculate your gem growth.
 						</p>
 					</div>
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 animate-fade-in-up animate-stagger-2">
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger asChild>
