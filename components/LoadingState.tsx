@@ -24,10 +24,13 @@ export default function LoadingState({
   
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[200px] p-8">
-        <div className="h-8 w-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
-        <p className="mt-4 text-muted-foreground">Loading content...</p>
-      </div>
+			<div className="flex flex-col items-center justify-center min-h-[200px] p-8 animate-fade-in">
+				<div className="relative h-8 w-8">
+					<div className="absolute inset-0 rounded-full border-2 border-primary/20"></div>
+					<div className="absolute inset-0 rounded-full border-2 border-t-transparent border-primary animate-spin"></div>
+				</div>
+				<p className="mt-4 text-muted-foreground animate-fade-in animate-stagger-1">Loading content...</p>
+			</div>
     )
   }
   
