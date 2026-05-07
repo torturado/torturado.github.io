@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = "2.1.0";
+const CURRENT_VERSION = "2.2.0";
 
 interface Change {
 	version: string;
@@ -132,6 +132,17 @@ const CHANGELOG: Change[] = [
 			"Fixed manual Goal Gems rank detection so round values like 20B now map to the highest reached rank (Divine x1)",
 			"Updated robots.txt and sitemap.xml to expose AI/agent discovery files and refreshed crawl metadata",
 			"Automated .nojekyll generation during deploy and removed the legacy public/index.html export file",
+		],
+	},
+	{
+		version: "2.2.0",
+		date: "2026-05-07",
+		changes: [
+			"Added a new EXP & chests calculator mode",
+			"Added EXP/gems conversion using buy and sell market rates",
+			"Added chest EV, cost, and net value calculations",
+			"Added chest odds with Gift Card and Huge Reward valued at 25M gems",
+			"Made the Gems calculator submit button sticky while keeping it full width",
 		],
 	},
 ];

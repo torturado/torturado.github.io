@@ -105,6 +105,33 @@ const DISCORD_RANKS: DiscordRank[] = [
 	},
 ];
 
+interface ExpBoxReward {
+	label: string;
+	oddsPercent: string;
+	gems?: string;
+	exp?: string;
+}
+
+const EXP_TRADE_AMOUNT = new BigNumber(500);
+const BUY_EXP_GEMS = new BigNumber(10000000);
+const SELL_EXP_GEMS = new BigNumber(8000000);
+const BOX_COST_EXP = new BigNumber(725);
+const GAME_CARD_GEMS = new BigNumber(25000000);
+const HUGE_REWARD_GEMS = new BigNumber(25000000);
+const BUY_GEMS_PER_EXP = BUY_EXP_GEMS.dividedBy(EXP_TRADE_AMOUNT);
+const SELL_GEMS_PER_EXP = SELL_EXP_GEMS.dividedBy(EXP_TRADE_AMOUNT);
+
+const EXP_BOX_REWARDS: ExpBoxReward[] = [
+	{ label: "100B gems", oddsPercent: "0.001", gems: "100000000000" },
+	{ label: "$10 game card", oddsPercent: "0.01", gems: GAME_CARD_GEMS.toString() },
+	{ label: "4B gems", oddsPercent: "0.10", gems: "4000000000" },
+	{ label: "250 EXP", oddsPercent: "40", exp: "250" },
+	{ label: "500 EXP", oddsPercent: "25", exp: "500" },
+	{ label: "2.5M gems", oddsPercent: "15", gems: "2500000" },
+	{ label: "10M gems", oddsPercent: "10", gems: "10000000" },
+	{ label: "Huge reward", oddsPercent: "10", gems: HUGE_REWARD_GEMS.toString() },
+];
+
 interface RankWithMultiplier {
 	rank: DiscordRank;
 	multiplier: number;
@@ -233,6 +260,8 @@ interface CalculatorInputs {
 	currentGems: string;
 	goalGems: string;
 	additionalGems: string;
+	expBalance: string;
+	boxCount: string;
 	years: string;
 	months: string;
 	days: string;
@@ -256,6 +285,247 @@ interface Result {
 	progressColor?: string;
 }
 
+const expToBuyGems = (expAmount: BigNumber) => expAmount.times(BUY_GEMS_PER_EXP);
+const expToSellGems = (expAmount: BigNumber) => expAmount.times(SELL_GEMS_PER_EXP);
+const gemsToExpAtBuyRate = (gems: BigNumber) => gems.dividedBy(BUY_GEMS_PER_EXP);
+
+const calculateBoxExpectedValue = () => {
+	return EXP_BOX_REWARDS.reduce(
+		(total, reward) => {
+			const odds = new BigNumber(reward.oddsPercent).dividedBy(100);
+
+			return {
+				gems: reward.gems
+					? total.gems.plus(new BigNumber(reward.gems).times(odds))
+					: total.gems,
+				exp: reward.exp
+					? total.exp.plus(new BigNumber(reward.exp).times(odds))
+					: total.exp,
+			};
+		},
+		{ gems: new BigNumber(0), exp: new BigNumber(0) },
+	);
+};
+
+const BOX_EXPECTED_VALUE = calculateBoxExpectedValue();
+const BOX_EV_GEMS_BUY_RATE = BOX_EXPECTED_VALUE.gems.plus(
+	expToBuyGems(BOX_EXPECTED_VALUE.exp),
+);
+const BOX_EV_GEMS_SELL_RATE = BOX_EXPECTED_VALUE.gems.plus(
+	expToSellGems(BOX_EXPECTED_VALUE.exp),
+);
+const BOX_COST_GEMS_BUY_RATE = expToBuyGems(BOX_COST_EXP);
+const BOX_COST_GEMS_SELL_RATE = expToSellGems(BOX_COST_EXP);
+
+const optionalNumberError = (value: string) => {
+	if (!value) return "";
+	const parsed = new BigNumber(value);
+	if (parsed.isNaN()) return "Must be a valid number";
+	if (parsed.lte(0)) return "Must be greater than zero";
+	return "";
+};
+
+const ExpMarketPanel = ({
+	inputs,
+	inputErrors,
+	handleInputChange,
+	showCurrentGemsInput = false,
+}: {
+	inputs: CalculatorInputs;
+	inputErrors: Record<string, FieldError>;
+	handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	showCurrentGemsInput?: boolean;
+}) => {
+	const currentGems = inputs.currentGems ? new BigNumber(inputs.currentGems) : null;
+	const currentGemsIsValid = currentGems && !currentGems.isNaN() && currentGems.gt(0);
+	const expBalance = inputs.expBalance ? new BigNumber(inputs.expBalance) : null;
+	const expBalanceIsValid = expBalance && !expBalance.isNaN() && expBalance.gt(0);
+	const boxCount = inputs.boxCount ? new BigNumber(inputs.boxCount) : null;
+	const boxCountIsValid = boxCount && !boxCount.isNaN() && boxCount.gt(0);
+	const derivedExp = currentGemsIsValid ? gemsToExpAtBuyRate(currentGems) : null;
+	const expForBoxes = expBalanceIsValid ? expBalance : derivedExp;
+	const boxesFromExp = expForBoxes
+		? expForBoxes.dividedBy(BOX_COST_EXP).integerValue(BigNumber.ROUND_DOWN)
+		: null;
+	const leftoverExp = expForBoxes && boxesFromExp
+		? expForBoxes.minus(boxesFromExp.times(BOX_COST_EXP))
+		: null;
+	const simulatedBoxes = boxCountIsValid ? boxCount : boxesFromExp;
+	const expNeeded = simulatedBoxes ? simulatedBoxes.times(BOX_COST_EXP) : null;
+	const totalEvBuy = simulatedBoxes ? BOX_EV_GEMS_BUY_RATE.times(simulatedBoxes) : null;
+	const totalCostBuy = expNeeded ? expToBuyGems(expNeeded) : null;
+	const totalCostSell = expNeeded ? expToSellGems(expNeeded) : null;
+	const expBalanceError = inputErrors.expBalance?.message || optionalNumberError(inputs.expBalance);
+	const boxCountError = inputErrors.boxCount?.message || optionalNumberError(inputs.boxCount);
+	const displayBoxes = simulatedBoxes && simulatedBoxes.gt(0) ? simulatedBoxes : new BigNumber(1);
+	const displayExpNeeded = displayBoxes.times(BOX_COST_EXP);
+	const displayCostBuy = expToBuyGems(displayExpNeeded);
+	const displayCostSell = expToSellGems(displayExpNeeded);
+	const displayEvBuy = BOX_EV_GEMS_BUY_RATE.times(displayBoxes);
+	const displayEvSell = BOX_EV_GEMS_SELL_RATE.times(displayBoxes);
+	const displayNetBuy = displayEvBuy.minus(displayCostBuy);
+	const displayNetSell = displayEvSell.minus(displayCostSell);
+	const netBuyIsPositive = displayNetBuy.gte(0);
+	const primaryResult = boxCountIsValid
+		? {
+				label: "EXP needed",
+				value: `${formatNumber(displayExpNeeded)} EXP`,
+				subtext: `${formatNumber(displayCostBuy)} gems to buy` ,
+			}
+		: {
+				label: expBalanceIsValid || currentGemsIsValid ? "You can open" : "Baseline",
+				value: `${formatNumber(displayBoxes)} chests`,
+				subtext: `${formatNumber(displayExpNeeded)} EXP used`,
+			};
+
+	const conversionStats = [
+		{
+			label: "Buyable EXP",
+			value: derivedExp ? formatNumber(derivedExp, 2) : "Enter gems",
+			detail: "500 EXP costs 10M gems.",
+		},
+		{
+			label: "Boxes available",
+			value: boxesFromExp ? formatNumber(boxesFromExp) : "0",
+			detail: leftoverExp ? `${formatNumber(leftoverExp, 2)} EXP leftover.` : "725 EXP per box.",
+		},
+		{
+			label: "Sell value",
+			value: expForBoxes ? formatNumber(expToSellGems(expForBoxes)) : "0",
+			detail: "500 EXP sells for 8M gems.",
+		},
+	];
+
+	const outcomeStats = [
+		{
+			label: "EXP needed",
+			value: formatNumber(displayExpNeeded),
+			detail: `${formatNumber(displayBoxes)} boxes at 725 EXP each.`,
+		},
+		{
+			label: "Expected return",
+			value: formatNumber(displayEvBuy),
+			detail: `${formatNumber(BOX_EXPECTED_VALUE.exp, 2)} EXP + ${formatNumber(BOX_EXPECTED_VALUE.gems)} gems EV per box.`,
+		},
+		{
+			label: "Cost to buy EXP",
+			value: formatNumber(displayCostBuy),
+			detail: `Sell-rate value would be ${formatNumber(displayCostSell)} gems.`,
+		},
+	];
+
+	return (
+		<div className="space-y-6">
+			<div className="flex items-end justify-between gap-4 border-b border-input pb-4">
+				<div>
+					<h2 className="text-xl font-semibold tracking-tight text-card-foreground">EXP & chests</h2>
+					<p className="mt-1 text-sm text-muted-foreground">725 EXP per chest</p>
+				</div>
+				<div className="text-right tabular-nums">
+					<p className="text-xs text-muted-foreground">EV / chest</p>
+					<p className="font-semibold text-card-foreground">{formatNumber(BOX_EV_GEMS_BUY_RATE)}</p>
+				</div>
+			</div>
+
+			<div className="space-y-5">
+				{showCurrentGemsInput ? (
+					<div className="space-y-2">
+						<Label htmlFor="expCurrentGems" className="text-sm font-medium">Gems</Label>
+						<Input
+							id="expCurrentGems"
+							type="number"
+							name="currentGems"
+							placeholder="e.g. 10000000"
+							value={inputs.currentGems}
+							onChange={handleInputChange}
+							className={`h-11 bg-card border-input text-card-foreground tabular-nums ${inputErrors.currentGems?.hasError ? "border-red-500 animate-shake" : ""}`}
+						/>
+						{inputErrors.currentGems?.hasError ? <p className="text-red-500 text-sm">{inputErrors.currentGems.message}</p> : null}
+					</div>
+				) : null}
+
+				<div className="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-start">
+					<div className="space-y-2">
+						<Label htmlFor="expBalance" className="text-sm font-medium">EXP</Label>
+						<Input
+							id="expBalance"
+							type="number"
+							name="expBalance"
+							placeholder="e.g. 7250"
+							value={inputs.expBalance}
+							onChange={handleInputChange}
+							className={`h-11 bg-card border-input text-card-foreground tabular-nums ${expBalanceError ? "border-red-500 animate-shake" : ""}`}
+						/>
+						{expBalanceError ? <p className="text-red-500 text-sm">{expBalanceError}</p> : null}
+					</div>
+
+					<div className="hidden h-full items-center justify-center text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground md:flex">or</div>
+
+					<div className="space-y-2">
+						<Label htmlFor="boxCount" className="text-sm font-medium">Chests</Label>
+						<Input
+							id="boxCount"
+							type="number"
+							name="boxCount"
+							placeholder="e.g. 10"
+							value={inputs.boxCount}
+							onChange={handleInputChange}
+							className={`h-11 bg-card border-input text-card-foreground tabular-nums ${boxCountError ? "border-red-500 animate-shake" : ""}`}
+						/>
+						{boxCountError ? <p className="text-red-500 text-sm">{boxCountError}</p> : null}
+					</div>
+				</div>
+
+				<div className="border-y border-input py-5">
+					<div className="grid gap-5 sm:grid-cols-3">
+						<div className="sm:col-span-2">
+							<p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">{primaryResult.label}</p>
+							<p className="mt-2 font-heading text-4xl font-semibold leading-none tracking-tight text-card-foreground tabular-nums">{primaryResult.value}</p>
+							<p className="mt-2 text-sm text-muted-foreground">{primaryResult.subtext}</p>
+						</div>
+						<div className="sm:text-right">
+							<p className="text-xs text-muted-foreground">Net vs buy</p>
+							<p className={`mt-2 text-2xl font-semibold tabular-nums ${netBuyIsPositive ? "text-green-600" : "text-red-600"}`}>{netBuyIsPositive ? "+" : ""}{formatNumber(displayNetBuy)}</p>
+						</div>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+					{outcomeStats.map((stat) => (
+						<div key={stat.label} className="border-l border-input pl-3">
+							<p className="text-xs text-muted-foreground">{stat.label}</p>
+							<p className="mt-1 font-semibold text-card-foreground tabular-nums">{stat.value}</p>
+						</div>
+					))}
+				</div>
+
+				<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+					{conversionStats.map((stat) => (
+						<div key={stat.label} className="border-l border-input pl-3">
+							<p className="text-xs text-muted-foreground">{stat.label}</p>
+							<p className="mt-1 font-medium text-card-foreground tabular-nums">{stat.value}</p>
+						</div>
+					))}
+				</div>
+
+				<details className="border-t border-input pt-4">
+					<summary className="cursor-pointer text-sm font-medium text-card-foreground">
+						Odds
+					</summary>
+					<div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+						{EXP_BOX_REWARDS.map((reward) => (
+							<div key={reward.label} className="flex items-center justify-between gap-3 border-b border-input/60 py-2">
+								<span>{reward.oddsPercent}%</span>
+								<span className="text-right text-muted-foreground">{reward.label}</span>
+							</div>
+						))}
+					</div>
+				</details>
+			</div>
+		</div>
+	);
+};
+
 export default function Calculator() {
 	const [state, setState] = useState<CalculatorState>({
 		startTime: null,
@@ -271,6 +541,8 @@ export default function Calculator() {
 		currentGems: "",
 		goalGems: "",
 		additionalGems: "",
+		expBalance: "",
+		boxCount: "",
 		years: "",
 		months: "",
 		days: "",
@@ -283,6 +555,7 @@ export default function Calculator() {
 
 	const [results, setResults] = useState<Record<string, Result> | null>(null);
 	const [showTechnicalInfo, setShowTechnicalInfo] = useState(false);
+	const [calculatorMode, setCalculatorMode] = useState<"gems" | "exp">("gems");
 	const [activeTab, setActiveTab] = useState("input");
 	const [resultsKey, setResultsKey] = useState(0);
 
@@ -296,6 +569,8 @@ export default function Calculator() {
 		currentGems: { hasError: false, message: "" },
 		goalGems: { hasError: false, message: "" },
 		additionalGems: { hasError: false, message: "" },
+		expBalance: { hasError: false, message: "" },
+		boxCount: { hasError: false, message: "" },
 		targetDate: { hasError: false, message: "" },
 	});
 
@@ -384,7 +659,12 @@ export default function Calculator() {
 					message: "Must be greater than zero",
 				};
 			}
-		} else if (name === "goalGems" || name === "additionalGems") {
+		} else if (
+			name === "goalGems" ||
+			name === "additionalGems" ||
+			name === "expBalance" ||
+			name === "boxCount"
+		) {
 			if (value !== "" && new BigNumber(value).isNaN()) {
 				error = { hasError: true, message: "Must be a valid number" };
 			} else if (value !== "" && new BigNumber(value).lte(0)) {
@@ -1180,8 +1460,42 @@ export default function Calculator() {
 						<br />
 						Made by @oyfg on Discord.
 					</CardDescription>
+					<div className="mt-4 grid grid-cols-2 rounded-xl border border-input bg-muted p-1">
+						<button
+							type="button"
+							onClick={() => setCalculatorMode("gems")}
+							aria-pressed={calculatorMode === "gems"}
+							className={`rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+								calculatorMode === "gems"
+									? "bg-primary text-primary-foreground shadow-sm"
+									: "text-muted-foreground hover:text-foreground"
+							}`}
+						>
+							Gems calculator
+						</button>
+						<button
+							type="button"
+							onClick={() => setCalculatorMode("exp")}
+							aria-pressed={calculatorMode === "exp"}
+							className={`rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+								calculatorMode === "exp"
+									? "bg-primary text-primary-foreground shadow-sm"
+									: "text-muted-foreground hover:text-foreground"
+							}`}
+						>
+							EXP & chests
+						</button>
+					</div>
 				</CardHeader>
 				<CardContent className="p-6 bg-card rounded-[10px]">
+					{calculatorMode === "exp" ? (
+						<ExpMarketPanel
+							inputs={inputs}
+							inputErrors={inputErrors}
+							handleInputChange={handleInputChange}
+							showCurrentGemsInput
+						/>
+					) : (
 					<Tabs
 						value={activeTab}
 						onValueChange={setActiveTab}
@@ -1657,17 +1971,20 @@ export default function Calculator() {
 										/>
 									</div>
 								</div>
-								<p className="text-muted-foreground text-sm">
-									Daily Interest:{" "}
-									{state.dailyInterest.times(100).toFixed(2)}%
-								</p>
-									<Button
-										type="submit"
-										className="w-full active:scale-[0.98] transition-transform duration-100 ease-out-expo"
-										size="lg"
-									>
-										Calculate
-									</Button>
+								<div className="sticky bottom-0 z-10 -mx-6 -mb-6 border-t border-input bg-card/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-card/80 sm:-mx-6">
+									<div className="space-y-3">
+										<p className="text-muted-foreground text-sm">
+											Daily Interest: {state.dailyInterest.times(100).toFixed(2)}%
+										</p>
+										<Button
+											type="submit"
+											className="w-full active:scale-[0.98] transition-transform duration-100 ease-out-expo"
+											size="lg"
+										>
+											Calculate
+										</Button>
+									</div>
+								</div>
 							</form>
 						</TabsContent>
 						<TabsContent
@@ -1818,6 +2135,7 @@ export default function Calculator() {
 							)}
 						</TabsContent>
 					</Tabs>
+					)}
 				</CardContent>
 				<TechnicalInfoModal
 					isOpen={showTechnicalInfo}
