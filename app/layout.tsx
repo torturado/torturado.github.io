@@ -8,19 +8,7 @@ import "./globals.css";
 
 const metadataBase = new URL("https://torturado.github.io");
 
-const umamiOrigin = (() => {
-	const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL;
-
-	if (!umamiUrl) {
-		return "";
-	}
-
-	try {
-		return new URL(umamiUrl).origin;
-	} catch {
-		return "";
-	}
-})();
+const umamiOrigin = "https://umamita.derrumbar.top";
 
 const cspContent = [
 	"default-src 'self'",

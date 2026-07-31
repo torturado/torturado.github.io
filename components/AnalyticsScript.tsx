@@ -2,27 +2,27 @@
 
 import Script from 'next/script'
 
+const UMAMI_URL = 'https://umamita.derrumbar.top'
+const UMAMI_WEBSITE_ID = 'fc66d744-3b0f-4898-bf02-a4a4b24aaffc'
+
 export function AnalyticsScript() {
-  const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID
-  const UMAMI_URL = process.env.NEXT_PUBLIC_UMAMI_URL
-
-  if (!UMAMI_WEBSITE_ID || !UMAMI_URL) {
-    if (process.env.NODE_ENV !== "production") {
-      console.info("Missing Umami environment variables; analytics disabled")
-    }
-    return null
-  }
-
   return (
-    <Script
-      async
-      defer
-      strategy="afterInteractive"
-      data-website-id={UMAMI_WEBSITE_ID}
-      src={`${UMAMI_URL}/script.js`}
-      data-auto-track="true"
-      data-do-not-track="false"
-      data-cache="true"
-    />
+    <>
+      <Script
+        defer
+        strategy="afterInteractive"
+        data-website-id={UMAMI_WEBSITE_ID}
+        src={`${UMAMI_URL}/script.js`}
+        data-auto-track="true"
+        data-do-not-track="false"
+        data-cache="true"
+      />
+      <Script
+        defer
+        strategy="afterInteractive"
+        data-website-id={UMAMI_WEBSITE_ID}
+        src={`${UMAMI_URL}/recorder.js`}
+      />
+    </>
   )
-} 
+}
