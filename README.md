@@ -4,20 +4,21 @@ Static Next.js app exported to GitHub Pages for estimating EXP Bank gem growth.
 
 ## Agent discovery
 
-- Canonical machine-readable docs live in `public/agents.md` and `public/llms.txt`.
-- Route-specific markdown mirrors live in `public/index.md`, `public/faq.md`, `public/tips.md`, `public/privacy.md`, `public/terms.md`, `public/cookies.md`, and `public/contact.md`.
-- The homepage exposes browser-side WebMCP tools, but this repository does not publish an HTTP API, OAuth/OIDC metadata, protected-resource metadata, or an MCP server.
+- Canonical machine-readable docs live in public/agents.md and public/llms.txt.
+- Route-specific Markdown mirrors live in public/index.md, public/about.md, public/docs.md, public/faq.md, public/tips.md, public/privacy.md, public/terms.md, public/cookies.md, and public/contact.md.
+- Read-only JSON resources live at /api/info.json and /api/ranks.json.
+- The OpenAPI 3.1 contract lives at /openapi.json.
+- The homepage exposes browser-side WebMCP tools for arbitrary calculations.
 
-## GitHub Pages limitations
+## GitHub Pages limits
 
-- HTTP `Link` response headers are not configurable in this deployment.
-- `Accept: text/markdown` negotiation is not supported for `/`.
-- Agents should use the HTML `<link>` elements or fetch the published `.md` files directly.
+- The static JSON resources do not accept request parameters. Use WebMCP for arbitrary calculations.
+- Runtime JSON errors, Accept: text/markdown negotiation with Vary: Accept, and an MCP Streamable HTTP handshake require a server deployment.
+- Agents can use the HTML link elements or fetch the published Markdown files directly.
 
-## Local build
+## Local build and tests
 
-```bash
-npm install
-npm run build
-```
+    npm install
+    npm run build
+    npm test
 

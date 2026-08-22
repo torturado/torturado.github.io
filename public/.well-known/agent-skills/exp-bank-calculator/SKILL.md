@@ -5,7 +5,7 @@ description: Use this skill when you need to estimate EXP Bank gem growth, time-
 
 # EXP Bank Calculator
 
-Use this skill for the static calculator at `https://torturado.github.io`.
+Use this skill for the static calculator at https://torturado.github.io.
 
 ## When to use
 
@@ -15,13 +15,14 @@ Use this skill for the static calculator at `https://torturado.github.io`.
 
 ## Inputs
 
-- `currentGems`: required starting balance
-- `goalGems`: optional total balance target
-- `additionalGems`: optional extra gems to earn beyond the current balance
-- Duration inputs: `years`, `months`, `days`, `hours`, `minutes`, `seconds`
+- currentGems: required starting balance
+- goalGems: optional total balance target
+- additionalGems: optional extra gems to earn beyond the current balance
+- Duration inputs: years, months, days, hours, minutes, seconds
 
 ## Notes
 
-- The calculator assumes a fixed daily interest rate of `0.50%`.
-- There is no server API. Prefer the homepage WebMCP tools when available.
-- If WebMCP is unavailable, use the site UI or the formula documentation in `/faq` and `/agents.md`.
+- The calculator assumes a fixed daily interest rate of 0.50%.
+- Read-only JSON resources are available at /api/info.json and /api/ranks.json.
+- Prefer the homepage WebMCP tools for arbitrary calculations when available.
+- If WebMCP is unavailable, use the site UI or the formula documentation in /faq, /index.md, and /agents.md.

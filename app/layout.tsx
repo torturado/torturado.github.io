@@ -84,6 +84,13 @@ export default function RootLayout({
 				)}
 				<link rel="describedby" href="/llms.txt" />
 				<link rel="service-doc" href="/agents.md" />
+				<link
+					rel="alternate"
+					type="application/json"
+					title="OpenAPI specification"
+					href="/openapi.json"
+				/>
+				<link rel="help" href="/docs" />
 				<AnalyticsScript />
 			</head>
 			<body className={`${GeistSans.className}`}>

@@ -40,3 +40,14 @@ Static GitHub Pages calculator for estimating EXP Bank gem growth with compound 
 
 - FAQ: https://torturado.github.io/faq.md
 - Agent guide: https://torturado.github.io/agents.md
+- About: https://torturado.github.io/about.md
+- API docs: https://torturado.github.io/docs.md
+- OpenAPI: https://torturado.github.io/openapi.json
+- Calculator info JSON: https://torturado.github.io/api/info.json
+- Rank thresholds JSON: https://torturado.github.io/api/ranks.json
+
+## Agent access
+
+- Use the browser WebMCP tool calculate-exp-growth for arbitrary calculations when navigator.modelContext is available.
+- Use list-exp-ranks for the rank threshold list.
+- The JSON endpoints are static resources and do not accept request parameters.

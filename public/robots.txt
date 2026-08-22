@@ -7,6 +7,11 @@ Allow: /privacy
 Allow: /terms
 Allow: /cookies
 Allow: /contact
+Allow: /about
+Allow: /docs
+Allow: /api
+Allow: /api/
+Allow: /openapi.json
 Allow: /index.md
 Allow: /faq.md
 Allow: /tips.md

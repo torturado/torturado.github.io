@@ -27,6 +27,18 @@ export function Footer() {
 						>
 							FAQ
 						</Link>
+						<Link
+							href="/about"
+							className="hover:text-foreground transition-colors"
+						>
+							About
+						</Link>
+						<Link
+							href="/docs"
+							className="hover:text-foreground transition-colors"
+						>
+							Docs
+						</Link>
 					</nav>
 				</div>
 			</div>
