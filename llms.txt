@@ -1,34 +1,44 @@
-EXP Bank Calculator
-URL: https://torturado.github.io
+# EXP Bank Calculator
 
-Summary:
-- Static calculator for EXP Bank gem growth.
-- Fixed daily interest rate: 0.50%.
-- No HTTP API.
-- No OAuth or OIDC authorization server.
-- No OAuth protected-resource metadata.
-- No MCP server.
-- Browser-side WebMCP tools are available on the homepage.
+> EXP Bank Calculator estimates gem growth at a fixed 0.50% daily compound rate. It runs in the browser, publishes read-only JSON metadata, and exposes WebMCP tools for arbitrary calculations.
 
-Machine docs:
-- https://torturado.github.io/
-- https://torturado.github.io/index.md
-- https://torturado.github.io/faq
-- https://torturado.github.io/faq.md
-- https://torturado.github.io/tips.md
-- https://torturado.github.io/privacy.md
-- https://torturado.github.io/terms.md
-- https://torturado.github.io/cookies.md
-- https://torturado.github.io/contact.md
-- https://torturado.github.io/agents.md
-- https://torturado.github.io/llms.txt
+## When to use
 
-Agent notes:
-- Prefer WebMCP on the homepage when available.
-- Otherwise read /agents.md and use the UI manually.
-- Agents can also fetch the published route-specific .md files directly.
+Use this calculator when a person needs to estimate a starting gem balance after a duration, compare a target balance with a starting balance, estimate time to reach a goal, or identify the Discord rank threshold for a balance. Use the calculate-exp-growth WebMCP tool when browser WebMCP is available. Otherwise, use the formula and inputs in /index.md or the interactive homepage.
 
-GitHub Pages limitations:
-- HTTP Link response headers are not configurable in this deployment.
-- Accept: text/markdown negotiation is not supported for /.
-- Use HTML link elements or fetch the published .md files directly.
+## Start here
+
+- [EXP Bank Calculator](https://torturado.github.io/): Use the calculator and browser WebMCP tools.
+- [Agent guide](https://torturado.github.io/agents.md): Read the full machine-oriented instructions.
+- [API docs](https://torturado.github.io/docs): Find endpoint descriptions, examples, and hosting limits.
+- [OpenAPI specification](https://torturado.github.io/openapi.json): Read the typed API contract.
+
+## Calculation content
+
+- [Calculator overview](https://torturado.github.io/index.md): Inputs, outputs, formula, and time normalization.
+- [Frequently asked questions](https://torturado.github.io/faq.md): Formula and product behavior.
+- [Tips and strategies](https://torturado.github.io/tips.md): Practical ways to compare scenarios.
+
+## Public JSON resources
+
+- [Calculator info](https://torturado.github.io/api/info.json): Rate, formula, time units, and supported agent access methods.
+- [Rank thresholds](https://torturado.github.io/api/ranks.json): Discord rank names and minimum gem balances.
+
+These JSON resources are static and do not accept request parameters. For arbitrary calculations, call the browser WebMCP tool calculate-exp-growth with currentGems and any optional goal or duration fields.
+
+## WebMCP tools
+
+- calculate-exp-growth: Calculate future gems, profit, growth percentage, income estimates, time-to-goal, and rank thresholds. Required input: currentGems. Optional inputs: goalGems, additionalGems, years, months, days, hours, minutes, and seconds.
+- list-exp-ranks: Return the rank thresholds and daily rate used by the calculator.
+
+## Policies and contact
+
+- [About](https://torturado.github.io/about): Product scope and calculation model.
+- [Contact](https://torturado.github.io/contact): Support, bug reports, and feature requests.
+- [Privacy policy](https://torturado.github.io/privacy): Local processing, storage, and analytics.
+- [Terms of service](https://torturado.github.io/terms): Use of the calculator and estimation disclaimer.
+- [Cookie and storage policy](https://torturado.github.io/cookies): Browser storage and analytics details.
+
+## Deployment limits
+
+The current site is a static GitHub Pages export. It cannot run request-time HTTP calculation code, return JSON errors for arbitrary invalid requests, negotiate Accept: text/markdown with Vary: Accept, or provide an MCP Streamable HTTP handshake. The static files and WebMCP tools above are the supported agent interfaces.

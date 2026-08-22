@@ -1,0 +1,332 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "EXP Bank Calculator API",
+    "version": "1.0.0",
+    "description": "Read-only JSON resources for the EXP Bank Calculator. Use the browser WebMCP tool calculate-exp-growth for arbitrary growth calculations because the current GitHub Pages deployment has no request-time server.",
+    "contact": {
+      "name": "EXP Calculator",
+      "url": "https://torturado.github.io/contact",
+      "email": "expcalculator.cupped755@passinbox.com"
+    },
+    "license": {
+      "name": "Terms of Service",
+      "url": "https://torturado.github.io/terms"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://torturado.github.io",
+      "description": "Public GitHub Pages deployment"
+    }
+  ],
+  "externalDocs": {
+    "description": "EXP Bank Calculator API docs",
+    "url": "https://torturado.github.io/docs"
+  },
+  "paths": {
+    "/api/info.json": {
+      "get": {
+        "tags": [
+          "metadata"
+        ],
+        "summary": "Read calculator assumptions",
+        "description": "Returns the rate, formula, time normalization, supported calculation access methods, and links to the agent guide.",
+        "operationId": "getCalculatorInfo",
+        "responses": {
+          "200": {
+            "description": "Calculator assumptions and discovery links.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalculatorInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested API resource was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/api/ranks.json": {
+      "get": {
+        "tags": [
+          "metadata"
+        ],
+        "summary": "List EXP Discord rank thresholds",
+        "description": "Returns the rank names, minimum gem balances, display labels, and daily interest rate used by the calculator.",
+        "operationId": "listExpRanks",
+        "responses": {
+          "200": {
+            "description": "The rank threshold list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested API resource was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "UnexpectedError": {
+        "description": "The server could not complete the request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "internal_error",
+                "message": "The request could not be completed.",
+                "resolution": "Retry the request. If the problem persists, read the API docs or contact EXP Calculator support."
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "ExpRank": {
+        "type": "object",
+        "description": "A Discord rank threshold used by the calculator.",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "minGems",
+          "displayValue"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Rank name."
+          },
+          "minGems": {
+            "type": "string",
+            "description": "Minimum gem balance as a decimal string."
+          },
+          "displayValue": {
+            "type": "string",
+            "description": "Human-readable threshold label."
+          }
+        }
+      },
+      "RankList": {
+        "type": "object",
+        "description": "The rank thresholds and rate used by the calculator.",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "dailyInterestRate",
+          "ranks"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "EXP Bank Calculator"
+          },
+          "dailyInterestRate": {
+            "type": "string",
+            "const": "0.005"
+          },
+          "ranks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExpRank"
+            }
+          }
+        }
+      },
+      "CalculatorInfo": {
+        "type": "object",
+        "description": "Calculator assumptions and agent access methods.",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "description",
+          "url",
+          "dailyInterestRate",
+          "dailyInterestPercent",
+          "formula",
+          "timeNormalization",
+          "calculationAccess",
+          "links"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "dailyInterestRate": {
+            "type": "string"
+          },
+          "dailyInterestPercent": {
+            "type": "string"
+          },
+          "formula": {
+            "type": "string"
+          },
+          "timeNormalization": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "yearDays",
+              "monthDays",
+              "hoursPerDay",
+              "minutesPerDay",
+              "secondsPerDay"
+            ],
+            "properties": {
+              "yearDays": {
+                "type": "integer",
+                "const": 365
+              },
+              "monthDays": {
+                "type": "integer",
+                "const": 30
+              },
+              "hoursPerDay": {
+                "type": "integer",
+                "const": 24
+              },
+              "minutesPerDay": {
+                "type": "integer",
+                "const": 1440
+              },
+              "secondsPerDay": {
+                "type": "integer",
+                "const": 86400
+              }
+            }
+          },
+          "calculationAccess": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "staticJson",
+              "webMcp",
+              "webMcpTools"
+            ],
+            "properties": {
+              "staticJson": {
+                "type": "boolean",
+                "const": false
+              },
+              "webMcp": {
+                "type": "boolean",
+                "const": true
+              },
+              "webMcpTools": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "calculate-exp-growth",
+                    "list-exp-ranks"
+                  ]
+                }
+              }
+            }
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "documentation",
+              "openapi",
+              "agentGuide"
+            ],
+            "properties": {
+              "documentation": {
+                "type": "string",
+                "format": "uri"
+              },
+              "openapi": {
+                "type": "string",
+                "format": "uri"
+              },
+              "agentGuide": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "description": "Structured error returned by a request-time API.",
+        "additionalProperties": false,
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message",
+              "resolution"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Stable machine-readable error code.",
+                "enum": [
+                  "invalid_request",
+                  "not_found",
+                  "internal_error"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "description": "Short explanation of the failure."
+              },
+              "resolution": {
+                "type": "string",
+                "description": "Specific next step for the caller."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
