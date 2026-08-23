@@ -1,3 +1,10 @@
+---
+title: EXP Bank Calculator
+description: Static documentation for estimating EXP Bank gem growth.
+canonical: https://torturado.github.io/index.md
+last-updated: 2026-08-23
+---
+
 # EXP Bank Calculator
 
 Canonical URL: https://torturado.github.io/
@@ -45,6 +52,7 @@ Static GitHub Pages calculator for estimating EXP Bank gem growth with compound 
 - OpenAPI: https://torturado.github.io/openapi.json
 - Calculator info JSON: https://torturado.github.io/api/info.json
 - Rank thresholds JSON: https://torturado.github.io/api/ranks.json
+- Authentication: https://torturado.github.io/auth.md
 
 ## Agent access
 

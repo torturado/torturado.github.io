@@ -6,7 +6,7 @@
       "type": "skill-md",
       "description": "Use this skill when you need to estimate EXP Bank gem growth, time-to-goal, or rank thresholds on torturado.github.io.",
       "url": "/.well-known/agent-skills/exp-bank-calculator/SKILL.md",
-      "digest": "sha256:b2874244865ace5a49b4fd4cb57dfdfe15aed3a4af275a0468382ee359c4c675"
+      "digest": "sha256:2ffc66d20a6a78e930cdd4800946e1dafe1e04a05e172b8a5079032647ef04c0"
     }
   ]
 }

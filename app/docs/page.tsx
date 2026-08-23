@@ -42,6 +42,18 @@ export default function DocsPage() {
 				</div>
 
 				<div>
+					<h2 className="mb-2 text-2xl font-semibold">Authentication and access</h2>
+					<p className="leading-7">
+						The public JSON resources require no API key, account, OAuth token,
+						or bearer credential. Read the{" "}
+						<a className="underline underline-offset-4" href="/auth.md">
+							/auth.md access policy
+						</a>{" "}
+						for the complete list of public resources and hosting limits.
+					</p>
+				</div>
+
+				<div>
 					<h2 className="mb-2 text-2xl font-semibold">List rank thresholds</h2>
 					<p className="leading-7">
 						Use <code>/api/ranks.json</code> to retrieve the Discord
@@ -60,6 +72,20 @@ export default function DocsPage() {
 					</p>
 					<pre className="mt-3 overflow-x-auto border-l border-input pl-4 text-sm leading-6">
 						<code>{infoExample}</code>
+					</pre>
+				</div>
+
+				<div>
+					<h2 className="mb-2 text-2xl font-semibold">Response schemas</h2>
+					<p className="leading-7">
+						Successful responses use the <code>CalculatorInfo</code> and{" "}
+						<code>RankList</code> schemas in the OpenAPI document. The contract
+						also defines an <code>ErrorResponse</code> object with{" "}
+						<code>error.code</code>, <code>error.message</code>, and{" "}
+						<code>error.resolution</code> for a future request-time deployment.
+					</p>
+					<pre className="mt-3 overflow-x-auto border-l border-input pl-4 text-sm leading-6">
+						<code>error.code | error.message | error.resolution</code>
 					</pre>
 				</div>
 

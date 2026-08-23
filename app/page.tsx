@@ -61,6 +61,35 @@ const structuredData = {
 				addressLocality: "Online-only project",
 				addressCountry: "ZZ",
 			},
+			sameAs: ["https://github.com/torturado/torturado.github.io"],
+		},
+		{
+			"@type": "WebSite",
+			"@id": "https://torturado.github.io/#website",
+			name: "EXP Bank Calculator",
+			description:
+				"Public documentation and calculator for EXP Bank gem growth projections.",
+			url: "https://torturado.github.io/",
+			publisher: {
+				"@id": "https://torturado.github.io/#organization",
+			},
+		},
+		{
+			"@type": "WebPage",
+			"@id": "https://torturado.github.io/#homepage",
+			name: "EXP Bank Calculator | Gem Growth Calculator",
+			description:
+				"Calculate EXP Bank gem growth, target balances, and time-to-goal estimates.",
+			url: "https://torturado.github.io/",
+			isPartOf: {
+				"@id": "https://torturado.github.io/#website",
+			},
+			about: {
+				"@id": "https://torturado.github.io/#application",
+			},
+			mainEntity: {
+				"@id": "https://torturado.github.io/#application",
+			},
 		},
 	],
 };

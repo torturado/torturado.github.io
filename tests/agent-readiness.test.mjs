@@ -50,6 +50,9 @@ test("homepage has useful content before JavaScript runs", async () => {
 	assert.equal(organization.contactPoint.contactType, "customer support");
 	assert.match(organization.contactPoint.email, /@/);
 	assert.equal(organization.address["@type"], "PostalAddress");
+	assert.ok(organization.sameAs.includes("https://github.com/torturado/torturado.github.io"));
+	assert.ok(graph.some((node) => node["@type"] === "WebSite"));
+	assert.ok(graph.some((node) => node["@type"] === "WebPage"));
 });
 
 test("custom 404 gives agents a recovery guide", async () => {
@@ -92,6 +95,8 @@ test("static JSON endpoints match the published contract", async () => {
 	const info = JSON.parse(await read("out/api/info.json"));
 	const ranks = JSON.parse(await read("out/api/ranks.json"));
 	const spec = JSON.parse(await read("out/openapi.json"));
+	const infoMarkdown = await read("out/api/info.json.md");
+	const ranksMarkdown = await read("out/api/ranks.json.md");
 
 	assert.equal(info.dailyInterestRate, "0.005");
 	assert.equal(info.calculationAccess.staticJson, false);
@@ -100,6 +105,9 @@ test("static JSON endpoints match the published contract", async () => {
 	assert.equal(ranks.ranks.at(-1).name, "Cosmic");
 	assert.ok(spec.paths["/api/info.json"]);
 	assert.ok(spec.paths["/api/ranks.json"]);
+	assert.match(infoMarkdown, /^---\ntitle: EXP Bank Calculator API info/m);
+	assert.match(infoMarkdown, /^# EXP Bank Calculator API info/m);
+	assert.match(ranksMarkdown, /^# EXP Bank Calculator rank thresholds/m);
 });
 
 test("agent discovery files name the best-fit use cases and developer resources", async () => {
@@ -113,12 +121,14 @@ test("agent discovery files name the best-fit use cases and developer resources"
 	);
 
 	assert.match(llms, /^# EXP Bank Calculator/m);
-	assert.match(llms, /## When to use/);
+	assert.match(llms, /## When to use this calculator/);
 	assert.match(llms, /\/docs/);
 	assert.match(llms, /\/openapi\.json/);
+	assert.match(llms, /\/api\/llms\.txt/);
+	assert.match(llms, /\/auth\.md/);
 	assert.match(agents, /## When to use this calculator/);
 	assert.match(agents, /\/api\/info\.json/);
-	assert.match(skill, /## When to use/);
+	assert.match(skill, /## When to use this skill/);
 	assert.equal(
 		skillIndex.skills[0].digest,
 		"sha256:" + createHash("sha256").update(skill).digest("hex"),
@@ -133,6 +143,9 @@ test("trust and documentation pages are substantial and linked in the sitemap", 
 
 	const sitemap = await read("public/sitemap.xml");
 	for (const path of ["/about", "/docs", "/openapi.json", "/api/info.json", "/api/ranks.json"]) {
+		assert.match(sitemap, new RegExp(path.replace(".", "\\.")));
+	}
+	for (const path of ["/api/info.json.md", "/api/ranks.json.md", "/api/llms.txt", "/docs/llms.txt", "/auth.md"]) {
 		assert.match(sitemap, new RegExp(path.replace(".", "\\.")));
 	}
 });

@@ -1,0 +1,17 @@
+# EXP Bank Calculator developer docs
+
+> Documentation for integrating with the public EXP Bank Calculator resources.
+
+## When to use these docs
+
+Use these docs when an agent needs endpoint schemas, example requests,
+authentication information, or the limits of the static GitHub Pages
+deployment.
+
+## Start here
+
+- [HTML API docs](https://torturado.github.io/docs)
+- [Markdown API docs](https://torturado.github.io/docs.md)
+- [OpenAPI 3.1 specification](https://torturado.github.io/openapi.json)
+- [Authentication](https://torturado.github.io/auth.md)
+- [API section guide](https://torturado.github.io/api/llms.txt)
