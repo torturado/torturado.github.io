@@ -1,0 +1,19 @@
+# EXP Bank Calculator API
+
+> Read-only JSON resources and typed API documentation for EXP Bank gem growth.
+
+## When to use this API
+
+Use these resources when an agent needs the calculator assumptions or Discord
+rank thresholds. They are public, unauthenticated GET resources. Use browser
+WebMCP for arbitrary calculations because GitHub Pages cannot execute
+request-time code.
+
+## Resources
+
+- [Calculator info](https://torturado.github.io/api/info.json): rate, formula, and time normalization.
+- [Calculator info Markdown](https://torturado.github.io/api/info.json.md): agent-readable mirror.
+- [Rank thresholds](https://torturado.github.io/api/ranks.json): rank names and minimum balances.
+- [Rank thresholds Markdown](https://torturado.github.io/api/ranks.json.md): agent-readable mirror.
+- [OpenAPI specification](https://torturado.github.io/openapi.json): typed response schemas and error model.
+- [Authentication](https://torturado.github.io/auth.md): access and hosting limits.

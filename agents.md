@@ -1,3 +1,10 @@
+---
+title: EXP Bank Calculator agent guide
+description: Machine-oriented instructions for using the EXP Bank Calculator.
+canonical: https://torturado.github.io/agents.md
+last-updated: 2026-08-23
+---
+
 # EXP Bank Calculator
 
 Agent-facing guide for https://torturado.github.io.
@@ -21,10 +28,15 @@ Agent-facing guide for https://torturado.github.io.
 - /about.md
 - /docs
 - /docs.md
+- /docs/llms.txt
 - /openapi.json
+- /auth.md
 - /api
+- /api/llms.txt
 - /api/info.json
+- /api/info.json.md
 - /api/ranks.json
+- /api/ranks.json.md
 - /faq.md
 - /tips.md
 - /privacy.md
