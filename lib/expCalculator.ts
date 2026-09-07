@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 import { customExponentiation, formatDateUS, logBase } from "@/utils/bigNumberUtils";
 
 const ONE = new BigNumber(1);
-const DAILY_INTEREST = new BigNumber("0.005");
+const DAILY_INTEREST = new BigNumber("0.003");
 const HOURLY_INTEREST = customExponentiation(
 	ONE.plus(DAILY_INTEREST),
 	new BigNumber(1).dividedBy(24),

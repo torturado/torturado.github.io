@@ -98,7 +98,7 @@ test("static JSON endpoints match the published contract", async () => {
 	const infoMarkdown = await read("out/api/info.json.md");
 	const ranksMarkdown = await read("out/api/ranks.json.md");
 
-	assert.equal(info.dailyInterestRate, "0.005");
+	assert.equal(info.dailyInterestRate, "0.003");
 	assert.equal(info.calculationAccess.staticJson, false);
 	assert.equal(info.calculationAccess.webMcp, true);
 	assert.equal(ranks.ranks.length, 7);

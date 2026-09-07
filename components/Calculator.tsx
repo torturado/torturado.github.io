@@ -533,7 +533,7 @@ export default function Calculator() {
 		goalGems: null,
 		additionalGems: null,
 		initialTimeInDays: new BigNumber(0),
-		dailyInterest: new BigNumber("0.005"),
+		dailyInterest: new BigNumber("0.003"),
 		hourlyInterest: null,
 	});
 

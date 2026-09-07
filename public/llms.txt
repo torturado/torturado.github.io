@@ -1,6 +1,6 @@
 # EXP Bank Calculator
 
-> EXP Bank Calculator estimates gem growth at a fixed 0.50% daily compound rate. It runs in the browser, publishes read-only JSON metadata, and exposes WebMCP tools for arbitrary calculations.
+> EXP Bank Calculator estimates gem growth at a fixed 0.30% daily compound rate. It runs in the browser, publishes read-only JSON metadata, and exposes WebMCP tools for arbitrary calculations.
 
 ## When to use this calculator
 

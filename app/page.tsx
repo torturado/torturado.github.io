@@ -97,7 +97,7 @@ const structuredData = {
 export const metadata: Metadata = createRouteMetadata({
 	title: "EXP Bank Calculator | Gem Growth Calculator",
 	description:
-		"Static GitHub Pages calculator for EXP Bank gem growth, goal planning, and compound-interest projections at a 0.50% daily rate.",
+		"Static GitHub Pages calculator for EXP Bank gem growth, goal planning, and compound-interest projections at a 0.30% daily rate.",
 	canonicalPath: "/",
 	markdownPath: "/index.md",
 });
@@ -166,7 +166,7 @@ export default function Home() {
 					<p>
 						Use this calculator to estimate how a starting EXP Bank
 						balance grows over time. It models daily compound growth
-						at a fixed rate of 0.50%, then converts that rate into an
+						at a fixed rate of 0.30%, then converts that rate into an
 						equivalent hourly rate for shorter time periods.
 					</p>
 					<p>
@@ -180,7 +180,7 @@ export default function Home() {
 					<p>
 						The calculator uses the formula FV = PV × (1 + r)^t. FV
 						is the future balance, PV is the starting balance, r is
-						the daily rate 0.005, and t is the number of days. One
+						the daily rate 0.003, and t is the number of days. One
 						year is treated as 365 days and one month as 30 days.
 						Calculations run in your browser, and high-precision
 						arithmetic keeps large gem amounts readable.

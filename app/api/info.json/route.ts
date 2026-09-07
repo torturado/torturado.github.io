@@ -7,8 +7,8 @@ export function GET() {
 			description:
 				"Static calculator information and links for agents and developers.",
 			url: "https://torturado.github.io/",
-			dailyInterestRate: "0.005",
-			dailyInterestPercent: "0.50%",
+			dailyInterestRate: "0.003",
+			dailyInterestPercent: "0.30%",
 			formula: "FV = PV x (1 + r)^t",
 			timeNormalization: {
 				yearDays: 365,

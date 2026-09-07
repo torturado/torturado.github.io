@@ -6,7 +6,7 @@ export function GET() {
 	return new Response(
 		JSON.stringify({
 			name: "EXP Bank Calculator",
-			dailyInterestRate: "0.005",
+			dailyInterestRate: "0.003",
 			ranks: getExpRanks(),
 		}),
 		{

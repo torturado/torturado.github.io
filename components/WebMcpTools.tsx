@@ -86,7 +86,7 @@ const tools: WebMcpTool[] = [
 		},
 		execute: async () => ({
 			ranks: getExpRanks(),
-			dailyInterest: "0.005",
+			dailyInterest: "0.003",
 		}),
 	},
 ];

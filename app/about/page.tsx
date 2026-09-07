@@ -19,7 +19,7 @@ export default function AboutPage() {
 					<h2 className="mb-3 text-2xl font-semibold">What this tool does</h2>
 					<p>
 						EXP Bank Calculator estimates how a gem balance changes
-						when it compounds at a 0.50% daily rate. Enter a starting
+						when it compounds at a 0.30% daily rate. Enter a starting
 						balance and a duration, target date, or goal amount. The
 						calculator reports the projected balance, profit, growth
 						percentage, income estimates, and the Discord rank
@@ -31,7 +31,7 @@ export default function AboutPage() {
 					<h2 className="mb-3 text-2xl font-semibold">How calculations work</h2>
 					<p>
 						The model uses FV = PV × (1 + r)^t. PV is the current gem
-						balance, r is 0.005 per day, and t is the normalized
+						balance, r is 0.003 per day, and t is the normalized
 						duration in days. The calculator treats a year as 365
 						days and a month as 30 days. It derives an hourly rate
 						from the daily rate so short durations can be estimated

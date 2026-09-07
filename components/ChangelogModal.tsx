@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = "2.2.0";
+const CURRENT_VERSION = "2.3.0";
 
 interface Change {
 	version: string;
@@ -143,6 +143,14 @@ const CHANGELOG: Change[] = [
 			"Added chest EV, cost, and net value calculations",
 			"Added chest odds with Gift Card and Huge Reward valued at 25M gems",
 			"Made the Gems calculator submit button sticky while keeping it full width",
+		],
+	},
+	{
+		version: "2.3.0",
+		date: "2026-09-07",
+		changes: [
+			"Reduced daily interest rate to 0.30%",
+			"Updated calculator documentation and agent resources to use the new rate",
 		],
 	},
 ];

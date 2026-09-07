@@ -36,8 +36,8 @@ Static GitHub Pages calculator for estimating EXP Bank gem growth with compound 
 
 ## Calculation assumptions
 
-- Daily rate: `0.50%` compounding.
-- Derived hourly rate: `(1 + 0.005)^(1/24) - 1`.
+- Daily rate: `0.30%` compounding.
+- Derived hourly rate: `(1 + 0.003)^(1/24) - 1`.
 - Time normalization:
   - `1 year = 365 days`
   - `1 month = 30 days`
