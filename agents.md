@@ -12,7 +12,7 @@ Agent-facing guide for https://torturado.github.io.
 ## Summary
 
 - Static GitHub Pages site for estimating EXP Bank gem growth with compound interest.
-- Primary task: calculate future gem balances from a starting deposit at a fixed 0.50% daily rate.
+- Primary task: calculate future gem balances from a starting deposit at a fixed 0.30% daily rate.
 - Read-only JSON resources are published at /api/info.json and /api/ranks.json.
 - The typed OpenAPI contract is published at /openapi.json.
 - No OAuth or OIDC authorization server.
@@ -56,7 +56,7 @@ Agent-facing guide for https://torturado.github.io.
 
 ## Calculator assumptions
 
-- Daily interest rate: 0.50% (0.005)
+- Daily interest rate: 0.30% (0.003)
 - Hourly rate is derived from the daily rate using compound growth.
 - Time inputs are normalized as:
   - 1 year = 365 days

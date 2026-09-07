@@ -7,18 +7,18 @@ Canonical URL: https://torturado.github.io/tips
 - Start with gems you do not need right away.
 - Use the calculator to set a first milestone, such as `10%` above your current balance.
 - Check progress regularly and reinvest gains to maximize compounding.
-- The page highlights rough growth examples at `0.50%` daily:
-  - about `4.6%` after 1 month
-  - about `30%` after 6 months
-  - about `71%` after 1 year
-  - about `240%` after 2 years
+- The page highlights rough growth examples at `0.30%` daily:
+  - about `9.4%` after 1 month
+  - about `71.5%` after 6 months
+  - about `198%` after 1 year
+  - about `791%` after 2 years
 
 ## Intermediate
 
 - Use `Goal Gems` and `Additional Gems` to plan milestone targets.
 - For short-term goals, increasing the deposit matters more.
 - For longer horizons, time in the bank matters more.
-- The page notes a "Rule of 139": at `0.50%` daily, gems roughly double in about `139` days.
+- The page notes a "Rule of 231": at `0.30%` daily, gems roughly double in about `231` days.
 - If you need withdrawals, the guidance favors withdrawing interest rather than principal when possible.
 
 ## Advanced

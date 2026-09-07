@@ -22,7 +22,7 @@ Use this skill for the static calculator at https://torturado.github.io.
 
 ## Notes
 
-- The calculator assumes a fixed daily interest rate of 0.50%.
+- The calculator assumes a fixed daily interest rate of 0.30%.
 - Read-only JSON resources are available at /api/info.json and /api/ranks.json.
 - Prefer the homepage WebMCP tools for arbitrary calculations when available.
 - If WebMCP is unavailable, use the site UI or the formula documentation in /faq, /index.md, and /agents.md.

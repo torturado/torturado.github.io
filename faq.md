@@ -4,7 +4,7 @@ Canonical URL: https://torturado.github.io/faq
 
 ## What is the EXP Bank?
 
-The EXP Bank is presented as a gem-deposit system with fixed daily compound growth. The calculator models growth at `0.50%` per day.
+The EXP Bank is presented as a gem-deposit system with fixed daily compound growth. The calculator models growth at `0.30%` per day.
 
 ## How is interest calculated?
 
@@ -12,7 +12,7 @@ The calculator uses compound interest. The core formula is `FV = PV x (1 + r)^t`
 
 - `FV` is the future value
 - `PV` is the current deposit
-- `r` is the daily rate `0.005`
+- `r` is the daily rate `0.003`
 - `t` is the number of days
 
 ## How accurate is the calculator?
@@ -40,7 +40,7 @@ The FAQ states a minimum deposit of `100` gems and no stated maximum.
 
 ## Will the interest rate change?
 
-The FAQ currently describes the calculator as using a fixed `0.50%` daily rate.
+The calculator uses a fixed `0.30%` daily rate.
 
 ## Can the calculator model multiple deposits or withdrawals?
 

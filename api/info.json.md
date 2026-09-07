@@ -12,7 +12,7 @@ describes the calculator assumptions and supported agent access methods.
 
 ## Values
 
-- Daily interest rate: `0.005` (`0.50%`)
+- Daily interest rate: `0.003` (`0.30%`)
 - Formula: `FV = PV × (1 + r)^t`
 - One year: `365` days
 - One month: `30` days

@@ -157,7 +157,7 @@
           },
           "dailyInterestRate": {
             "type": "string",
-            "const": "0.005"
+            "const": "0.003"
           },
           "ranks": {
             "type": "array",
