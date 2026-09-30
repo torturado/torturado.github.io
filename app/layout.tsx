@@ -65,6 +65,10 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>
+				<meta
+					name="google-site-verification"
+					content="PNBWG4wZ-aZ7Wd0TWAO8A_Fe0Ve45Bm8z5HrRNr4g7k"
+				/>
 				<meta name="referrer" content="strict-origin-when-cross-origin" />
 				<meta
 					httpEquiv="Permissions-Policy"
