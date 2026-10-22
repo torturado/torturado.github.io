@@ -23,27 +23,12 @@ const cspContent = [
 ].join("; ");
 
 export const metadata: Metadata = {
-	title: "EXP Bank Calculator | Gem Growth Calculator",
+	title: "EXP Bank Calculator | Gem Growth & Interest",
 	description:
-		"Calculate your EXP Bank earnings with our advanced gem growth calculator. Track real-time earnings, set goals, and predict future gem amounts with compound interest calculations.",
-	keywords:
-		"EXP Bank, gem calculator, compound interest, gem growth, earnings calculator, real-time calculator",
+		"Free EXP Bank calculator for gem growth at 0.30% daily compound interest. Estimate future gems, profit, time to your goal, and Discord rank milestones.",
 	authors: [{ name: "EXP Calculator Team" }],
-	openGraph: {
-		title: "EXP Bank Calculator | Gem Growth Calculator",
-		description:
-			"Calculate your EXP Bank earnings with our advanced gem growth calculator. Track real-time earnings and predict future gem amounts.",
-		type: "website",
-		url: metadataBase,
-		images: [
-			{
-				url: "https://torturado.github.io/og-image.jpg",
-				width: 800,
-				height: 800,
-				alt: "EXP Bank Calculator",
-			},
-		],
-	},
+	applicationName: "EXP Bank Calculator",
+	manifest: "/manifest.json",
 	robots: {
 		index: true,
 		follow: true,

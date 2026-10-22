@@ -1,15 +1,15 @@
 ---
-title: EXP Bank Calculator
-description: Static documentation for estimating EXP Bank gem growth.
-canonical: https://torturado.github.io/index.md
-last-updated: 2026-08-23
+title: EXP Bank Calculator | Gem Growth & Interest
+description: Free EXP Bank calculator for gem growth at 0.30% daily compound interest, future balances, profit, and gem goals.
+canonical: https://torturado.github.io/
+last-updated: 2026-10-22
 ---
 
 # EXP Bank Calculator
 
 Canonical URL: https://torturado.github.io/
 
-Static GitHub Pages calculator for estimating EXP Bank gem growth with compound interest.
+Free EXP calculator for estimating EXP Bank gem growth at 0.30% daily compound interest. Calculate future gems, profit, time to a gem goal, and Discord rank milestones. No account is required; calculations run in your browser.
 
 ## Purpose
 
@@ -42,6 +42,40 @@ Static GitHub Pages calculator for estimating EXP Bank gem growth with compound 
   - `1 year = 365 days`
   - `1 month = 30 days`
   - hours, minutes, and seconds are converted into fractional days
+
+## How to use the EXP calculator
+
+1. Enter your balance in `Current Gems`.
+2. Choose a duration or enter a `Target Date` and optional `Target Time`.
+3. Optionally enter `Goal Gems` for a total balance or `Additional Gems` for extra gems you want to earn.
+4. Select `Calculate` to see your projected balance, profit, growth percentage, and time to goal.
+
+With 1,000 current gems, `Goal Gems = 2000` and `Additional Gems = 1000` describe the same target. Additional Gems is a profit target, not a new deposit.
+
+## EXP Bank gem growth examples
+
+Starting with 1,000 gems at 0.30% daily compound interest, without later deposits or withdrawals:
+
+| Duration | Balance | Profit |
+| --- | ---: | ---: |
+| 1 day | 1,003.00 | 3.00 |
+| 7 days | 1,021.19 | 21.19 |
+| 30 days | 1,094.03 | 94.03 |
+| 180 days | 1,714.62 | 714.62 |
+| 365 days | 2,984.29 | 1,984.29 |
+
+Values are rounded to two decimal places. The formula is `FV = PV × (1 + r)^t`, with a daily rate of `r = 0.003` and duration `t` in days. Profit is `FV − PV`. These are estimates using a fixed rate.
+
+## Discord rank goals
+
+Use Goal Gems rank presets to estimate the time to a milestone:
+
+- Ethereal: 160M+ gems
+- Luminary: 800M+ gems
+- Radiant: 1.6B+ gems
+- Catalyst: 4B+ gems
+- Divine: 12B+ gems
+- Cosmic: 48B+ gems
 
 ## Related docs
 

@@ -16,19 +16,37 @@ import {
 	TargetIcon,
 	TrendingUpIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 export function TipsPageContent() {
 	return (
 		<div className="container mx-auto py-8 px-4">
 			<Card className="w-full">
 				<CardHeader className="bg-card">
-					<CardTitle className="text-2xl">
-						Tips & Strategies
-					</CardTitle>
+					<h1 className="text-2xl font-semibold tracking-tight">
+						EXP Bank Gem Growth Tips
+					</h1>
 					<CardDescription>
-						Optimize your EXP Bank investments and achieve your gem
-						growth goals
+						Plan your gem goals with the EXP Bank calculator and understand
+						growth at 0.30% daily compound interest.
 					</CardDescription>
+					<nav
+						aria-label="Gem planning resources"
+						className="flex flex-wrap gap-x-5 gap-y-2 text-sm"
+					>
+						<Link className="underline underline-offset-4" href="/#calculator">
+							Open the gem calculator
+						</Link>
+						<Link
+							className="underline underline-offset-4"
+							href="/#growth-examples"
+						>
+							Gem growth examples
+						</Link>
+						<Link className="underline underline-offset-4" href="/faq">
+							Interest and goal FAQ
+						</Link>
+					</nav>
 				</CardHeader>
 				<CardContent className="p-6 bg-card">
 					<Tabs defaultValue="beginners" className="space-y-6">

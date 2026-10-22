@@ -113,14 +113,7 @@ export const customExponentiation = (base: BigNumber, exponent: BigNumber): BigN
     return ONE.plus(exponent.times(ln(base)))
   }
   
-  // For cases where base is close to 1, use binomial approximation for small exponents
-  if (base.minus(ONE).abs().lt(0.1) && exponent.abs().lt(10)) {
-    const x = base.minus(ONE)
-    const result = ONE.plus(exponent.times(x))
-    return result
-  }
-  
-  // Standard calculation for other cases
+  // Fractional powers must preserve compounding, including the derived hourly rate.
   return exp(exponent.times(ln(base)))
 }
 

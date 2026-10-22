@@ -1,52 +1,65 @@
-# Frequently Asked Questions
+---
+title: EXP Bank FAQ | Gem Interest, Growth & Goals
+description: EXP Bank gem growth, compound-interest formula, doubling time, goal instructions, and calculator assumptions.
+canonical: https://torturado.github.io/faq
+last-updated: 2026-10-22
+---
+
+# EXP Bank FAQ
 
 Canonical URL: https://torturado.github.io/faq
 
-## What is the EXP Bank?
+## What is EXP Bank?
 
-The EXP Bank is presented as a gem-deposit system with fixed daily compound growth. The calculator models growth at `0.30%` per day.
+EXP Bank is the gem-deposit system modeled by this calculator. The tool estimates how a starting gem balance grows at a fixed 0.30% daily compound interest rate, time to a target balance, and Discord rank milestones.
 
-## How is interest calculated?
+## How is EXP Bank gem interest calculated?
 
-The calculator uses compound interest. The core formula is `FV = PV x (1 + r)^t`, where:
+The formula is `FV = PV × (1 + r)^t`, where FV is your future balance, PV is your current gems, r is `0.003` (0.30% daily), and t is the duration in days. Interest compounds on the balance including previously earned interest.
 
-- `FV` is the future value
-- `PV` is the current deposit
-- `r` is the daily rate `0.003`
-- `t` is the number of days
+For example, 1,000 gems become approximately 1,094.03 gems after 30 days, a profit of 94.03 gems. More examples: https://torturado.github.io/#growth-examples
 
-## How accurate is the calculator?
+## How long does it take to double your gems?
 
-The site uses high-precision arithmetic for very large values. Small rounding differences can still appear for very large balances or very long durations.
+At 0.30% daily compound interest, doubling takes about 231.4 days: `t = ln(2) / ln(1.003)`. A balance of 1,000 gems reaches 2,000 gems after that time in the calculator's model. Counting only complete days, the balance first exceeds double after 232 days.
 
-## Can gems be withdrawn at any time?
+## How do I use Goal Gems and Additional Gems?
 
-The page copy says withdrawals can happen at any time without penalties, but withdrawing reduces the balance that keeps compounding.
+1. Enter your starting balance in `Current Gems`.
+2. Use `Goal Gems` for the total balance you want to reach, or `Additional Gems` for the extra amount you want to earn.
+3. Select `Calculate` to see the estimated time to each target.
 
-## Is there a minimum or maximum deposit?
+With 1,000 current gems, Goal Gems of 2,000 and Additional Gems of 1,000 describe the same target. Additional Gems is a profit goal, not a new deposit. Rank presets let you select a Discord milestone as your goal.
 
-The FAQ states a minimum deposit of `100` gems and no stated maximum.
+## What is the difference between a time period and a target date?
 
-## How do I use Goal Gems?
+A time period specifies a duration in years, months, days, hours, minutes, or seconds. One year is 365 days and one month is 30 days. A Target Date and optional Target Time use the interval from now to that calendar date instead.
 
-1. Enter `Current Gems`.
-2. Enter `Goal Gems`.
-3. Read the estimated time to reach that total.
+Shorter periods use an equivalent hourly rate: `(1.003)^(1/24) − 1`.
 
-## What is the difference between Time Period and Future Date?
+## How accurate is the EXP calculator?
 
-- `Time Period` uses a duration from now.
-- `Future Date` projects growth to a specific calendar date and optional time.
+The calculator uses high-precision arithmetic for large balances. Displayed values are rounded, and results depend on the fixed rate and chosen duration. They are estimates; the EXP Bank service may apply different rounding or crediting rules.
 
-## Will the interest rate change?
+Calculation model: https://torturado.github.io/about
 
-The calculator uses a fixed `0.30%` daily rate.
+## Can I calculate multiple deposits or withdrawals?
 
-## Can the calculator model multiple deposits or withdrawals?
+Each calculation models one starting balance without later transactions. Calculate growth up to a transaction, adjust the resulting balance, and use it as Current Gems for the next period. Repeat for each transaction.
 
-Not directly. The FAQ recommends separate calculations, using `Additional Gems`, or using a spreadsheet for more complex scenarios.
+## Are there deposit limits, withdrawal fees, or rate changes?
 
-## How can feedback or bug reports be sent?
+The calculator accepts a positive starting balance and uses a fixed 0.30% daily rate. It does not check account eligibility, deposit limits, withdrawal fees, or changes to the bank's rules. Check these directly with the EXP Bank service.
 
-- Contact details: https://torturado.github.io/contact.md
-- Issue tracker: https://github.com/torturado/torturado.github.io/issues
+## How can I report a calculator issue?
+
+Include your inputs, the result you received, and the result you expected.
+
+- Contact: https://torturado.github.io/contact
+- GitHub issues: https://github.com/torturado/torturado.github.io/issues
+
+## Related resources
+
+- Calculator: https://torturado.github.io/#calculator
+- Growth examples: https://torturado.github.io/#growth-examples
+- Gem growth tips: https://torturado.github.io/tips

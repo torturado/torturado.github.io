@@ -3,9 +3,9 @@ import { createRouteMetadata } from "../routeMetadata";
 import { TipsPageContent } from "./TipsPageContent";
 
 export const metadata: Metadata = createRouteMetadata({
-	title: "Tips & Strategies | EXP Bank Calculator",
+	title: "EXP Bank Gem Growth Tips | Compound Interest & Goals",
 	description:
-		"Beginner, intermediate, and advanced strategies for using the EXP Bank calculator and planning gem growth at a 0.30% daily rate.",
+		"Plan EXP Bank gem goals with compound-interest examples, doubling time, and Discord rank milestones at 0.30% daily growth.",
 	canonicalPath: "/tips",
 	markdownPath: "/tips.md",
 });

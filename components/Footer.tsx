@@ -8,7 +8,10 @@ export function Footer() {
 			<div className="container mx-auto px-4">
 				<div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-muted-foreground">
 					<p>© {currentYear} EXP Calculator</p>
-					<nav className="flex items-center gap-4">
+					<nav
+						aria-label="Site links"
+						className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2"
+					>
 						<Link
 							href="/privacy"
 							className="hover:text-foreground transition-colors"
@@ -26,6 +29,12 @@ export function Footer() {
 							className="hover:text-foreground transition-colors"
 						>
 							FAQ
+						</Link>
+						<Link
+							href="/tips"
+							className="hover:text-foreground transition-colors"
+						>
+							Gem growth tips
 						</Link>
 						<Link
 							href="/about"

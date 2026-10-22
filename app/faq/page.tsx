@@ -3,9 +3,9 @@ import { createRouteMetadata } from "../routeMetadata";
 import { FAQPageContent } from "./FAQPageContent";
 
 export const metadata: Metadata = createRouteMetadata({
-	title: "FAQ | EXP Bank Calculator",
+	title: "EXP Bank FAQ | Gem Interest, Growth & Goals",
 	description:
-		"Frequently asked questions about the EXP Bank calculator, compound-interest formula, withdrawals, goals, and deposits.",
+		"Learn how EXP Bank gem growth works at 0.30% daily interest. Find the compound-interest formula, doubling time, goal instructions, and calculator assumptions.",
 	canonicalPath: "/faq",
 	markdownPath: "/faq.md",
 });

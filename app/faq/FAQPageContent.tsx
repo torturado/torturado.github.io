@@ -1,344 +1,189 @@
-"use client";
-
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import Link from "next/link";
 
 export function FAQPageContent() {
 	return (
-		<div className="container mx-auto py-8 px-4">
-			<Card className="w-full">
-				<CardHeader className="bg-card">
-					<CardTitle className="text-2xl">
-						Frequently Asked Questions
-					</CardTitle>
-					<CardDescription>
-						Find answers to common questions about the EXP Bank
-						system and calculator
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="p-6 bg-card">
-					<Accordion type="single" collapsible className="w-full">
-						<AccordionItem value="item-1">
-							<AccordionTrigger className="text-lg font-medium">
-								What is the EXP Bank?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									The EXP Bank is a special financial system
-									that allows players to deposit gems and earn
-									compound interest over time. With a fixed
-									0.30% daily interest rate, the bank provides
-									a reliable way to grow your gem wealth
-									passively.
-								</p>
-								<p className="mt-2">
-									Unlike traditional investments, the EXP Bank
-									guarantees this rate regardless of market
-									conditions, making it an excellent option
-									for both new and experienced players looking
-									to maximize their long-term gem growth.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+		<div className="mx-auto max-w-3xl px-4 py-8">
+			<header className="mb-8 flex flex-col gap-3">
+				<h1 className="text-3xl font-semibold tracking-tight">EXP Bank FAQ</h1>
+				<p className="leading-7 text-muted-foreground">
+					Answers about gem growth, daily compound interest, and using the EXP
+					Bank calculator to plan your goals.
+				</p>
+				<nav
+					aria-label="FAQ resources"
+					className="flex flex-wrap gap-x-5 gap-y-2 text-sm"
+				>
+					<Link className="underline underline-offset-4" href="/#calculator">
+						Open the EXP Bank calculator
+					</Link>
+					<Link
+						className="underline underline-offset-4"
+						href="/#growth-examples"
+					>
+						See gem growth examples
+					</Link>
+					<Link className="underline underline-offset-4" href="/tips">
+						Gem growth tips
+					</Link>
+				</nav>
+			</header>
 
-						<AccordionItem value="item-2">
-							<AccordionTrigger className="text-lg font-medium">
-								How is interest calculated?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									Interest in the EXP Bank is calculated using
-									compound interest at a daily rate of 0.30%.
-									Compound interest means you earn interest
-									not only on your initial deposit but also on
-									the interest already accumulated.
-								</p>
-								<p className="mt-2">
-									The formula used is:{" "}
-									<strong>FV = PV x (1 + r)^t</strong> where:
-								</p>
-								<ul className="list-disc mt-2 ml-6">
-									<li>
-										<strong>FV</strong> = Final value
-										(future amount of gems)
-									</li>
-									<li>
-										<strong>PV</strong> = Present value
-										(current deposit amount)
-									</li>
-									<li>
-										<strong>r</strong> = Interest rate per
-										period (0.003 or 0.30% daily)
-									</li>
-									<li>
-										<strong>t</strong> = Number of time
-										periods (days)
-									</li>
-								</ul>
-								<p className="mt-2">
-									Interest is calculated and credited to your
-									account automatically at the end of each
-									day.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+			<div className="flex flex-col gap-8 leading-7 text-muted-foreground">
+				<section id="what-is-exp-bank" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						What is EXP Bank?
+					</h2>
+					<p>
+						EXP Bank is the gem-deposit system modeled by this calculator. The
+						tool estimates how a starting gem balance grows at a fixed 0.30%
+						daily compound interest rate. It also estimates time to a target
+						balance and Discord rank milestones.
+					</p>
+				</section>
 
-						<AccordionItem value="item-3">
-							<AccordionTrigger className="text-lg font-medium">
-								How accurate is the calculator?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									Our calculator provides highly accurate
-									results using the BigNumber.js library,
-									which ensures precision even when dealing
-									with extremely large numbers (billions of
-									gems). The calculations match exactly what
-									you&apos;ll receive in the actual EXP Bank
-									system.
-								</p>
-								<p className="mt-2">
-									For very long time periods (multiple years)
-									or extremely large gem amounts (trillions+),
-									there might be minor rounding differences,
-									but these are negligible for practical
-									purposes. All time calculations account for
-									leap years and accurate day counts between
-									dates.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+				<section id="interest-formula" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						How is EXP Bank gem interest calculated?
+					</h2>
+					<p>
+						The formula is <strong>FV = PV × (1 + r)^t</strong>, where FV is
+						your future balance, PV is your current gems, r is 0.003 (the 0.30%
+						daily rate), and t is the duration in days. Interest compounds: each
+						period grows the balance including the interest already earned.
+					</p>
+					<p>
+						For example, 1,000 gems become approximately 1,094.03 gems after 30
+						days, a profit of 94.03 gems. See the{" "}
+						<Link
+							className="text-foreground underline underline-offset-4"
+							href="/#growth-examples"
+						>
+							gem growth examples
+						</Link>{" "}
+						for other durations.
+					</p>
+				</section>
 
-						<AccordionItem value="item-4">
-							<AccordionTrigger className="text-lg font-medium">
-								Can I withdraw my gems at any time?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									Yes, you can withdraw your gems from the EXP
-									Bank at any time without penalties. However,
-									to maximize your returns, it&apos;s generally
-									recommended to leave your gems deposited for
-									longer periods to take advantage of compound
-									interest.
-								</p>
-								<p className="mt-2">
-									Keep in mind that once you withdraw gems,
-									you&apos;ll no longer earn interest on that
-									amount. You can use our calculator&apos;s
-									&quot;Goal Gems&quot; feature to determine the
-									optimal time to withdraw if you&apos;re
-									saving for a specific amount.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+				<section id="doubling-time" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						How long does it take to double your gems?
+					</h2>
+					<p>
+						At 0.30% daily compound interest, doubling takes about 231.4 days,
+						using t = ln(2) / ln(1.003). For example, a balance of 1,000 gems
+						reaches 2,000 gems after that time in the calculator&apos;s model.
+						If you count only complete days, the balance first exceeds double
+						after 232 days.
+					</p>
+				</section>
 
-						<AccordionItem value="item-5">
-							<AccordionTrigger className="text-lg font-medium">
-								Is there a minimum or maximum deposit amount?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									The EXP Bank has a minimum deposit
-									requirement of 100 gems to open an account.
-									There is no maximum limit to how many gems
-									you can deposit, and the system can handle
-									amounts in the billions or even trillions.
-								</p>
-								<p className="mt-2">
-									For extremely large deposits (over 1 billion
-									gems), our calculator has special
-									optimization features to ensure accurate and
-									responsive calculations even with massive
-									numbers.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+				<section id="goal-gems" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						How do I use Goal Gems and Additional Gems?
+					</h2>
+					<p>
+						Enter your starting balance in <strong>Current Gems</strong>. Use{" "}
+						<strong>Goal Gems</strong> for the total balance you want to reach,
+						or <strong>Additional Gems</strong> for the extra amount you want to
+						earn. Then select Calculate to see the estimated time to each
+						target.
+					</p>
+					<p>
+						With 1,000 current gems, Goal Gems of 2,000 and Additional Gems of
+						1,000 describe the same target. Additional Gems is a profit goal,
+						not a new deposit. Rank presets let you select a Discord milestone
+						as your goal.
+					</p>
+				</section>
 
-						<AccordionItem value="item-6">
-							<AccordionTrigger className="text-lg font-medium">
-								How do I use the Goal Gems feature?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									The Goal Gems feature helps you determine
-									how long it will take to reach a specific
-									gem amount. To use it:
-								</p>
-								<ol className="list-decimal mt-2 ml-6">
-									<li>
-										Enter your current gem amount in the
-										&quot;Current Gems&quot; field
-									</li>
-									<li>
-										Enter your target amount in the
-										&quot;Goal Gems&quot; field
-									</li>
-									<li>
-										The calculator will automatically
-										display how many days, months, and years
-										it will take to reach your goal
-									</li>
-								</ol>
-								<p className="mt-2">
-									This feature is particularly useful for
-									planning major purchases or setting savings
-									milestones. You can also combine it with the
-									time period calculator to see how close
-									you&apos;ll get to your goal within a specific
-									timeframe.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+				<section id="time-periods" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						What is the difference between a time period and a target date?
+					</h2>
+					<p>
+						A time period specifies how long your gems grow, using years,
+						months, days, hours, minutes, or seconds. The calculator treats one
+						year as 365 days and one month as 30 days. A Target Date and
+						optional Target Time use the interval from now to that calendar date
+						instead.
+					</p>
+					<p>
+						Shorter periods use an equivalent hourly rate derived from the daily
+						rate: (1.003)^(1/24) − 1.
+					</p>
+				</section>
 
-						<AccordionItem value="item-7">
-							<AccordionTrigger className="text-lg font-medium">
-								What&apos;s the difference between &quot;Future
-								Date&quot; and &quot;Time Period&quot;
-								calculations?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									Both features calculate your future gem
-									amount, but they approach time differently:
-								</p>
-								<ul className="list-disc mt-2 ml-6">
-									<li>
-										<strong>Time Period</strong>: Calculates
-										growth over a specific duration (for
-										example, 3 months or 1 year) from today.
-										This is useful when you want to know
-										your returns after a certain investment
-										period.
-									</li>
-									<li>
-										<strong>Future Date</strong>: Calculates
-										growth up to a specific calendar date.
-										This is useful when you have a target
-										date in mind.
-									</li>
-								</ul>
-								<p className="mt-2">
-									Both calculations provide the same accuracy
-									and can be used together with other features
-									like Goal Gems.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+				<section id="accuracy" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						How accurate is the EXP calculator?
+					</h2>
+					<p>
+						The calculator uses high-precision arithmetic to handle large gem
+						balances. Displayed values are rounded, and results depend on the
+						fixed 0.30% daily rate and the chosen duration. They are estimates;
+						the EXP Bank service may apply different rounding or crediting
+						rules.
+					</p>
+					<p>
+						Read more about the{" "}
+						<Link
+							className="text-foreground underline underline-offset-4"
+							href="/about"
+						>
+							calculation model
+						</Link>
+						.
+					</p>
+				</section>
 
-						<AccordionItem value="item-8">
-							<AccordionTrigger className="text-lg font-medium">
-								Will the interest rate ever change?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									The EXP Bank&apos;s interest rate is fixed at
-									0.30% daily.
-								</p>
-								<p className="mt-2">
-									This consistent rate is one of the key
-									advantages of the EXP Bank, as it allows for
-									reliable long-term planning and predictable
-									returns. If there were ever to be a rate
-									change, an announcement would be made well
-									in advance.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+				<section id="deposits-withdrawals" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						Can I calculate multiple deposits or withdrawals?
+					</h2>
+					<p>
+						Each calculation models one starting balance without later
+						transactions. To estimate a later deposit or withdrawal, calculate
+						growth up to that point, adjust the resulting balance, and use it as
+						Current Gems for the next period. Repeat for each transaction.
+					</p>
+				</section>
 
-						<AccordionItem value="item-9">
-							<AccordionTrigger className="text-lg font-medium">
-								Is there a way to calculate multiple deposits or
-								withdrawals?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									Currently, the calculator is designed for
-									single initial deposit scenarios. For
-									multiple deposits or withdrawals, you can:
-								</p>
-								<ul className="list-disc mt-2 ml-6">
-									<li>
-										Run separate calculations for each
-										deposit and manually combine the results
-									</li>
-									<li>
-										Use the &quot;Additional Gems&quot;
-										feature to simulate adding more gems at
-										the current time
-									</li>
-									<li>
-										For complex scenarios with multiple
-										transactions, you may want to use a
-										spreadsheet alongside our calculator
-									</li>
-								</ul>
-								<p className="mt-2">
-									We&apos;re considering adding more advanced
-									features for multiple transaction modeling
-									in future updates based on user feedback.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
+				<section id="bank-rules" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						Are there deposit limits, withdrawal fees, or rate changes?
+					</h2>
+					<p>
+						The calculator accepts a positive starting balance and uses a fixed
+						0.30% daily rate. It does not check account eligibility, deposit
+						limits, withdrawal fees, or changes to the bank&apos;s rules. Check
+						those details directly with the EXP Bank service.
+					</p>
+				</section>
 
-						<AccordionItem value="item-10">
-							<AccordionTrigger className="text-lg font-medium">
-								How can I provide feedback or report issues with
-								the calculator?
-							</AccordionTrigger>
-							<AccordionContent className="text-base">
-								<p>
-									We welcome your feedback and reports about
-									the calculator! You can:
-								</p>
-								<ul className="list-disc mt-2 ml-6">
-									<li>
-										Use the contact details on the
-										<a
-											href="/contact"
-											className="text-blue-500 hover:underline ml-1"
-										>
-											Contact page
-										</a>
-									</li>
-									<li>
-										Report technical issues or bugs through
-										our{" "}
-										<a
-											href="https://github.com/torturado/torturado.github.io/issues"
-											className="text-blue-500 hover:underline"
-										>
-											GitHub issue tracker
-										</a>
-									</li>
-									<li>
-										Provide feature suggestions through the
-										same channels
-									</li>
-								</ul>
-								<p className="mt-2">
-									Your input helps us improve the calculator
-									and add new features that benefit the
-									community. We regularly review feedback and
-									implement enhancements based on user
-									suggestions.
-								</p>
-							</AccordionContent>
-						</AccordionItem>
-					</Accordion>
-				</CardContent>
-			</Card>
+				<section id="feedback" className="flex flex-col gap-3">
+					<h2 className="text-xl font-semibold text-foreground">
+						How can I report a calculator issue?
+					</h2>
+					<p>
+						Use the{" "}
+						<Link
+							className="text-foreground underline underline-offset-4"
+							href="/contact"
+						>
+							contact page
+						</Link>{" "}
+						or the{" "}
+						<a
+							className="text-foreground underline underline-offset-4"
+							href="https://github.com/torturado/torturado.github.io/issues"
+						>
+							GitHub issue tracker
+						</a>
+						. Include the inputs, the result you received, and what you expected
+						so the calculation can be reproduced.
+					</p>
+				</section>
+			</div>
 		</div>
 	);
 }

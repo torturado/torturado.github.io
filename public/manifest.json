@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "EXP Calculator",
+  "name": "EXP Bank Calculator",
+  "description": "Calculate EXP Bank gem growth, interest, and time to reach your goals.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,12 +10,12 @@
     },
     {
       "src": "logo192.jpg",
-      "type": "image/jpg",
+      "type": "image/jpeg",
       "sizes": "192x192"
     },
     {
       "src": "logo512.jpg",
-      "type": "image/jpg",
+      "type": "image/jpeg",
       "sizes": "512x512"
     }
   ],
