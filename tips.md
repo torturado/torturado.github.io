@@ -1,6 +1,19 @@
-# Tips & Strategies
+---
+title: EXP Bank Gem Growth Tips | Compound Interest & Goals
+description: Plan EXP Bank gem goals with compound-interest examples, doubling time, and Discord rank milestones at 0.30% daily growth.
+canonical: https://torturado.github.io/tips
+last-updated: 2026-10-22
+---
+
+# EXP Bank Gem Growth Tips
 
 Canonical URL: https://torturado.github.io/tips
+
+Plan your gem goals with the EXP Bank calculator and understand growth at 0.30% daily compound interest.
+
+- Calculator: https://torturado.github.io/#calculator
+- Growth examples: https://torturado.github.io/#growth-examples
+- Interest and goal FAQ: https://torturado.github.io/faq
 
 ## Beginners
 
