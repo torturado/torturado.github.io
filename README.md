@@ -15,6 +15,12 @@ Static Next.js app exported to GitHub Pages for estimating EXP Bank gem growth.
 - The static JSON resources do not accept request parameters. Use WebMCP for arbitrary calculations.
 - Runtime JSON errors, Accept: text/markdown negotiation with Vary: Accept, and an MCP Streamable HTTP handshake require a server deployment.
 - Agents can use the HTML link elements or fetch the published Markdown files directly.
+- GitHub Pages controls response cache lifetimes and HTTP security headers. HTML meta tags cannot set X-Frame-Options, X-Content-Type-Options, Permissions-Policy, or CSP frame-ancestors. Custom response headers require host or CDN configuration.
+
+## Analytics
+
+The Umami event definitions, saved goals, funnel, segments, and campaign example
+are documented in [docs/analytics.md](docs/analytics.md).
 
 ## Local build and tests
 

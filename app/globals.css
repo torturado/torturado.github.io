@@ -15,7 +15,7 @@
 		--popover-foreground: 0 0% 9%;
 
 		/* Accent - muted teal */
-		--primary: 183 25% 45%;
+		--primary: 183 25% 36%;
 		--primary-foreground: 0 0% 98%;
 
 		/* Secondary - neutral gray */
@@ -24,10 +24,10 @@
 
 		/* Muted */
 		--muted: 0 0% 94%;
-		--muted-foreground: 0 0% 45%;
+		--muted-foreground: 0 0% 40%;
 
 		/* Accent alias */
-		--accent: 183 25% 45%;
+		--accent: 183 25% 36%;
 		--accent-foreground: 0 0% 98%;
 
 		/* Semantic - Error */
@@ -41,7 +41,7 @@
 		/* Borders and inputs */
 		--border: 0 0% 89%;
 		--input: 0 0% 89%;
-		--ring: 183 25% 45%;
+		--ring: 183 25% 36%;
 
 		--radius: 0.5rem;
 	}

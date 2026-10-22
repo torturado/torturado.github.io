@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = "2.3.0";
+const CURRENT_VERSION = "2.4.0";
 
 interface Change {
 	version: string;
@@ -151,6 +151,23 @@ const CHANGELOG: Change[] = [
 		changes: [
 			"Reduced daily interest rate to 0.30%",
 			"Updated calculator documentation and agent resources to use the new rate",
+		],
+	},
+	{
+		version: "2.4.0",
+		date: "2026-10-22",
+		changes: [
+			"Added gem growth examples, calculation instructions, compound-interest explanations, and Discord rank milestone guidance",
+			"Made all FAQ answers available in the initial HTML and corrected the explanations of goals, deposits, and calculation assumptions",
+			"Updated search titles, descriptions, structured data, social previews, app identity, sitemap dates, and Markdown guides",
+			"Improved internal navigation and made footer links wrap on smaller screens",
+			"Fixed fractional exponentiation so hourly compounding matches the 0.30% daily rate",
+			"Rendered calculator inputs in the initial HTML and removed the forced loading delay to prevent layout shifts",
+			"Improved text and button contrast and added accessible labels for duration inputs and sliders",
+			"Optimized rank icons, reducing their combined file size by 60%",
+			"Removed unsupported security meta directives and documented GitHub Pages cache and response-header limitations",
+			"Connected calculator events to Umami goals, conversion funnels, and saved audience segments",
+			"Enabled real-user performance metrics and excluded local previews and URL fragments from analytics",
 		],
 	},
 ];

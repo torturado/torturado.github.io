@@ -17,7 +17,6 @@ const cspContent = [
 	"img-src 'self' data: https:",
 	"font-src 'self' data:",
 	`connect-src 'self'${umamiOrigin ? ` ${umamiOrigin}` : ""}`,
-	"frame-ancestors 'none'",
 	"base-uri 'self'",
 	"form-action 'self'",
 ].join("; ");
@@ -55,12 +54,6 @@ export default function RootLayout({
 					content="PNBWG4wZ-aZ7Wd0TWAO8A_Fe0Ve45Bm8z5HrRNr4g7k"
 				/>
 				<meta name="referrer" content="strict-origin-when-cross-origin" />
-				<meta
-					httpEquiv="Permissions-Policy"
-					content="geolocation=(), microphone=(), camera=()"
-				/>
-				<meta httpEquiv="X-Frame-Options" content="DENY" />
-				<meta httpEquiv="X-Content-Type-Options" content="nosniff" />
 				<meta name="color-scheme" content="light dark" />
 				{process.env.NODE_ENV === "production" && (
 					<meta

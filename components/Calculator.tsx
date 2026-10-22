@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { trackEvent } from "@/lib/analytics";
 import {
 	Tooltip,
 	TooltipContent,
@@ -37,7 +38,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import LoadingState from "./LoadingState";
 import TechnicalInfoModal from "./TechnicalInfoModal";
 import { Progress } from "./ui/progress";
 // Create an SVG wrapper to solve Dark Reader extension compatibility issue
@@ -329,11 +329,13 @@ const ExpMarketPanel = ({
 	inputs,
 	inputErrors,
 	handleInputChange,
+	handleInputBlur,
 	showCurrentGemsInput = false,
 }: {
 	inputs: CalculatorInputs;
 	inputErrors: Record<string, FieldError>;
 	handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	handleInputBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
 	showCurrentGemsInput?: boolean;
 }) => {
 	const currentGems = inputs.currentGems ? new BigNumber(inputs.currentGems) : null;
@@ -438,6 +440,7 @@ const ExpMarketPanel = ({
 							placeholder="e.g. 10000000"
 							value={inputs.currentGems}
 							onChange={handleInputChange}
+							onBlur={handleInputBlur}
 							className={`h-11 bg-card border-input text-card-foreground tabular-nums ${inputErrors.currentGems?.hasError ? "border-red-500 animate-shake" : ""}`}
 						/>
 						{inputErrors.currentGems?.hasError ? <p className="text-red-500 text-sm">{inputErrors.currentGems.message}</p> : null}
@@ -454,6 +457,7 @@ const ExpMarketPanel = ({
 							placeholder="e.g. 7250"
 							value={inputs.expBalance}
 							onChange={handleInputChange}
+							onBlur={handleInputBlur}
 							className={`h-11 bg-card border-input text-card-foreground tabular-nums ${expBalanceError ? "border-red-500 animate-shake" : ""}`}
 						/>
 						{expBalanceError ? <p className="text-red-500 text-sm">{expBalanceError}</p> : null}
@@ -470,6 +474,7 @@ const ExpMarketPanel = ({
 							placeholder="e.g. 10"
 							value={inputs.boxCount}
 							onChange={handleInputChange}
+							onBlur={handleInputBlur}
 							className={`h-11 bg-card border-input text-card-foreground tabular-nums ${boxCountError ? "border-red-500 animate-shake" : ""}`}
 						/>
 						{boxCountError ? <p className="text-red-500 text-sm">{boxCountError}</p> : null}
@@ -561,9 +566,29 @@ export default function Calculator() {
 
 	const updateIntervalRef = useRef<NodeJS.Timeout | null>(null);
 	const futureAmountIntervalRef = useRef<NodeJS.Timeout | null>(null);
+	const calculatorStartedRef = useRef(false);
+	const lastMarketInputRef = useRef("");
 
-	// Add a loading state
-	const [isCalculatorReady, setIsCalculatorReady] = useState(false);
+	const trackCalculatorStart = () => {
+		if (calculatorStartedRef.current) return;
+		calculatorStartedRef.current = true;
+		trackEvent("calculator_started", { mode: calculatorMode });
+	};
+
+	const handleCalculatorModeChange = (mode: "gems" | "exp") => {
+		if (mode === calculatorMode) return;
+		setCalculatorMode(mode);
+		trackEvent("calculator_mode_changed", { mode });
+	};
+
+	const handleMarketInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+		const { name, value } = event.currentTarget;
+		if (!value || optionalNumberError(value)) return;
+		const inputKey = `${name}:${value}`;
+		if (lastMarketInputRef.current === inputKey) return;
+		lastMarketInputRef.current = inputKey;
+		trackEvent("market_calculation_completed", { mode: "exp", input: name });
+	};
 
 	const [inputErrors, setInputErrors] = useState<Record<string, FieldError>>({
 		currentGems: { hasError: false, message: "" },
@@ -584,6 +609,7 @@ export default function Calculator() {
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
+		trackCalculatorStart();
 		setInputs((prev) => ({ ...prev, [name]: value }));
 
 		// Validate inputs in real-time
@@ -600,28 +626,17 @@ export default function Calculator() {
 				setSelectedMultiplier(1);
 			}
 		}
-
-		// Track analytics event for important fields
-		if (
-			typeof window !== "undefined" &&
-			window.trackEvent &&
-			["currentGems", "goalGems", "additionalGems"].includes(name)
-		) {
-			window.trackEvent("Calculator Input", `Changed ${name}`, value);
-		}
 	};
 
 	// Handle rank button click - sets goalGems to the rank's minimum value
 	const handleRankSelect = (rank: DiscordRank) => {
+		trackCalculatorStart();
 		setInputs((prev) => ({ ...prev, goalGems: rank.minGems }));
 		setSelectedRank(rank);
 		setSelectedMultiplier(1);
 		validateField("goalGems", rank.minGems);
 
-		// Track analytics event
-		if (typeof window !== "undefined" && window.trackEvent) {
-			window.trackEvent("Calculator Input", "Selected Rank", rank.name);
-		}
+		trackEvent("rank_selected", { rank: rank.name });
 	};
 
 	// Handle multiplier button click - sets goalGems to rank * multiplier
@@ -635,14 +650,7 @@ export default function Calculator() {
 		setSelectedMultiplier(multiplier);
 		validateField("goalGems", value);
 
-		// Track analytics event
-		if (typeof window !== "undefined" && window.trackEvent) {
-			window.trackEvent(
-				"Calculator Input",
-				"Selected Multiplier",
-				`${selectedRank.name} x${multiplier}`,
-			);
-		}
+		trackEvent("rank_multiplier_selected", { rank: selectedRank.name, multiplier });
 	};
 
 	const validateField = (name: string, value: string) => {
@@ -692,12 +700,13 @@ export default function Calculator() {
 	};
 
 	const handleSliderChange = (name: string, value: number[]) => {
+		trackCalculatorStart();
 		setInputs((prev) => ({ ...prev, [name]: value[0].toString() }));
 	};
 
 	const calculateResults = () => {
 		// Validate all fields before calculation
-		let hasErrors = false;
+		const invalidFields: string[] = [];
 
 		// Validate current gems (required field)
 		const currentGemsError = validateField(
@@ -705,14 +714,14 @@ export default function Calculator() {
 			inputs.currentGems,
 		);
 		if (currentGemsError.hasError) {
-			hasErrors = true;
+			invalidFields.push("currentGems");
 		}
 
 		// Validate optional fields only if they have values
 		if (inputs.goalGems) {
 			const goalGemsError = validateField("goalGems", inputs.goalGems);
 			if (goalGemsError.hasError) {
-				hasErrors = true;
+				invalidFields.push("goalGems");
 			}
 		}
 
@@ -722,7 +731,7 @@ export default function Calculator() {
 				inputs.additionalGems,
 			);
 			if (additionalGemsError.hasError) {
-				hasErrors = true;
+				invalidFields.push("additionalGems");
 			}
 		}
 
@@ -732,11 +741,12 @@ export default function Calculator() {
 				inputs.targetDate,
 			);
 			if (targetDateError.hasError) {
-				hasErrors = true;
+				invalidFields.push("targetDate");
 			}
 		}
 
-		if (hasErrors) {
+		if (invalidFields.length > 0) {
+			trackEvent("validation_failed", { mode: "gems", fields: invalidFields.join(",") });
 			return; // Stop calculation if there are errors
 		}
 
@@ -1314,15 +1324,14 @@ export default function Calculator() {
 		setActiveTab("results");
 		setResultsKey((prev) => prev + 1);
 
-		// Track analytics event for calculation
-		if (typeof window !== "undefined" && window.trackEvent) {
-			window.trackEvent(
-				"Calculator",
-				"Calculate",
-				`Gems: ${inputs.currentGems}`,
-				Number(inputs.currentGems) || 0,
-			);
-		}
+		const eventData = {
+			mode: "gems",
+			has_goal: Boolean(inputs.goalGems || inputs.additionalGems),
+			has_target_date: Boolean(inputs.targetDate),
+			has_duration: initialTimeInDays.gt(0),
+		};
+		trackEvent("calculation_completed", eventData);
+		if (eventData.has_goal) trackEvent("goal_calculation_completed", eventData);
 	};
 
 	const calculateFutureAmount = (
@@ -1397,15 +1406,6 @@ export default function Calculator() {
 				color: "text-amber-500 font-medium",
 			},
 		}));
-
-		// Track analytics event for future date calculation
-		if (typeof window !== "undefined" && window.trackEvent) {
-			window.trackEvent(
-				"Calculator",
-				"Future Calculation",
-				formatDateUS(targetDate),
-			);
-		}
 	};
 
 	const handleCalculatorSubmit = (
@@ -1416,9 +1416,6 @@ export default function Calculator() {
 	};
 
 	useEffect(() => {
-		// Mark calculator as ready after initial render
-		setIsCalculatorReady(true);
-
 		return () => {
 			clearInterval(updateIntervalRef.current!);
 			clearInterval(futureAmountIntervalRef.current!);
@@ -1426,8 +1423,7 @@ export default function Calculator() {
 	}, []);
 
 	return (
-		<LoadingState>
-			<Card className="w-full animate-fade-in-up">
+			<Card className="w-full">
 				<CardHeader className="bg-card">
 					<CardTitle className="text-xl flex justify-between items-center">
 						EXP Bank Calculator
@@ -1463,7 +1459,7 @@ export default function Calculator() {
 					<div className="mt-4 grid grid-cols-2 rounded-xl border border-input bg-muted p-1">
 						<button
 							type="button"
-							onClick={() => setCalculatorMode("gems")}
+							onClick={() => handleCalculatorModeChange("gems")}
 							aria-pressed={calculatorMode === "gems"}
 							className={`rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
 								calculatorMode === "gems"
@@ -1475,7 +1471,7 @@ export default function Calculator() {
 						</button>
 						<button
 							type="button"
-							onClick={() => setCalculatorMode("exp")}
+							onClick={() => handleCalculatorModeChange("exp")}
 							aria-pressed={calculatorMode === "exp"}
 							className={`rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
 								calculatorMode === "exp"
@@ -1493,6 +1489,7 @@ export default function Calculator() {
 							inputs={inputs}
 							inputErrors={inputErrors}
 							handleInputChange={handleInputChange}
+							handleInputBlur={handleMarketInputBlur}
 							showCurrentGemsInput
 						/>
 					) : (
@@ -1879,14 +1876,14 @@ export default function Calculator() {
 												key={unit}
 												className="space-y-2"
 											>
-												<Label htmlFor={unit}>
+												<Label id={`${unit}-label`} htmlFor={unit}>
 													{unit
 														.charAt(0)
 														.toUpperCase() +
 														unit.slice(1)}
 												</Label>
 												<Slider
-													id={unit}
+													aria-labelledby={`${unit}-label`}
 													min={0}
 													max={
 														unit === "years"
@@ -1914,6 +1911,7 @@ export default function Calculator() {
 													}
 												/>
 												<Input
+													id={unit}
 													type="number"
 													name={unit}
 													toolparamdescription={`Optional ${unit} component of the calculation duration.`}
@@ -2142,6 +2140,5 @@ export default function Calculator() {
 					onClose={() => setShowTechnicalInfo(false)}
 				/>
 			</Card>
-		</LoadingState>
 	);
 }

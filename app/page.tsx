@@ -1,4 +1,5 @@
 import { ChangelogModal } from "@/components/ChangelogModal";
+import Calculator from "@/components/Calculator";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +11,6 @@ import {
 import { calculateExpGrowth, getExpRanks } from "@/lib/expCalculator";
 import BigNumber from "bignumber.js";
 import { HelpCircle } from "lucide-react";
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createRouteMetadata } from "./routeMetadata";
@@ -26,14 +26,6 @@ const growthExamples = [1, 7, 30, 180, 365].map((days) => {
 		balance: new BigNumber(results.futureGems).toFormat(2),
 		profit: new BigNumber(results.profit).toFormat(2),
 	};
-});
-
-const Calculator = dynamic(() => import("../components/Calculator"), {
-	loading: () => (
-		<div className="rounded-lg border border-input bg-card p-6 text-sm text-muted-foreground">
-			Loading calculator...
-		</div>
-	),
 });
 
 const structuredData = {
