@@ -116,6 +116,8 @@ const EXP_TRADE_AMOUNT = new BigNumber(500);
 const BUY_EXP_GEMS = new BigNumber(10000000);
 const SELL_EXP_GEMS = new BigNumber(8000000);
 const BOX_COST_EXP = new BigNumber(800);
+// Gems can only be spent on EXP while the balance stays at or above this amount.
+const MIN_GEMS_AFTER_EXP_PURCHASE = new BigNumber(48000000000);
 const GAME_CARD_GEMS = new BigNumber(25000000);
 const HUGE_REWARD_GEMS = new BigNumber(25000000);
 const BUY_GEMS_PER_EXP = BUY_EXP_GEMS.dividedBy(EXP_TRADE_AMOUNT);
@@ -344,7 +346,9 @@ const ExpMarketPanel = ({
 	const expBalanceIsValid = expBalance && !expBalance.isNaN() && expBalance.gt(0);
 	const boxCount = inputs.boxCount ? new BigNumber(inputs.boxCount) : null;
 	const boxCountIsValid = boxCount && !boxCount.isNaN() && boxCount.gt(0);
-	const derivedExp = currentGemsIsValid ? gemsToExpAtBuyRate(currentGems) : null;
+	const derivedExp = currentGemsIsValid
+		? gemsToExpAtBuyRate(BigNumber.maximum(currentGems.minus(MIN_GEMS_AFTER_EXP_PURCHASE), 0))
+		: null;
 	const expForBoxes = expBalanceIsValid ? expBalance : derivedExp;
 	const boxesFromExp = expForBoxes
 		? expForBoxes.dividedBy(BOX_COST_EXP).integerValue(BigNumber.ROUND_DOWN)
@@ -375,7 +379,7 @@ const ExpMarketPanel = ({
 				subtext: `${formatNumber(displayCostBuy)} gems to buy` ,
 			}
 		: {
-				label: expBalanceIsValid || currentGemsIsValid ? "You can open" : "Baseline",
+				label: boxesFromExp?.gt(0) ? "You can open" : "Baseline",
 				value: `${formatNumber(displayBoxes)} chests`,
 				subtext: `${formatNumber(displayExpNeeded)} EXP used`,
 			};
@@ -384,7 +388,7 @@ const ExpMarketPanel = ({
 		{
 			label: "Buyable EXP",
 			value: derivedExp ? formatNumber(derivedExp, 2) : "Enter gems",
-			detail: "500 EXP costs 10M gems.",
+			detail: "500 EXP costs 10M gems. Keeps 48B gems in your balance.",
 		},
 		{
 			label: "Boxes available",
