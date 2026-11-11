@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 // This version number should be updated whenever you make changes to the changelog
-const CURRENT_VERSION = "2.4.0";
+const CURRENT_VERSION = "2.5.0";
 
 interface Change {
 	version: string;
@@ -168,6 +168,14 @@ const CHANGELOG: Change[] = [
 			"Removed unsupported security meta directives and documented GitHub Pages cache and response-header limitations",
 			"Connected calculator events to Umami goals, conversion funnels, and saved audience segments",
 			"Enabled real-user performance metrics and excluded local previews and URL fragments from analytics",
+		],
+	},
+	{
+		version: "2.5.0",
+		date: "2026-11-11",
+		changes: [
+			"Raised the chest cost from 725 to 800 EXP",
+			"Increased the top chest prize from 100B to 250B gems",
 		],
 	},
 ];

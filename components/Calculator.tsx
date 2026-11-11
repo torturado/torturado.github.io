@@ -115,14 +115,14 @@ interface ExpBoxReward {
 const EXP_TRADE_AMOUNT = new BigNumber(500);
 const BUY_EXP_GEMS = new BigNumber(10000000);
 const SELL_EXP_GEMS = new BigNumber(8000000);
-const BOX_COST_EXP = new BigNumber(725);
+const BOX_COST_EXP = new BigNumber(800);
 const GAME_CARD_GEMS = new BigNumber(25000000);
 const HUGE_REWARD_GEMS = new BigNumber(25000000);
 const BUY_GEMS_PER_EXP = BUY_EXP_GEMS.dividedBy(EXP_TRADE_AMOUNT);
 const SELL_GEMS_PER_EXP = SELL_EXP_GEMS.dividedBy(EXP_TRADE_AMOUNT);
 
 const EXP_BOX_REWARDS: ExpBoxReward[] = [
-	{ label: "100B gems", oddsPercent: "0.001", gems: "100000000000" },
+	{ label: "250B gems", oddsPercent: "0.001", gems: "250000000000" },
 	{ label: "$10 game card", oddsPercent: "0.01", gems: GAME_CARD_GEMS.toString() },
 	{ label: "4B gems", oddsPercent: "0.10", gems: "4000000000" },
 	{ label: "250 EXP", oddsPercent: "40", exp: "250" },
@@ -389,7 +389,7 @@ const ExpMarketPanel = ({
 		{
 			label: "Boxes available",
 			value: boxesFromExp ? formatNumber(boxesFromExp) : "0",
-			detail: leftoverExp ? `${formatNumber(leftoverExp, 2)} EXP leftover.` : "725 EXP per box.",
+			detail: leftoverExp ? `${formatNumber(leftoverExp, 2)} EXP leftover.` : `${formatNumber(BOX_COST_EXP)} EXP per box.`,
 		},
 		{
 			label: "Sell value",
@@ -402,7 +402,7 @@ const ExpMarketPanel = ({
 		{
 			label: "EXP needed",
 			value: formatNumber(displayExpNeeded),
-			detail: `${formatNumber(displayBoxes)} boxes at 725 EXP each.`,
+			detail: `${formatNumber(displayBoxes)} boxes at ${formatNumber(BOX_COST_EXP)} EXP each.`,
 		},
 		{
 			label: "Expected return",
@@ -421,7 +421,7 @@ const ExpMarketPanel = ({
 			<div className="flex items-end justify-between gap-4 border-b border-input pb-4">
 				<div>
 					<h2 className="text-xl font-semibold tracking-tight text-card-foreground">EXP & chests</h2>
-					<p className="mt-1 text-sm text-muted-foreground">725 EXP per chest</p>
+					<p className="mt-1 text-sm text-muted-foreground">{formatNumber(BOX_COST_EXP)} EXP per chest</p>
 				</div>
 				<div className="text-right tabular-nums">
 					<p className="text-xs text-muted-foreground">EV / chest</p>
@@ -454,7 +454,7 @@ const ExpMarketPanel = ({
 							id="expBalance"
 							type="number"
 							name="expBalance"
-							placeholder="e.g. 7250"
+							placeholder="e.g. 8000"
 							value={inputs.expBalance}
 							onChange={handleInputChange}
 							onBlur={handleInputBlur}
